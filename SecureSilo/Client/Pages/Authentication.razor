@@ -1,7 +1,12 @@
 @page "/authentication/{action}"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-<RemoteAuthenticatorView Action="@Action" />
+@inject NavigationManager navmanager
+<RemoteAuthenticatorView Action="@Action" >
+    <LogOutSucceeded>
+        @{ navmanager.NavigateTo("/"); }
+    </LogOutSucceeded>
+</RemoteAuthenticatorView>
 
-@code{
-    [Parameter] public string Action { get; set; }
-}
+    @code{
+        [Parameter] public string Action { get; set; }
+    }
