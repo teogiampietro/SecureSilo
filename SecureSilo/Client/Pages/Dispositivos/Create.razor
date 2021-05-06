@@ -1,0 +1,17 @@
+﻿@page "/crear-dispositivo"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Configurar nuevo dispositivo</h3>
+<FormularioDispositivos TextoBoton="Confirmar" OnValidSubmit="@CrearDispositivo" Dispositivo="@dispositivo" />
+
+@code {
+    Dispositivo dispositivo = new Dispositivo();
+
+    async Task CrearDispositivo()
+    {
+        await Http.PostAsJsonAsync("dispositivos", dispositivo);
+        NavManager.NavigateTo("indice-dispositivos");
+    }
+
+}

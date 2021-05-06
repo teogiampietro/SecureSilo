@@ -1,0 +1,103 @@
+﻿@inject HttpClient http
+
+<EditForm Model="@Dispositivo" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group">
+        <label>Numero de serie:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Dispositivo.NumeroSerie" />
+            <ValidationMessage For="@(() => Dispositivo.NumeroSerie)" />
+        </div>
+        <label>Descripción:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Dispositivo.Descripcion" />
+            <ValidationMessage For="@(() => Dispositivo.Descripcion)" />
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label>Panel</label>
+        <div>
+            <InputSelectNumber class="form-control"
+                               ValueChanged="@((int value) => ValorPanelCambiado(value))"
+                               ValueExpression="@(() => panelId )"
+                               Value="panelId">
+                <option value="0">-- Seleccione un Panel --</option>
+                @foreach (var item in Paneles)
+                {
+                    @if (item.Id == panelId)
+                    {
+                        <option selected value="@item.Id">@item.Descripcion</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+            </InputSelectNumber>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Silo</label>
+        <div>
+            <InputSelectNumber class="form-control"
+                               @bind-Value="Dispositivo.SiloID"
+                               >
+                <option value="0">-- Seleccione un Silo --</option>
+                @foreach (var item in Silos)
+                {
+                    @if (item.Id == Dispositivo.SiloID)
+                    {
+                        <option selected value="@item.Id">@item.Descripcion</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+            </InputSelectNumber>
+            <ValidationMessage For="@(() => Dispositivo.SiloID)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+@code {
+    [Parameter] public Dispositivo Dispositivo { get; set; } = new Dispositivo();
+    [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    List<Silo> Silos = new List<Silo>();
+    List<Panel> Paneles = new List<Panel>();
+    private int panelId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Dispositivo.Silo != null)
+        {
+            panelId = Dispositivo.Silo.PanelID;
+            await CargarSilos(Dispositivo.Silo.PanelID);
+        }
+        Paneles = await http.GetFromJsonAsync<List<Panel>>("paneles");
+    }
+    private async Task ValorPanelCambiado(int value)
+    {
+        this.Dispositivo.SiloID = 0;
+        panelId = value;
+
+        await InvokeAsync(StateHasChanged);
+
+        if (value == 0)
+        {
+            Silos.Clear();
+        }
+        else
+        {
+            await CargarSilos(value);
+        }
+    }
+    private async Task CargarSilos(int panelId)
+    {
+        Silos = await http.GetFromJsonAsync<List<Silo>>($"paneles/{panelId}/silos");
+    }
+}

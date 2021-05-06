@@ -1,0 +1,72 @@
+﻿@page "/indice-dispositivos"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@attribute [Authorize]
+
+<h3>Dispositivos</h3>
+
+<div>
+    <a class="btn btn-success" href="crear-dispositivo">Configurar nuevo dispositivo</a>
+</div>
+@if (dispositivos == null)
+{
+    <text> Cargando dispositivos...</text>
+}
+else if (dispositivos.Length == 0)
+{
+    <text> No se encontraron dispositivos en la base de datos. </text>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Numero Serie</th>
+                <th>Descripción</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dispositivo in dispositivos)
+            {
+                <tr>
+                    <td>@dispositivo.Id</td>
+                    <td>@dispositivo.NumeroSerie</td>
+                    <td>@dispositivo.Descripcion</td>
+                    <td>
+                        <a class="btn btn-success" href="editar-dispositivo/@dispositivo.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => BorrarDispositivo(dispositivo.Id))">Borrar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@code {
+    Dispositivo[] dispositivos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDispositivos();
+    }
+
+    async Task CargarDispositivos()
+    {
+        dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>("dispositivos");
+    }
+
+    async Task BorrarDispositivo(int idDispositivo)
+    {
+        var dispositivoSeleccionado = dispositivos.First(x => x.Id == idDispositivo);
+        string mensajeConfirmacion = $"¿Desea borrar al usuario {dispositivoSeleccionado.Descripcion}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
+        {
+            await Http.DeleteAsync($"dispositivos/{idDispositivo}");
+            await CargarDispositivos();
+        }
+
+    }
+}

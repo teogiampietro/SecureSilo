@@ -1,0 +1,21 @@
+﻿@page "/editar-dispositivo/{IdDispositivo:int}"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+<h3> Editar dispositivo</h3>
+@if (dispositivo != null)
+{
+    <FormularioDispositivos TextoBoton="Editar Dispositivo" OnValidSubmit="@EditarDispositivo" Dispositivo="@dispositivo" />
+}
+@code {
+    [Parameter] public int IdDispositivo { get; set; }
+    Dispositivo dispositivo;
+    protected async override Task OnParametersSetAsync()
+    {
+        dispositivo = await Http.GetFromJsonAsync<Dispositivo>($"dispositivos/{IdDispositivo}");
+    }
+    async Task EditarDispositivo()
+    {
+        await Http.PutAsJsonAsync("dispositivos", dispositivo);
+        NavManager.NavigateTo("indice-dispositivos");
+    }
+}

@@ -1,0 +1,73 @@
+﻿@page "/indice-panel"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@attribute [Authorize]
+
+<h3>Paneles</h3>
+
+<div>
+    <a class="btn btn-success" href="crear-panel">Nuevo panel</a>
+</div>
+@if (paneles == null)
+{
+    <text> Cargando paneles...</text>
+}
+else if (paneles.Length == 0)
+{
+    <text> No se encontraron paneles en la base de datos. </text>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Código Panel</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var panel in paneles)
+            {
+                <tr>
+                    <td>@panel.Id</td>
+                    <td>@panel.Descripcion</td>
+                    <td>
+                        <select></select>
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="editar-panel/@panel.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => Borrarpanel(panel.Id))">Borrar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@code {
+    Panel[] paneles { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPanel();
+    }
+
+    async Task CargarPanel()
+    {
+        paneles = await Http.GetFromJsonAsync<Panel[]>("panel");
+    }
+
+    async Task Borrarpanel(int idPanel)
+    {
+        var panelSeleccionado = paneles.First(x => x.Id == idPanel);
+        string mensajeConfirmacion = $"¿Desea borrar al panel {panelSeleccionado.Descripcion}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
+        {
+            await Http.DeleteAsync($"panels/{idPanel}");
+            await CargarPanel();
+        }
+
+    }
+}
