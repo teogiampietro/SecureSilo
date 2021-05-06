@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorWebApp.Shared
+namespace SecureSilo.Shared
 {
     public class Panel
     {
