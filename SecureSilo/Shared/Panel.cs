@@ -13,7 +13,7 @@ namespace SecureSilo.Shared
         public int Id { get; set; }
         public string Descripcion { get; set; }
         //Un panel tiene una lista de silos
-        public List<Silo> ListaSilos { get; set; }
+        public List<SecureSilo.Shared.Silo> ListaSilos { get; set; }
         //Un panel tiene una lista de usuarios
         //public List<Usuario> ListaUsuarios { get; set; }
     }
