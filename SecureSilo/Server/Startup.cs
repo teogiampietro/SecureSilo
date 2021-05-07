@@ -1,18 +1,13 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecureSilo.Server.Data;
 using SecureSilo.Server.Models;
-using System.Linq;
+using Newtonsoft.Json;
 
 namespace SecureSilo.Server
 {
@@ -46,6 +41,12 @@ namespace SecureSilo.Server
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();
