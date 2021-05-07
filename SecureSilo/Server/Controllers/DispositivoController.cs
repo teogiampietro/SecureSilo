@@ -22,12 +22,12 @@ namespace SecureSilo.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Dispositivo>>> Get()
         {
-            return await context.Dispositivos.ToListAsync();
+            return await context.Dispositivos.Include(x => x.Silo).ToListAsync();
         }
         [HttpGet("{id}", Name = "obtenerDispositivo")]
         public async Task<ActionResult<Dispositivo>> Get(int id)
         {
-            return await context.Dispositivos.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Dispositivos.Include(x => x.Silo).FirstOrDefaultAsync(x => x.Id == id);
         }
         [HttpPost]
         public async Task<ActionResult<List<Dispositivo>>> Post(Dispositivo dispositivo)
