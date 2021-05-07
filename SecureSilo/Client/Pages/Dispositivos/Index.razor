@@ -25,21 +25,25 @@ else
                 <th>ID</th>
                 <th>Numero Serie</th>
                 <th>Descripción</th>
+                <th>Silo</th>
+                <th>Panel</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var dispositivo in dispositivos)
             {
-                <tr>
-                    <td>@dispositivo.Id</td>
-                    <td>@dispositivo.NumeroSerie</td>
-                    <td>@dispositivo.Descripcion</td>
-                    <td>
-                        <a class="btn btn-success" href="editar-dispositivo/@dispositivo.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => BorrarDispositivo(dispositivo.Id))">Borrar</button>
-                    </td>
-                </tr>
+            <tr>
+                <td>@dispositivo.Id</td>
+                <td>@dispositivo.NumeroSerie</td>
+                <td>@dispositivo.Descripcion</td>
+                <td>@dispositivo.SiloID</td>
+                <td>@dispositivo.Silo.PanelID</td>
+<td>
+                    <a class="btn btn-success" href="editar-dispositivo/@dispositivo.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => BorrarDispositivo(dispositivo.Id))">Borrar</button>
+                </td>
+            </tr>
             }
         </tbody>
 
