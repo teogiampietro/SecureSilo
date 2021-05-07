@@ -22,7 +22,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th></th>
+
                 <th>Código Panel</th>
                 <th>Descripción</th>
             </tr>
@@ -33,9 +33,9 @@ else
                 <tr>
                     <td>@panel.Id</td>
                     <td>@panel.Descripcion</td>
-                    <td>
+                    @*<td>
                         <select></select>
-                    </td>
+                    </td>*@
                     <td>
                         <a class="btn btn-success" href="editar-panel/@panel.Id">Editar</a>
                         <button class="btn btn-danger" @onclick="@(() => Borrarpanel(panel.Id))">Borrar</button>
@@ -56,7 +56,7 @@ else
 
     async Task CargarPanel()
     {
-        paneles = await Http.GetFromJsonAsync<Panel[]>("panel");
+        paneles = await Http.GetFromJsonAsync<Panel[]>("paneles");
     }
 
     async Task Borrarpanel(int idPanel)
