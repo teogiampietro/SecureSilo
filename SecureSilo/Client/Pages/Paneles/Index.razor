@@ -1,4 +1,4 @@
-﻿@page "/indice-panel"
+﻿@page "/indice-paneles"
 @inject HttpClient Http
 @inject IJSRuntime JS
 
@@ -33,12 +33,9 @@ else
                 <tr>
                     <td>@panel.Id</td>
                     <td>@panel.Descripcion</td>
-                    @*<td>
-                        <select></select>
-                    </td>*@
                     <td>
                         <a class="btn btn-success" href="editar-panel/@panel.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => Borrarpanel(panel.Id))">Borrar</button>
+                        <button class="btn btn-danger" @onclick="@(() => BorrarPanel(panel.Id))">Borrar</button>
                     </td>
                 </tr>
             }
@@ -59,7 +56,7 @@ else
         paneles = await Http.GetFromJsonAsync<Panel[]>("paneles");
     }
 
-    async Task Borrarpanel(int idPanel)
+    async Task BorrarPanel(int idPanel)
     {
         var panelSeleccionado = paneles.First(x => x.Id == idPanel);
         string mensajeConfirmacion = $"¿Desea borrar al panel {panelSeleccionado.Descripcion}?";

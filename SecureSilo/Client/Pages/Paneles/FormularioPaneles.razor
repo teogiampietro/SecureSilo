@@ -1,5 +1,16 @@
-﻿<h3>FormularioPaneles</h3>
-
+﻿<EditForm Model="@Panel" OnValidSubmit="@OnValidSubmit">
+    <div class="form-fiel">
+        <label>Descripción:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Panel.Descripcion" />
+            <ValidationMessage For="@(() => Panel.Descripcion)" />
+        </div>
+    </div>  
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
 @code {
-
-}
+    [Parameter] public Panel Panel { get; set; } = new Panel();
+    [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+     }
