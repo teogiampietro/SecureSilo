@@ -1,0 +1,70 @@
+﻿@page "/silos"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@attribute [Authorize]
+
+<h3>Silos</h3>
+
+<div>
+    <a class="btn btn-success" href="crear-silo">Nuevo Silo</a>
+</div>
+@if (silos == null)
+{
+    <text> Cargando silos... </text>
+}
+else if (silos.Length == 0)
+{
+    <text> No se encontraron silos en la base de datos. </text>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código Silo</th>
+                <th>Descripción</th>
+                <th>Panel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var silo in silos)
+            {
+                <tr>
+                    <td>@silo.Id</td>
+                    <td>@silo.Descripcion</td>
+                    <td>@silo.Panel.Descripcion</td>
+                    <td>
+                        <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code{
+    Silo[] silos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarSilo();
+    }
+    async Task CargarSilo()
+    {
+        silos = await Http.GetFromJsonAsync<Silo[]>("Silos");
+    }
+    async Task BorrarSilo(int idSilo)
+    {
+        var siloSeleccionado = silos.First(x => x.Id == idSilo);
+        string mensajeConfirmacion = $"¿Desea borrar al silo {siloSeleccionado.Descripcion}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
+        {
+            await Http.DeleteAsync($"Silos/{idSilo}");
+            await CargarSilo();
+        }
+    }
+}

@@ -1,0 +1,16 @@
+﻿@page "/crear-silo"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Configurar nuevo panel</h3>
+<FormularioSilos TextoBoton="Confirmar" OnValidSubmit="@CrearSilo" Silo="@silo" />
+
+@code {
+    Silo silo = new Silo();
+
+    async Task CrearSilo()
+    {
+        await Http.PostAsJsonAsync("silos", silo);
+        NavManager.NavigateTo("silos");
+    }
+}

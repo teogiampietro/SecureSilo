@@ -1,0 +1,19 @@
+﻿@page "/editar-silo/{IdSilo:int}"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+<h3> Editar silo</h3>
+<FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />
+
+@code {
+    [Parameter] public int IdSilo { get; set; }
+    Silo silo = new Silo();
+    protected async override Task OnParametersSetAsync()
+    {
+        silo = await Http.GetFromJsonAsync<Silo>($"silos/{IdSilo}");
+    }
+    async Task EditarSilo()
+    {
+        await Http.PutAsJsonAsync("silos", silo);
+        NavManager.NavigateTo("silos");
+    }
+}

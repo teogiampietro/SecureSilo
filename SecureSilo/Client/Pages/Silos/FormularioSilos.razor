@@ -1,0 +1,46 @@
+﻿@inject HttpClient http
+
+<EditForm Model="@Silo" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group">
+        <label>Descripción:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Silo.Descripcion" />
+            <ValidationMessage For="@(() => Silo.Descripcion)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Panel</label>
+        <div>
+            <InputSelectNumber class="form-control"
+                              @bind-Value="Silo.PanelID">
+                <option value="0">-- Seleccione un Panel --</option>
+                @foreach (var item in Paneles)
+                {
+                    @if (item.Id == panelId)
+                    {
+                        <option selected value="@item.Id">@item.Descripcion</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+            </InputSelectNumber>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+@code {
+    [Parameter] public Silo Silo { get; set; } = new Silo();
+    [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    List<Panel> Paneles = new List<Panel>();
+    private int panelId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Paneles = await http.GetFromJsonAsync<List<Panel>>("paneles");
+    }
+}
