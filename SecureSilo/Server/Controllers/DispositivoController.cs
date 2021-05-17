@@ -22,7 +22,7 @@ namespace SecureSilo.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Dispositivo>>> Get()
         {
-            return await context.Dispositivos.Include(x => x.Silo).ToListAsync();
+            return await context.Dispositivos.Include(x => x.Silo).Include(y => y.Silo.Panel).ToListAsync();
         }
         [HttpGet("{id}", Name = "obtenerDispositivo")]
         public async Task<ActionResult<Dispositivo>> Get(int id)

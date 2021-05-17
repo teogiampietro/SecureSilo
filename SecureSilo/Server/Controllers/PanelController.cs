@@ -42,13 +42,20 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return new CreatedAtRouteResult("obtenerPaneles", new { id = panel.Id }, panel);
         }
-
+        [HttpPut]
         public async Task<ActionResult> Put(Panel panel)
         {
             context.Entry(panel).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return NoContent();
         }
-
+       [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var panel = new Panel { Id = id };
+            context.Remove(panel);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
