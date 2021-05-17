@@ -43,5 +43,12 @@ namespace SecureSilo.Server.Controllers
             return new CreatedAtRouteResult("obtenerPaneles", new { id = panel.Id }, panel);
         }
 
+        public async Task<ActionResult> Put(Panel panel)
+        {
+            context.Entry(panel).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
