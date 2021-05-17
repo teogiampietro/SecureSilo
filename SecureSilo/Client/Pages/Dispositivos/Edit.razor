@@ -16,6 +16,6 @@
     async Task EditarDispositivo()
     {
         await Http.PutAsJsonAsync("dispositivos", dispositivo);
-        NavManager.NavigateTo("indice-dispositivos");
+        NavManager.NavigateTo("dispositivos");
     }
 }

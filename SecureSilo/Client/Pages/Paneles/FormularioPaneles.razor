@@ -5,7 +5,7 @@
             <InputText class="form-control" @bind-Value="@Panel.Descripcion" />
             <ValidationMessage For="@(() => Panel.Descripcion)" />
         </div>
-    </div>  
+    </div>
     <button type="submit" class="btn btn-success">@TextoBoton</button>
     <DataAnnotationsValidator />
 </EditForm>
@@ -13,4 +13,4 @@
     [Parameter] public Panel Panel { get; set; } = new Panel();
     [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
-     }
+}

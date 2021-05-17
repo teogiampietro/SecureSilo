@@ -11,7 +11,7 @@
     async Task CrearDispositivo()
     {
         await Http.PostAsJsonAsync("dispositivos", dispositivo);
-        NavManager.NavigateTo("indice-dispositivos");
+        NavManager.NavigateTo("dispositivos");
     }
 
 }

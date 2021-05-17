@@ -3,7 +3,7 @@
 @inject NavigationManager NavManager
 
 <h3>Configurar nuevo panel</h3>
-<FormularioPaneles TextoBoton="Confirmar" OnValidSubmit="@CrearPanel" Dispositivo="@panel" />
+<FormularioPaneles TextoBoton="Confirmar" OnValidSubmit="@CrearPanel" Panel="@panel" />
 
 @code {
     Panel panel = new Panel();
@@ -11,7 +11,7 @@
     async Task CrearPanel()
     {
         await Http.PostAsJsonAsync("paneles", panel);
-        NavManager.NavigateTo("indice-paneles");
+        NavManager.NavigateTo("paneles");
     }
 
 }
