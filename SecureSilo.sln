@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureSilo.Server", "SecureSilo\Server\SecureSilo.Server.csproj", "{2FB31DB7-6599-4833-B7EF-858CA9E4F6F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSilo.Server", "SecureSilo\Server\SecureSilo.Server.csproj", "{2FB31DB7-6599-4833-B7EF-858CA9E4F6F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureSilo.Client", "SecureSilo\Client\SecureSilo.Client.csproj", "{EE19A49B-3928-4E71-8AA6-784280E1DF12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSilo.Client", "SecureSilo\Client\SecureSilo.Client.csproj", "{EE19A49B-3928-4E71-8AA6-784280E1DF12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureSilo.Shared", "SecureSilo\Shared\SecureSilo.Shared.csproj", "{EC0ED414-BAB0-4E85-8CE6-A58CE69501C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSilo.Shared", "SecureSilo\Shared\SecureSilo.Shared.csproj", "{EC0ED414-BAB0-4E85-8CE6-A58CE69501C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
