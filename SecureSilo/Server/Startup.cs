@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using SecureSilo.Server.Data;
 using SecureSilo.Server.Models;
 using Newtonsoft.Json;
+using Microsoft.OpenApi.Models;
+using System;
+using Swashbuckle.Swagger;
 
 namespace SecureSilo.Server
 {
@@ -28,28 +31,28 @@ namespace SecureSilo.Server
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => {
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-                })
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
+            AddSwagger(services);
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
-
-
+            });       
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +75,12 @@ namespace SecureSilo.Server
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
+            });
+
             app.UseRouting();
 
             app.UseIdentityServer();
@@ -83,6 +92,29 @@ namespace SecureSilo.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
+            });
+
+
+
+        }
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                var groupName = "v1";
+
+                options.SwaggerDoc(groupName, new OpenApiInfo
+                {
+                    Title = $"Foo {groupName}",
+                    Version = groupName,
+                    Description = "Foo API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Foo Company",
+                        Email = string.Empty,
+                        Url = new Uri("https://foo.com/"),
+                    }
+                });
             });
         }
     }
