@@ -21,5 +21,6 @@ namespace SecureSilo.Server.Data
         public DbSet<Dispositivo> Dispositivos { get; set; }
         public DbSet<Silo> Silos { get; set; }
         public DbSet<Panel> Paneles { get; set; }
+        public DbSet<Update> Updates { get; set; }
     }
 }

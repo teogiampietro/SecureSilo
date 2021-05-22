@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SecureSilo.Server.Data.Migrations
+namespace SecureSilo.Server.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class _22052021_1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,19 @@ namespace SecureSilo.Server.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Paneles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Paneles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +199,72 @@ namespace SecureSilo.Server.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Silos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(nullable: true),
+                    Estado = table.Column<string>(nullable: true),
+                    PanelID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Silos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Silos_Paneles_PanelID",
+                        column: x => x.PanelID,
+                        principalTable: "Paneles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dispositivos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumeroSerie = table.Column<string>(nullable: false),
+                    Descripcion = table.Column<string>(nullable: false),
+                    SiloID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dispositivos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dispositivos_Silos_SiloID",
+                        column: x => x.SiloID,
+                        principalTable: "Silos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Updates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumeroSerie = table.Column<string>(nullable: true),
+                    FechaHora = table.Column<string>(nullable: true),
+                    Movimiento = table.Column<string>(nullable: true),
+                    Temperatura = table.Column<float>(nullable: false),
+                    Humedad = table.Column<float>(nullable: false),
+                    DispositivoID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Updates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Updates_Dispositivos_DispositivoID",
+                        column: x => x.DispositivoID,
+                        principalTable: "Dispositivos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -237,6 +316,11 @@ namespace SecureSilo.Server.Data.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Dispositivos_SiloID",
+                table: "Dispositivos",
+                column: "SiloID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -245,6 +329,16 @@ namespace SecureSilo.Server.Data.Migrations
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Silos_PanelID",
+                table: "Silos",
+                column: "PanelID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Updates_DispositivoID",
+                table: "Updates",
+                column: "DispositivoID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -271,10 +365,22 @@ namespace SecureSilo.Server.Data.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
+                name: "Updates");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Dispositivos");
+
+            migrationBuilder.DropTable(
+                name: "Silos");
+
+            migrationBuilder.DropTable(
+                name: "Paneles");
         }
     }
 }

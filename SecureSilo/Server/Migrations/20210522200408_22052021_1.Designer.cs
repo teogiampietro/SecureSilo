@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
-namespace SecureSilo.Server.Data.Migrations
+namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210522200408_22052021_1")]
+    partial class _22052021_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -312,24 +314,12 @@ namespace SecureSilo.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaHora")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float>("Humedad")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Movimiento")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NumeroSerie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiloID")
                         .HasColumnType("int");
-
-                    b.Property<float>("Temperatura")
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -374,6 +364,38 @@ namespace SecureSilo.Server.Data.Migrations
                     b.HasIndex("PanelID");
 
                     b.ToTable("Silos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DispositivoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FechaHora")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Humedad")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Movimiento")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumeroSerie")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Temperatura")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DispositivoID");
+
+                    b.ToTable("Updates");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -441,6 +463,15 @@ namespace SecureSilo.Server.Data.Migrations
                     b.HasOne("SecureSilo.Shared.Panel", "Panel")
                         .WithMany("ListaSilos")
                         .HasForeignKey("PanelID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Dispositivo", "Dispositivo")
+                        .WithMany("ListaUpdates")
+                        .HasForeignKey("DispositivoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
