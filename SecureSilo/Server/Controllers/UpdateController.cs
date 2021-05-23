@@ -19,11 +19,16 @@ namespace SecureSilo.Server.Controllers
         {
             this.context = context;
         }
+        [HttpGet]
+        public async Task<ActionResult<List<Update>>> Get()
+        {
+            return await context.Updates.Include(x => x.Dispositivo.Silo.Panel).ToListAsync();
+        }
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
             try
-            {
+            { 
                 string[] updateList = jsonUpdateList.Split(";");
                 foreach (var item in updateList)
                 {
