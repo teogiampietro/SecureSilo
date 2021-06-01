@@ -6,21 +6,21 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        <a href="authentication/register">Registrarse</a>
-        <a href="authentication/login">Ingresar</a>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" @onclick="ToLogin">Iniciar sesión</button>
     </NotAuthorized>
-    <Authorized>      
-        <a href="authentication/profile">Hola, @context.User.Identity.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Salir</button>      
-        
+    <Authorized>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" @onclick="BeginSignOut">Salir</button>
     </Authorized>
-    
-</AuthorizeView>
 
+</AuthorizeView>
 @code{
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
+    }
+    private async Task ToLogin(MouseEventArgs args)
+    {
+        Navigation.NavigateTo("/authentication/login");
     }
 }
