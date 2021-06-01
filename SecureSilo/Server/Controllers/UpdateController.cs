@@ -19,32 +19,49 @@ namespace SecureSilo.Server.Controllers
         {
             this.context = context;
         }
-        [HttpGet]
-        public async Task<ActionResult<List<Update>>> Get()
+        [HttpGet(Name = "listaUpdates")]
+        public async Task<ActionResult<List<Dispositivo>>> Get()
         {
-            return await context.Updates.Include(x => x.Dispositivo.Silo.Panel).ToListAsync();
+            return await context.Dispositivos
+                .Include(x => x.ListaUpdates)
+                .Include(y => y.Silo.Panel)
+                .Where(z => z.ListaUpdates.Count > 0)
+                .ToListAsync();
         }
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
-            try
-            { 
-                string[] updateList = jsonUpdateList.Split(";");
-                foreach (var item in updateList)
+            DispositivosController cDispositivos = new DispositivosController(context);
+            string[] updateList = jsonUpdateList.Split(";");
+            foreach (var item in updateList)
+            {
+                try
                 {
                     Update update = JsonSerializer.Deserialize<Update>(item);
                     Dispositivo dsp = FindDispositivo(update.NumeroSerie);
+                    if (dsp == null)
+                    {
+                        //Si no encuentro el dispositivo por numero de serie, quiere decir que no está cargado.
+                        //Así que creo un nuevo dispositivo con cualquier silo asignado. Deberá configurar el usuario.
+                        dsp = new Dispositivo();
+                        dsp.NumeroSerie = update.NumeroSerie;
+                        dsp.Descripcion = string.Empty;
+                        dsp.Silo = FindFirstSilo();
+                        await cDispositivos.Post(dsp);
+                    }
                     update.Dispositivo = dsp;
+                    update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
                     update.DispositivoID = dsp.Id;
+                    update.FechaHora = DateTime.Now.ToString();
                     this.context.Add(update);
                 }
-                await context.SaveChangesAsync();
-                return NoContent();
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }   
+            await context.SaveChangesAsync();
+            return NoContent();
         }
         [HttpGet("{id}", Name = "obtenerUpdate")]
         public async Task<ActionResult<Update>> Get(int id)
@@ -54,8 +71,14 @@ namespace SecureSilo.Server.Controllers
         private Dispositivo FindDispositivo(string numeroSerie)
         {
             Dispositivo newDispositivo = new Dispositivo();
-            newDispositivo =  context.Dispositivos.Where(x => x.NumeroSerie == numeroSerie).FirstOrDefault();
+            newDispositivo = context.Dispositivos.Where(x => x.NumeroSerie == numeroSerie).FirstOrDefault();
             return newDispositivo;
+        }
+        private Silo FindFirstSilo()
+        {
+            Silo newSilo = new Silo();
+            newSilo = context.Silos.FirstOrDefault();
+            return newSilo;
         }
     }
 }
