@@ -1,0 +1,61 @@
+﻿@page "/historial-updates"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@attribute [Authorize]
+
+<h3>Historial de actualizaciones por dispositivos</h3>
+@if (dispositivos == null)
+{
+    <text> Cargando actualizaciones... </text>
+}
+else if (dispositivos.Length == 0)
+{
+    <text> No se encontraron actualizaciones cargadas en la base de datos. </text>
+}
+else
+{
+    @foreach (var dispositivo in dispositivos)
+
+    {
+        <h4 class="d-flex justify-content-center font-weight-bold">@(dispositivo.Descripcion )</h4>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Fecha Hora</th>
+                    <th scope="col">Temperatura</th>
+                    <th scope="col">Humedad</th>
+                    <th scope="col">Movimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var update in dispositivo.ListaUpdates)
+                {
+                    <tr>
+                        <td scope="row">@update.Id</td>
+                        <td scope="row">@update.FechaHora</td>
+                        <td scope="row">@update.Temperatura</td>
+                        <td scope="row">@update.Humedad</td>
+                        <td scope="row">@update.Movimiento</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+}
+
+@code {
+    Dispositivo[] dispositivos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarUpdates();
+    }
+    async Task CargarUpdates()
+    {
+        dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>("Update");
+    }
+
+}
