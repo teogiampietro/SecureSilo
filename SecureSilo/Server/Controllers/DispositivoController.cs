@@ -34,7 +34,15 @@ namespace SecureSilo.Server.Controllers
         {
             context.Add(dispositivo);
             await context.SaveChangesAsync();
-            return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id }, dispositivo);
+            if (String.IsNullOrEmpty(dispositivo.Descripcion))
+            {
+                return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id, descripcion = ("dsp"+ dispositivo.Id)}, dispositivo);
+            }
+            else
+            {
+                return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id }, dispositivo);
+            }
+            
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
