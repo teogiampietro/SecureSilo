@@ -10,8 +10,8 @@ using SecureSilo.Server.Data;
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210522200408_22052021_1")]
-    partial class _22052021_1
+    [Migration("20210531134539_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
