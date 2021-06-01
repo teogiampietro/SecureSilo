@@ -14,13 +14,11 @@ namespace SecureSilo.Shared
         public int Id { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string NumeroSerie { get; set; }
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Descripcion { get; set; }
-        //En la lista de updates se encuentran los parámetros
-        public List<Update> ListaUpdates { get; set; }
-        //Un dispositivo se encuentra en un silo.
+        public string Descripcion { get; set; }          
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un silo")]
         public int SiloID {get; set; }
         public Silo Silo { get; set; }
+        public List<Update> ListaUpdates { get; set; }
+
     }
 }
