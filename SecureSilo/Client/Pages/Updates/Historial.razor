@@ -73,7 +73,15 @@ else
     }
     private async Task Filtrar()
     {
-        dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>($"Update/getFiltered/{nombreDispositivoFiltro}");
+        if (nombreDispositivoFiltro == string.Empty )
+        {
+            await CargarUpdates();
+        }
+        else
+        {
+            dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>($"Update/getFiltered/{nombreDispositivoFiltro}");
+        }
+
     }
     private async Task Limpiar()
     {
