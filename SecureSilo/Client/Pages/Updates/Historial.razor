@@ -5,6 +5,19 @@
 @attribute [Authorize]
 
 <h3>Historial de actualizaciones por dispositivos</h3>
+<div class="d-flex justify-content-center">
+    <label class="sr-only" for="nombre-filtro">Filtrar</label>
+    <input type="text" class="form-control mb-2 mr-sm-2"
+           @bind="nombreDispositivoFiltro" placeholder="Filtrar por Dispositivo" />
+    <button type="button" class="btn btn-dark mr-sm-2 mb-2"
+            @onclick="Filtrar">
+        Filtrar
+    </button>
+    <button type="button" class="btn btn-danger  mb-2"
+            @onclick="Limpiar">
+        Limpiar
+    </button>
+</div>
 @if (dispositivos == null)
 {
     <text> Cargando actualizaciones... </text>
@@ -48,6 +61,7 @@ else
 
 @code {
     Dispositivo[] dispositivos { get; set; }
+    private string nombreDispositivoFiltro = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,5 +71,14 @@ else
     {
         dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>("Update");
     }
+    private async Task Filtrar()
+    {
+        dispositivos = await Http.GetFromJsonAsync<Dispositivo[]>($"Update/getFiltered/{nombreDispositivoFiltro}");
+    }
+    private async Task Limpiar()
+    {
+        nombreDispositivoFiltro = string.Empty;
+        await CargarUpdates();
 
+    }
 }

@@ -28,6 +28,18 @@ namespace SecureSilo.Server.Controllers
                 .Where(z => z.ListaUpdates.Count > 0)
                 .ToListAsync();
         }
+        
+        [HttpGet("{id}", Name = "obtenerUpdate")]
+        public async Task<ActionResult<Update>> Get(int id)
+        {
+            return await context.Updates.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        [HttpGet("getFiltered/{nombreDispositivoFiltro}")]
+        public async Task<ActionResult<List<Dispositivo>>> Get(string nombreDispositivoFiltro)
+        {
+            return await context.Dispositivos.Include(x => x.ListaUpdates).Where(y => y.Descripcion == nombreDispositivoFiltro).ToListAsync();
+        }
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
@@ -63,11 +75,7 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
-        [HttpGet("{id}", Name = "obtenerUpdate")]
-        public async Task<ActionResult<Update>> Get(int id)
-        {
-            return await context.Updates.FirstOrDefaultAsync(x => x.Id == id);
-        }
+        #region Private Methods
         private Dispositivo FindDispositivo(string numeroSerie)
         {
             Dispositivo newDispositivo = new Dispositivo();
@@ -80,5 +88,7 @@ namespace SecureSilo.Server.Controllers
             newSilo = context.Silos.FirstOrDefault();
             return newSilo;
         }
+        #endregion
+
     }
 }
