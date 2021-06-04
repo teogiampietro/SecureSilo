@@ -19,6 +19,7 @@ namespace SecureSilo.Shared
         public int SiloID {get; set; }
         public Silo Silo { get; set; }
         public List<Update> ListaUpdates { get; set; }
+        public string Estado { get; set; }
 
     }
 }

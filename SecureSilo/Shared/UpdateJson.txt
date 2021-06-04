@@ -19,3 +19,7 @@
   "Temperatura": 25,
   "Humedad": 15
 }
+
+
+//TODO: Cambiar nombre panel por campo
+//TODO: Agregar botones de cancelar en la modificación
