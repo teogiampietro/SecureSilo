@@ -55,10 +55,12 @@ namespace SecureSilo.Server.Controllers
                     {
                         //Si no encuentro el dispositivo por numero de serie, quiere decir que no está cargado.
                         //Así que creo un nuevo dispositivo con cualquier silo asignado. Deberá configurar el usuario.
-                        dsp = new Dispositivo();
-                        dsp.NumeroSerie = update.NumeroSerie;
-                        dsp.Descripcion = string.Empty;
-                        dsp.Silo = FindFirstSilo();
+                        dsp = new Dispositivo
+                        {
+                            NumeroSerie = update.NumeroSerie,
+                            Descripcion = string.Empty,
+                            Silo = FindFirstSilo()
+                        };
                         await cDispositivos.Post(dsp);
                     }
                     update.Dispositivo = dsp;
