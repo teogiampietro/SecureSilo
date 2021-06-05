@@ -1,0 +1,19 @@
+﻿@page "/editar-campo/{IdCampo:int}"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+<h3> Editar campo</h3>
+<FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+
+@code {
+    [Parameter] public int IdCampo { get; set; }
+    Campo campo = new Campo();
+    protected async override Task OnParametersSetAsync()
+    {
+        campo = await Http.GetFromJsonAsync<Campo>($"campos/{IdCampo}");
+    }
+    async Task EditarCampo()
+    {
+        await Http.PutAsJsonAsync("campos", campo);
+        NavManager.NavigateTo("campos");
+    }
+}

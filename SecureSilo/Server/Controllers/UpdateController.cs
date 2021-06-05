@@ -23,9 +23,9 @@ namespace SecureSilo.Server.Controllers
         public async Task<ActionResult<List<Dispositivo>>> Get()
         {
             return await context.Dispositivos
-                .Include(x => x.ListaUpdates)
-                .Include(y => y.Silo.Panel)
-                .Where(z => z.ListaUpdates.Count > 0)
+                .Include(x => x.Updates)
+                .Include(y => y.Silo.Campo)
+                .Where(z => z.Updates.Count > 0)
                 .ToListAsync();
         }
         
@@ -38,7 +38,7 @@ namespace SecureSilo.Server.Controllers
         [HttpGet("getFiltered/{nombreDispositivoFiltro}")]
         public async Task<ActionResult<List<Dispositivo>>> Get(string nombreDispositivoFiltro)
         {
-            return await context.Dispositivos.Include(x => x.ListaUpdates).Where(y => y.Descripcion == nombreDispositivoFiltro).ToListAsync();
+            return await context.Dispositivos.Include(x => x.Updates).Where(y => y.Descripcion == nombreDispositivoFiltro).ToListAsync();
         }
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)

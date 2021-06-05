@@ -18,8 +18,6 @@ namespace SecureSilo.Shared
         public float Temperatura { get; set; }
         public float Humedad { get; set; }
 
-        //Un silo se encuentra en un panel
-        [ForeignKey("Dispositivo")]
         public int DispositivoID { get; set; }
         public Dispositivo Dispositivo { get; set; }
 

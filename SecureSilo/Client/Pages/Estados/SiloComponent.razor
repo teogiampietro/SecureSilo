@@ -13,7 +13,7 @@ else
     <div class="btn-group btn-group-lg" role="group">
 
         @foreach (var _silo in silos)
-            foreach (var _dsp in _silo.ListaDispositivos)
+            foreach (var _dsp in _silo.Dispositivos)
             {
                 @switch (_dsp.Estado)
                 {

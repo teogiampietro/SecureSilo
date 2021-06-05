@@ -16,11 +16,10 @@ namespace SecureSilo.Shared
         public string Estado { get; set; }
 
         //Un silo tiene una lista de dispositivos
-        public List<Dispositivo> ListaDispositivos { get; set; }
+        public List<Dispositivo> Dispositivos { get; set; }
 
-        //Un silo se encuentra en un panel
-        [ForeignKey("Panel")]
-        public int PanelID { get; set; }
-        public Panel Panel { get; set; }
+        //Un silo se encuentra en un campo
+        public int CampoID { get; set; }
+        public Campo Campo { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace SecureSilo.Shared
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un silo")]
         public int SiloID {get; set; }
         public Silo Silo { get; set; }
-        public List<Update> ListaUpdates { get; set; }
+        public List<Update> Updates { get; set; }
         public string Estado { get; set; }
 
     }

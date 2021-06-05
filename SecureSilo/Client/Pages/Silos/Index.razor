@@ -24,7 +24,7 @@ else
             <tr>
                 <th>Código Silo</th>
                 <th>Descripción</th>
-                <th>Panel</th>
+                <th>Campo</th>
                 <th></th>
             </tr>
         </thead>
@@ -34,7 +34,7 @@ else
                 <tr>
                     <td>@silo.Id</td>
                     <td>@silo.Descripcion</td>
-                    <td>@silo.Panel.Descripcion</td>
+                    <td>@silo.Campo.Descripcion</td>
                     <td>
                         <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
                         <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>

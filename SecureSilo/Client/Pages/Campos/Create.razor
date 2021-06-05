@@ -1,0 +1,17 @@
+﻿@page "/crear-campo"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Configurar nuevo campo</h3>
+<FormularioCampos TextoBoton="Confirmar" OnValidSubmit="@CrearCampo" Campo="@campo" />
+
+@code {
+    Campo campo = new Campo();
+
+    async Task CrearCampo()
+    {
+        await Http.PostAsJsonAsync("campos", campo);
+        NavManager.NavigateTo("campos");
+    }
+
+}

@@ -16,16 +16,16 @@
     </div>
 
     <div class="form-group">
-        <label>Panel</label>
+        <label>Campo</label>
         <div>
             <InputSelectNumber class="form-control"
-                               ValueChanged="@((int value) => ValorPanelCambiado(value))"
-                               ValueExpression="@(() => panelId )"
-                               Value="panelId">
-                <option value="0">-- Seleccione un Panel --</option>
-                @foreach (var item in Paneles)
+                               ValueChanged="@((int value) => ValorCampoCambiado(value))"
+                               ValueExpression="@(() => campoId )"
+                               Value="campoId">
+                <option value="0">-- Seleccione un Campo --</option>
+                @foreach (var item in Campos)
                 {
-                    @if (item.Id == panelId)
+                    @if (item.Id == campoId)
                     {
                         <option selected value="@item.Id">@item.Descripcion</option>
                     }
@@ -68,22 +68,22 @@
     [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     List<Silo> Silos = new List<Silo>();
-    List<Panel> Paneles = new List<Panel>();
-    private int panelId = 0;
+    List<Campo> Campos = new List<Campo>();
+    private int campoId = 0;
 
     protected override async Task OnInitializedAsync()
     {
         if (Dispositivo.Silo != null)
         {
-            panelId = Dispositivo.Silo.PanelID;
-            await CargarSilos(Dispositivo.Silo.PanelID);
+            campoId = Dispositivo.Silo.CampoID;
+            await CargarSilos(Dispositivo.Silo.CampoID);
         }
-        Paneles = await http.GetFromJsonAsync<List<Panel>>("paneles");
+        Campos = await http.GetFromJsonAsync<List<Campo>>("campos");
     }
-    private async Task ValorPanelCambiado(int value)
+    private async Task ValorCampoCambiado(int value)
     {
         this.Dispositivo.SiloID = 0;
-        panelId = value;
+        campoId = value;
 
         await InvokeAsync(StateHasChanged);
 
@@ -96,8 +96,8 @@
             await CargarSilos(value);
         }
     }
-    private async Task CargarSilos(int panelId)
+    private async Task CargarSilos(int campoId)
     {
-        Silos = await http.GetFromJsonAsync<List<Silo>>($"paneles/{panelId}/silos");
+        Silos = await http.GetFromJsonAsync<List<Silo>>($"campos/{campoId}/silos");
     }
 }
