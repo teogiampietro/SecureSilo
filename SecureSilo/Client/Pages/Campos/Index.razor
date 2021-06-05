@@ -4,12 +4,13 @@
 
 @attribute [Authorize]
 
-<h1>Campos</h1>
+<div class="container">
+    <h1>Campos</h1>
 
-<div>
-    <a class="btn btn-success" href="crear-campo">Nuevo campo</a>
-</div>
-@if (campos == null)
+    <div>
+        <a class="btn btn-success" href="crear-campo">Nuevo campo</a>
+    </div>
+    @if (campos == null)
 {
     <text> Cargando campos...</text>
 }
@@ -31,19 +32,21 @@ else
         <tbody>
             @foreach (var campo in campos)
             {
-                <tr>
-                    <td>@campo.Id</td>
-                    <td>@campo.Descripcion</td>
-                    <td>
-                        <a class="btn btn-success" href="editar-campo/@campo.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => BorrarCampo(campo.Id))">Borrar</button>
-                    </td>
-                </tr>
+            <tr>
+                <td>@campo.Id</td>
+                <td>@campo.Descripcion</td>
+                <td>
+                    <a class="btn btn-success" href="editar-campo/@campo.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => BorrarCampo(campo.Id))">Borrar</button>
+                </td>
+            </tr>
             }
         </tbody>
 
     </table>
 }
+</div>
+
 @code {
     Campo[] campos { get; set; }
 

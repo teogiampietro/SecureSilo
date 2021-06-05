@@ -3,48 +3,50 @@
 @inject IJSRuntime JS
 
 @attribute [Authorize]
+<div class="container">
+    <h1>Silos</h1>
 
-<h1>Silos</h1>
-
-<div>
-    <a class="btn btn-success" href="crear-silo">Nuevo Silo</a>
-</div>
-@if (silos == null)
-{
-    <text> Cargando silos... </text>
-}
-else if (silos.Length == 0)
-{
-    <text> No se encontraron silos en la base de datos. </text>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Código Silo</th>
-                <th>Descripción</th>
-                <th>Campo</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var silo in silos)
-            {
+    <div>
+        <a class="btn btn-success" href="crear-silo">Nuevo Silo</a>
+    </div>
+    @if (silos == null)
+    {
+        <text> Cargando silos... </text>
+    }
+    else if (silos.Length == 0)
+    {
+        <text> No se encontraron silos en la base de datos. </text>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@silo.Id</td>
-                    <td>@silo.Descripcion</td>
-                    <td>@silo.Campo.Descripcion</td>
-                    <td>
-                        <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
-                    </td>
-
+                    <th>Código Silo</th>
+                    <th>Descripción</th>
+                    <th>Campo</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var silo in silos)
+                {
+                    <tr>
+                        <td>@silo.Id</td>
+                        <td>@silo.Descripcion</td>
+                        <td>@silo.Campo.Descripcion</td>
+                        <td>
+                            <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
 
 
 @code{

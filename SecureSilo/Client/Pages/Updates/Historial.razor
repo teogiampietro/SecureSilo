@@ -3,61 +3,62 @@
 @inject IJSRuntime JS
 
 @attribute [Authorize]
-
-<h3>Historial de actualizaciones por dispositivos</h3>
-<div class="d-flex justify-content-center">
-    <label class="sr-only" for="nombre-filtro">Filtrar</label>
-    <input type="text" class="form-control mb-2 mr-sm-2"
-           @bind="nombreDispositivoFiltro" placeholder="Filtrar por Dispositivo" />
-    <button type="button" class="btn btn-dark mr-sm-2 mb-2"
-            @onclick="Filtrar">
-        Filtrar
-    </button>
-    <button type="button" class="btn btn-danger  mb-2"
-            @onclick="Limpiar">
-        Limpiar
-    </button>
-</div>
-@if (dispositivos == null)
-{
-    <text> Cargando actualizaciones... </text>
-}
-else if (dispositivos.Length == 0)
-{
-    <text> No se encontraron actualizaciones cargadas en la base de datos. </text>
-}
-else
-{
-    @foreach (var dispositivo in dispositivos)
-
+<div class="container">
+    <h3>Historial de actualizaciones por dispositivos</h3>
+    <div class="d-flex justify-content-center">
+        <label class="sr-only" for="nombre-filtro">Filtrar</label>
+        <input type="text" class="form-control mb-2 mr-sm-2"
+               @bind="nombreDispositivoFiltro" placeholder="Filtrar por Dispositivo" />
+        <button type="button" class="btn btn-dark mr-sm-2 mb-2"
+                @onclick="Filtrar">
+            Filtrar
+        </button>
+        <button type="button" class="btn btn-danger  mb-2"
+                @onclick="Limpiar">
+            Limpiar
+        </button>
+    </div>
+    @if (dispositivos == null)
     {
-        <h4 class="d-flex justify-content-center font-weight-bold">@(dispositivo.Descripcion )</h4>
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Fecha Hora</th>
-                    <th scope="col">Temperatura</th>
-                    <th scope="col">Humedad</th>
-                    <th scope="col">Movimiento</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var update in dispositivo.Updates)
-                {
-                    <tr>
-                        <td scope="row">@update.Id</td>
-                        <td scope="row">@update.FechaHora</td>
-                        <td scope="row">@update.Temperatura</td>
-                        <td scope="row">@update.Humedad</td>
-                        <td scope="row">@update.Movimiento</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
+        <text> Cargando actualizaciones... </text>
     }
-}
+    else if (dispositivos.Length == 0)
+    {
+        <text> No se encontraron actualizaciones cargadas en la base de datos. </text>
+    }
+    else
+    {
+        @foreach (var dispositivo in dispositivos)
+
+        {
+            <h4 class="d-flex justify-content-center font-weight-bold">@(dispositivo.Descripcion )</h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Fecha Hora</th>
+                        <th scope="col">Temperatura</th>
+                        <th scope="col">Humedad</th>
+                        <th scope="col">Movimiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var update in dispositivo.Updates)
+                    {
+                        <tr>
+                            <td scope="row">@update.Id</td>
+                            <td scope="row">@update.FechaHora</td>
+                            <td scope="row">@update.Temperatura</td>
+                            <td scope="row">@update.Humedad</td>
+                            <td scope="row">@update.Movimiento</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+    }
+</div>
 
 @code {
     Dispositivo[] dispositivos { get; set; }
@@ -73,7 +74,7 @@ else
     }
     private async Task Filtrar()
     {
-        if (nombreDispositivoFiltro == string.Empty )
+        if (nombreDispositivoFiltro == string.Empty)
         {
             await CargarUpdates();
         }
