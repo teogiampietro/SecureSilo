@@ -9,6 +9,7 @@
         <button class="btn btn-secondary my-2 my-sm-0" type="submit" @onclick="ToLogin">Iniciar sesión</button>
     </NotAuthorized>
     <Authorized>
+        <a href="authentication/profile" class="navbar-brand">Perfil</a>
         <button class="btn btn-secondary my-2 my-sm-0" type="submit" @onclick="BeginSignOut">Salir</button>
     </Authorized>
 
@@ -22,5 +23,9 @@
     private async Task ToLogin(MouseEventArgs args)
     {
         Navigation.NavigateTo("/authentication/login");
+    }
+    private async Task ToProfile(MouseEventArgs args)
+    {
+        Navigation.NavigateTo("/authentication/profile");
     }
 }
