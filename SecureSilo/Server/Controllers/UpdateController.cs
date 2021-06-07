@@ -90,6 +90,27 @@ namespace SecureSilo.Server.Controllers
             newSilo = context.Silos.FirstOrDefault();
             return newSilo;
         }
+        private void CalcularEstadoUpdate(Update upd)
+        {
+            if (upd.Movimiento == "ok")
+            {
+                if (upd.Temperatura >= Constants.temperaturaValue && upd.Humedad >= Constants.humedadValue)
+                {
+                    //ok
+
+                }
+                else
+                {
+                    //advertencia
+                    if (upd.Temperatura >= Constants.temperaturaMaxValue || upd.Humedad >= Constants.humedadMaxValue )
+                    {
+                        //alerta
+                    }
+
+                }
+                //alerta
+            }
+        }
         #endregion
 
     }

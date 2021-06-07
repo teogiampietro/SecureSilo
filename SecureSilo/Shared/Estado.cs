@@ -10,13 +10,6 @@ namespace SecureSilo.Shared
 {
     public class Estado
     {
-        struct Estados
-        {
-            public string Correcto => "Correcto";
-            public string SinDatos => "SinDatos";
-            public string Advertencia => "Advertencia";
-            public string Alerta => "Alerta";
-
-        }
+        public string Descripcion { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace SecureSilo.Shared
         public string Movimiento { get; set; }
         public float Temperatura { get; set; }
         public float Humedad { get; set; }
-
         public int DispositivoID { get; set; }
         public Dispositivo Dispositivo { get; set; }
 
