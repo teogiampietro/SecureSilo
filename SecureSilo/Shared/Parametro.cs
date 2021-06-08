@@ -8,11 +8,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecureSilo.Shared
 {
-    public class Estado
+    public class Parametro
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public string Descripcion { get; set; }
+        public string Riesgo { get; set; }
+        public double HumedadValue { get; set; }
+        public double TemperaturaValue { get; set; }
+        public double CO2Value { get; set; }
     }
 }

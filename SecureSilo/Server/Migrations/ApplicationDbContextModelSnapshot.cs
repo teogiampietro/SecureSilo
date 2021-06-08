@@ -314,12 +314,20 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LocalidadId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ubicacion")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("LocalidadId");
 
                     b.ToTable("Campos");
                 });
@@ -337,8 +345,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NumeroSerie")
-                        .IsRequired()
+                    b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiloID")
@@ -349,6 +356,101 @@ namespace SecureSilo.Server.Migrations
                     b.HasIndex("SiloID");
 
                     b.ToTable("Dispositivos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Grano", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Granos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Localidad", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProvinciaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvinciaId");
+
+                    b.ToTable("Localidades");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Pais", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Paises");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Parametro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("CO2Value")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("GranoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("HumedadValue")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Riesgo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("TemperaturaValue")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GranoId");
+
+                    b.ToTable("Parametros");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Provincia", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PaisId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaisId");
+
+                    b.ToTable("Provincias");
                 });
 
             modelBuilder.Entity("SecureSilo.Shared.Silo", b =>
@@ -367,9 +469,17 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GranoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MAC")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CampoID");
+
+                    b.HasIndex("GranoID");
 
                     b.ToTable("Silos");
                 });
@@ -381,14 +491,17 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<double>("CO2")
+                        .HasColumnType("float");
+
                     b.Property<int>("DispositivoID")
                         .HasColumnType("int");
 
                     b.Property<string>("FechaHora")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Humedad")
-                        .HasColumnType("real");
+                    b.Property<double>("Humedad")
+                        .HasColumnType("float");
 
                     b.Property<string>("Movimiento")
                         .HasColumnType("nvarchar(max)");
@@ -396,8 +509,8 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("NumeroSerie")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Temperatura")
-                        .HasColumnType("real");
+                    b.Property<double>("Temperatura")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -462,6 +575,12 @@ namespace SecureSilo.Server.Migrations
                     b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
                         .WithMany("Campos")
                         .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("SecureSilo.Shared.Localidad", "Localidad")
+                        .WithMany()
+                        .HasForeignKey("LocalidadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SecureSilo.Shared.Dispositivo", b =>
@@ -473,11 +592,38 @@ namespace SecureSilo.Server.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SecureSilo.Shared.Localidad", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Provincia", "Provincia")
+                        .WithMany()
+                        .HasForeignKey("ProvinciaId");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Parametro", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Grano", null)
+                        .WithMany("Parametros")
+                        .HasForeignKey("GranoId");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Provincia", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Pais", "Pais")
+                        .WithMany()
+                        .HasForeignKey("PaisId");
+                });
+
             modelBuilder.Entity("SecureSilo.Shared.Silo", b =>
                 {
                     b.HasOne("SecureSilo.Shared.Campo", "Campo")
                         .WithMany("ListaSilos")
                         .HasForeignKey("CampoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecureSilo.Shared.Grano", "Grano")
+                        .WithMany()
+                        .HasForeignKey("GranoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

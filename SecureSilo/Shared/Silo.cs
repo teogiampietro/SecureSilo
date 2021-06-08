@@ -12,14 +12,23 @@ namespace SecureSilo.Shared
     {
         [Key]
         public int Id { get; set; }
+        public string MAC { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
-
-        //Un silo tiene una lista de dispositivos
-        public List<Dispositivo> Dispositivos { get; set; }
 
         //Un silo se encuentra en un campo
         public int CampoID { get; set; }
         public Campo Campo { get; set; }
+
+        //Un silo posee un tipo de grano
+        public int GranoID { get; set; }
+        public Grano Grano { get; set; }
+
+        //Un silo tiene una lista de dispositivos
+        public List<Dispositivo> Dispositivos { get; set; }
+
+       
+
+
     }
 }

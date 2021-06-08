@@ -8,12 +8,12 @@ namespace SecureSilo.Shared
     {
 
         //TODO: Parametrizar?
-        public const double humedadValue = 25.5;
-        public const double temperaturaValue = 30;
+        public const double humedadValue = 14;
+        public const double temperaturaValue = 24;
         public const double dioxidValue = 10;
 
-        public const double humedadMaxValue = 30;
-        public const double temperaturaMaxValue = 35;
+        public const double humedadMaxValue = 16;
+        public const double temperaturaMaxValue = 30;
         public const double dioxidMaxValue = 15;
 
         //Estados

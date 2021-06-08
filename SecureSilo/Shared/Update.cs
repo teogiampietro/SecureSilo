@@ -15,8 +15,9 @@ namespace SecureSilo.Shared
         public string NumeroSerie { get; set; }
         public string FechaHora { get; set; }
         public string Movimiento { get; set; }
-        public float Temperatura { get; set; }
-        public float Humedad { get; set; }
+        public double Temperatura { get; set; }
+        public double Humedad { get; set; }
+        public double CO2 { get; set; }
         public int DispositivoID { get; set; }
         public Dispositivo Dispositivo { get; set; }
 
