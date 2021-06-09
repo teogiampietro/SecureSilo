@@ -18,9 +18,15 @@ namespace SecureSilo.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+        public DbSet<Pais> Paises { get; set; }
+        public DbSet<Provincia> Provincias { get; set; }
+        public DbSet<Localidad> Localidades { get; set; }
         public DbSet<Dispositivo> Dispositivos { get; set; }
         public DbSet<Silo> Silos { get; set; }
         public DbSet<Campo> Campos { get; set; }
-        public DbSet<Update> Updates { get; set; }
+        public DbSet<Update> Updates { get; set; } 
+        public DbSet<Grano> Granos { get; set; }
+        public DbSet<Parametro> Parametros { get; set; }
+
     }
 }
