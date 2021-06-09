@@ -1,8 +1,13 @@
 ﻿@page "/editar-campo/{IdCampo:int}"
 @inject HttpClient Http
 @inject NavigationManager NavManager
-<h3> Editar campo</h3>
-<FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+
+<div class="container">
+    <h3> Editar campo</h3>
+    <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+</div>
+
+
 
 @code {
     [Parameter] public int IdCampo { get; set; }

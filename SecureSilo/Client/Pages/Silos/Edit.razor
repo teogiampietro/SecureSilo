@@ -1,8 +1,11 @@
 ﻿@page "/editar-silo/{IdSilo:int}"
 @inject HttpClient Http
 @inject NavigationManager NavManager
-<h3> Editar silo</h3>
-<FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />
+
+<div class="container">
+    <h3> Editar silo</h3>
+    <FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />
+</div>
 
 @code {
     [Parameter] public int IdSilo { get; set; }

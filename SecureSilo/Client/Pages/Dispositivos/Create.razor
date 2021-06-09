@@ -1,9 +1,10 @@
 ﻿@page "/crear-dispositivo"
 @inject HttpClient Http
 @inject NavigationManager NavManager
-
-<h3>Configurar nuevo dispositivo</h3>
-<FormularioDispositivos TextoBoton="Confirmar" OnValidSubmit="@CrearDispositivo" Dispositivo="@dispositivo" />
+<div class="container">
+    <h3>Configurar nuevo dispositivo</h3>
+    <FormularioDispositivos TextoBoton="Confirmar" OnValidSubmit="@CrearDispositivo" Dispositivo="@dispositivo" />
+</div>
 
 @code {
     Dispositivo dispositivo = new Dispositivo();

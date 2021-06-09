@@ -1,11 +1,14 @@
 ﻿@page "/editar-dispositivo/{IdDispositivo:int}"
 @inject HttpClient Http
 @inject NavigationManager NavManager
-<h3> Editar dispositivo</h3>
-@if (dispositivo != null)
-{
-    <FormularioDispositivos TextoBoton="Editar Dispositivo" OnValidSubmit="@EditarDispositivo" Dispositivo="@dispositivo" />
-}
+<div class="container">
+    <h3> Editar dispositivo</h3>
+    @if (dispositivo != null)
+    {
+        <FormularioDispositivos TextoBoton="Editar Dispositivo" OnValidSubmit="@EditarDispositivo" Dispositivo="@dispositivo" />
+    }
+</div>
+
 @code {
     [Parameter] public int IdDispositivo { get; set; }
     Dispositivo dispositivo;

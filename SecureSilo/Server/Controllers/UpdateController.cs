@@ -28,7 +28,7 @@ namespace SecureSilo.Server.Controllers
                 .Where(z => z.Updates.Count > 0)
                 .ToListAsync();
         }
-        
+
         [HttpGet("{id}", Name = "obtenerUpdate")]
         public async Task<ActionResult<Update>> Get(int id)
         {
@@ -53,18 +53,20 @@ namespace SecureSilo.Server.Controllers
                     Dispositivo dsp = FindDispositivo(update.NumeroSerie);
                     if (dsp == null)
                     {
-                        //Si no encuentro el dispositivo por numero de serie, quiere decir que no está cargado.
-                        //Así que creo un nuevo dispositivo con cualquier silo asignado. Deberá configurar el usuario.
+                        //Si no encuentro el dispositivo, quiere decir que no está cargado. Es un nuevo dispositivo en el sistema.
+                        //Así que creo un nuevo dispositivo con un nuevo silo asignado. Deberá configurar el usuario.
                         dsp = new Dispositivo
                         {
-                            NumeroSerie = update.NumeroSerie,
+                            MAC = update.NumeroSerie,
                             Descripcion = string.Empty,
                             Silo = FindFirstSilo()
                         };
                         await cDispositivos.Post(dsp);
                     }
+                    //Si encuentro dispositivo es una actualización normal para un dispositivo ya cargado
                     update.Dispositivo = dsp;
                     update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
+                    update.Dispositivo.Estado = CalcularEstadoUpdate(update);
                     update.DispositivoID = dsp.Id;
                     update.FechaHora = DateTime.Now.ToString();
                     this.context.Add(update);
@@ -81,35 +83,54 @@ namespace SecureSilo.Server.Controllers
         private Dispositivo FindDispositivo(string numeroSerie)
         {
             Dispositivo newDispositivo = new Dispositivo();
-            newDispositivo = context.Dispositivos.Where(x => x.NumeroSerie == numeroSerie).FirstOrDefault();
+            newDispositivo = context.Dispositivos.Where(x => x.MAC == numeroSerie).FirstOrDefault();
             return newDispositivo;
         }
         private Silo FindFirstSilo()
         {
             Silo newSilo = new Silo();
             newSilo = context.Silos.FirstOrDefault();
+            if (newSilo.Dispositivos.Count >= 10)
+            {
+                newSilo.Campo = context.Campos.FirstOrDefault();
+                newSilo.Descripcion = "SinAsignar";
+                newSilo.CampoID = newSilo.Campo.Id;
+                context.Silos.Add(newSilo);
+                context.SaveChanges();
+                return newSilo;
+            }
             return newSilo;
         }
-        private void CalcularEstadoUpdate(Update upd)
+        private string CalcularEstadoUpdate(Update upd)
         {
-            if (upd.Movimiento == "ok")
+            if (upd.Movimiento != null || upd.Temperatura != double.MinValue || upd.Humedad != double.MinValue)
             {
-                if (upd.Temperatura >= Constants.temperaturaValue && upd.Humedad >= Constants.humedadValue)
+                if (upd.Movimiento == "ok")
                 {
-                    //ok
-
+                    if (upd.Temperatura <= Constants.temperaturaValue && upd.Humedad <= Constants.humedadValue)
+                    {
+                        return Constants.Ok;
+                    }
+                    else
+                    {
+                        if ((upd.Temperatura > Constants.temperaturaValue && upd.Temperatura < Constants.temperaturaMaxValue) ||
+                             (upd.Humedad > Constants.humedadValue && upd.Temperatura < Constants.humedadMaxValue))
+                        {
+                            return Constants.Advertencia;
+                        }
+                        if (upd.Temperatura >= Constants.temperaturaMaxValue || upd.Humedad >= Constants.humedadMaxValue)
+                        {
+                            return Constants.Alerta;
+                        }
+                    }                  
                 }
                 else
                 {
-                    //advertencia
-                    if (upd.Temperatura >= Constants.temperaturaMaxValue || upd.Humedad >= Constants.humedadMaxValue )
-                    {
-                        //alerta
-                    }
-
+                    return Constants.Alerta;
                 }
-                //alerta
+                return Constants.SinDatos;
             }
+            return Constants.SinDatos;
         }
         #endregion
 

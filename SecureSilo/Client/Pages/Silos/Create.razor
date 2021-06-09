@@ -2,8 +2,10 @@
 @inject HttpClient Http
 @inject NavigationManager NavManager
 
-<h3>Configurar nuevo silo</h3>
-<FormularioSilos TextoBoton="Confirmar" OnValidSubmit="@CrearSilo" Silo="@silo" />
+<div class="container">
+    <h3>Configurar nuevo silo</h3>
+    <FormularioSilos TextoBoton="Confirmar" OnValidSubmit="@CrearSilo" Silo="@silo" />
+</div>
 
 @code {
     Silo silo = new Silo();
