@@ -2,8 +2,11 @@
 @inject HttpClient Http
 @inject NavigationManager NavManager
 
-<h3>Configurar nuevo campo</h3>
-<FormularioCampos TextoBoton="Confirmar" OnValidSubmit="@CrearCampo" Campo="@campo" />
+<div class="container">
+    <h3>Configurar nuevo campo</h3>
+    <FormularioCampos TextoBoton="Confirmar" OnValidSubmit="@CrearCampo" Campo="@campo" />
+</div>
+
 @code {
     Campo campo = new Campo();
 
