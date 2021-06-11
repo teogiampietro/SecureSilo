@@ -1,0 +1,9 @@
+﻿
+//TODO: Cambiar nombre panel por campo DONE
+//TODO: Agregar botones de cancelar en la modificación
+
+//https://inta.gob.ar/sites/default/files/script-tmp-inta_monitoreo_de_silobolsas_mediante_la_medicin_de_c.pdf
+//https://inta.gob.ar/sites/default/files/script-tmp-inta_almacen_granos14.pdf
+//https://inta.gob.ar/sites/default/files/script-tmp-inta_-_t7n1__chiesa.pdf
+//https://produccion-animal.com.ar/produccion_y_manejo_reservas/reservas_granos/58-conservacion_de_granos.pdf
+

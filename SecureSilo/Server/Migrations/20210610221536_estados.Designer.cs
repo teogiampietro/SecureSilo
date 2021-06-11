@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210610221536_estados")]
+    partial class estados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,8 +344,8 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EstadoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Estado")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
@@ -352,8 +354,6 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EstadoId");
 
                     b.HasIndex("SiloID");
 
@@ -484,8 +484,8 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EstadoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Estado")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GranoID")
                         .HasColumnType("int");
@@ -496,8 +496,6 @@ namespace SecureSilo.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CampoID");
-
-                    b.HasIndex("EstadoId");
 
                     b.HasIndex("GranoID");
 
@@ -511,25 +509,25 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("A")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("C")
+                    b.Property<double>("CO2")
                         .HasColumnType("float");
 
                     b.Property<int>("DispositivoID")
                         .HasColumnType("int");
 
-                    b.Property<string>("F")
+                    b.Property<string>("FechaHora")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("H")
+                    b.Property<double>("Humedad")
                         .HasColumnType("float");
 
-                    b.Property<string>("M")
+                    b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("T")
+                    b.Property<string>("Movimiento")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Temperatura")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -605,10 +603,6 @@ namespace SecureSilo.Server.Migrations
 
             modelBuilder.Entity("SecureSilo.Shared.Dispositivo", b =>
                 {
-                    b.HasOne("SecureSilo.Shared.Estado", "Estado")
-                        .WithMany()
-                        .HasForeignKey("EstadoId");
-
                     b.HasOne("SecureSilo.Shared.Silo", "Silo")
                         .WithMany("Dispositivos")
                         .HasForeignKey("SiloID")
@@ -644,10 +638,6 @@ namespace SecureSilo.Server.Migrations
                         .HasForeignKey("CampoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SecureSilo.Shared.Estado", "Estado")
-                        .WithMany()
-                        .HasForeignKey("EstadoId");
 
                     b.HasOne("SecureSilo.Shared.Grano", "Grano")
                         .WithMany()

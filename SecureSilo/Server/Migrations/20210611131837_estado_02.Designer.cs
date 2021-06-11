@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210611131837_estado_02")]
+    partial class estado_02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -511,25 +513,25 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("A")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("C")
+                    b.Property<double>("CO2")
                         .HasColumnType("float");
 
                     b.Property<int>("DispositivoID")
                         .HasColumnType("int");
 
-                    b.Property<string>("F")
+                    b.Property<string>("FechaHora")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("H")
+                    b.Property<double>("Humedad")
                         .HasColumnType("float");
 
-                    b.Property<string>("M")
+                    b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("T")
+                    b.Property<string>("Movimiento")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Temperatura")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

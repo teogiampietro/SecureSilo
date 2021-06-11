@@ -15,19 +15,19 @@ else
         @foreach (var _silo in silos)
             foreach (var _dsp in _silo.Dispositivos)
             {
-                @switch (_dsp.Estado)
+                @switch (_dsp.Estado.Id)
                 {
-                    case Ok:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success">@_dsp.MAC</button>
+                    case 1:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@_dsp.MAC</button>
                         break;
-                    case Advertencia:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@_dsp.MAC</button>
-                        break;
-                    case Alerta:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger ">@_dsp.MAC</button>
-                        break;
-                    case NoDatos:
+                    case 2:
                         <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.MAC</button>
+                        break;
+                    case 3:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success ">@_dsp.MAC</button>
+                        break;
+                    case 4:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@_dsp.MAC</button>
                         break;
                     default:
                         <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.MAC</button>
@@ -39,14 +39,7 @@ else
     </div>
 }
 
-
-
-
 @code {
-    private const string Alerta = "Alerta";
-    private const string NoDatos = "NoDatos";
-    private const string Ok = "Ok";
-    private const string Advertencia = "Advertencia";
 
     // [Parameter] public Silo Silo { get; set; } = new Silo();
     // List<Silo> silos = new List<Silo>();

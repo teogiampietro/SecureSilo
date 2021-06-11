@@ -43,47 +43,61 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
-            DispositivosController cDispositivos = new DispositivosController(context);
+            //jsonUpdateList = PrepararJson(jsonUpdateList);
             string[] updateList = jsonUpdateList.Split(";");
-            foreach (var item in updateList)
+
+            DispositivosController cDispositivos = new DispositivosController(context);
+
+            Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
+            _silo = SiloExist(_silo);
+            try
             {
-                try
+                if (_silo == null)
                 {
-                    Update update = JsonSerializer.Deserialize<Update>(item);
-                    Dispositivo dsp = FindDispositivo(update.NumeroSerie);
-                    if (dsp == null)
-                    {
-                        //Si no encuentro el dispositivo, quiere decir que no está cargado. Es un nuevo dispositivo en el sistema.
-                        //Así que creo un nuevo dispositivo con un nuevo silo asignado. Deberá configurar el usuario.
-                        dsp = new Dispositivo
-                        {
-                            MAC = update.NumeroSerie,
-                            Descripcion = string.Empty,
-                            Silo = FindFirstSilo()
-                        };
-                        await cDispositivos.Post(dsp);
-                    }
-                    //Si encuentro dispositivo es una actualización normal para un dispositivo ya cargado
-                    update.Dispositivo = dsp;
-                    update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
-                    update.Dispositivo.Estado = CalcularEstadoUpdate(update);
-                    update.DispositivoID = dsp.Id;
-                    update.FechaHora = DateTime.Now.ToString();
-                    this.context.Add(update);
+                    //no encontró silo, entonces tengo que crearlo
                 }
-                catch (Exception)
+                else
                 {
-                    throw;
+
+                    //si encontró silo, ahora tengo que actualizar los dispositivos.
+                    updateList = updateList.Where((source, index) => index != 0).ToArray(); //remuevo el primer elemento, porque es un elemento de tipo silo
+                    foreach (var item in updateList)
+                    {
+                        Update update = JsonSerializer.Deserialize<Update>(item.ToString());
+                        Dispositivo dsp = FindDispositivo(update.M);
+                        if (dsp == null)
+                        {
+                            dsp = new Dispositivo
+                            {
+                                MAC = update.M,
+                                Descripcion = string.Empty,
+                                Silo = _silo
+                            };
+                            await cDispositivos.Post(dsp);
+                        }
+                        update.Dispositivo = dsp;
+                        update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
+                        update.Dispositivo.Estado = CalcularEstadoUpdate(update, _silo.Grano);
+                        update.DispositivoID = dsp.Id;
+                        update.F = DateTime.Now.ToString();
+                        this.context.Add(update);
+                    }
                 }
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
             await context.SaveChangesAsync();
             return NoContent();
         }
         #region Private Methods
-        private Dispositivo FindDispositivo(string numeroSerie)
+        private Dispositivo FindDispositivo(string MAC)
         {
             Dispositivo newDispositivo = new Dispositivo();
-            newDispositivo = context.Dispositivos.Where(x => x.MAC == numeroSerie).FirstOrDefault();
+            newDispositivo = context.Dispositivos.Where(x => x.MAC == MAC).FirstOrDefault();
             return newDispositivo;
         }
         private Silo FindFirstSilo()
@@ -101,36 +115,58 @@ namespace SecureSilo.Server.Controllers
             }
             return newSilo;
         }
-        private string CalcularEstadoUpdate(Update upd)
+        private Estado CalcularEstadoUpdate(Update upd, Grano grano)
         {
-            if (upd.Movimiento != null || upd.Temperatura != double.MinValue || upd.Humedad != double.MinValue)
+            List<Estado> _estados = context.Estados.ToList();
+
+            if (String.IsNullOrEmpty(upd.A) || upd.T != double.MinValue || upd.H != double.MinValue)
             {
-                if (upd.Movimiento == "ok")
+                if (upd.A == "ok")
                 {
-                    if (upd.Temperatura <= Constants.temperaturaValue && upd.Humedad <= Constants.humedadValue)
+                    if (upd.T <= Constants.temperaturaValue && upd.H <= Constants.humedadValue)
                     {
-                        return Constants.Ok;
+                        return _estados[2];   //Ok
                     }
                     else
                     {
-                        if ((upd.Temperatura > Constants.temperaturaValue && upd.Temperatura < Constants.temperaturaMaxValue) ||
-                             (upd.Humedad > Constants.humedadValue && upd.Temperatura < Constants.humedadMaxValue))
+                        if ((upd.T > Constants.temperaturaValue && upd.T < Constants.temperaturaMaxValue) ||
+                             (upd.H > Constants.humedadValue && upd.T < Constants.humedadMaxValue))
                         {
-                            return Constants.Advertencia;
+                            return _estados[3]; //Advertencia
                         }
-                        if (upd.Temperatura >= Constants.temperaturaMaxValue || upd.Humedad >= Constants.humedadMaxValue)
+                        if (upd.T >= Constants.temperaturaMaxValue || upd.H >= Constants.humedadMaxValue)
                         {
-                            return Constants.Alerta;
+                            return _estados[0]; //Alerta
                         }
-                    }                  
+                    }
                 }
                 else
                 {
-                    return Constants.Alerta;
+                    return _estados[0]; //Alerta
                 }
-                return Constants.SinDatos;
+                return _estados[1]; //Sin Datos
             }
-            return Constants.SinDatos;
+            return _estados[1];
+        }
+
+
+        private Silo SiloExist(Silo _silo)
+        {
+            _silo = context.Silos.Include(a => a.Campo)
+                .Include(b => b.Grano.Parametros)
+                .Include(c => c.Estado)
+                .Where(x => x.MAC == _silo.MAC).FirstOrDefault();
+            return _silo;
+        }
+        private string PrepararJson(string _json)
+        {
+            _json = _json.Replace("\"M\"", "\"MAC\"");
+            _json = _json.Replace("\"F\"", "\"FechaHora\"");
+            _json = _json.Replace("\"A\"", "Movimiento");
+            _json = _json.Replace("\"T\"", "\"Temperatura\"");
+            _json = _json.Replace("\"H\"", "\"Humedad\"");
+            _json = _json.Replace("\"C\"", "\"CO2\"");
+            return _json;
         }
         #endregion
 

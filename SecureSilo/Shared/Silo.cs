@@ -14,7 +14,7 @@ namespace SecureSilo.Shared
         public int Id { get; set; }
         public string MAC { get; set; }
         public string Descripcion { get; set; }
-        public string Estado { get; set; }
+        public Estado Estado { get; set; }
 
         //Un silo se encuentra en un campo
         public int CampoID { get; set; }

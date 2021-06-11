@@ -27,6 +27,7 @@ namespace SecureSilo.Server.Data
         public DbSet<Update> Updates { get; set; } 
         public DbSet<Grano> Granos { get; set; }
         public DbSet<Parametro> Parametros { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
     }
 }
