@@ -4,8 +4,11 @@
 
 <div class="container">
     <h3> Editar campo</h3>
-    <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
-</div>
+    @if (campo != null)
+    {
+        <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+    }
+    </div>
 
 @code {
     [Parameter] public int IdCampo { get; set; }
