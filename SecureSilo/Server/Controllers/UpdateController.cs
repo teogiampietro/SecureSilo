@@ -54,10 +54,8 @@ namespace SecureSilo.Server.Controllers
             {
                 if (_silo == null)
                 {
-                    //no encontró silo, entonces tengo que crearlo
+                   //si no encuentro silo tengo que crear uno
                 }
-                else
-                {
 
                     //si encontró silo, ahora tengo que actualizar los dispositivos.
                     updateList = updateList.Where((source, index) => index != 0).ToArray(); //remuevo el primer elemento, porque es un elemento de tipo silo
@@ -71,8 +69,9 @@ namespace SecureSilo.Server.Controllers
                             {
                                 MAC = update.M,
                                 Descripcion = string.Empty,
-                                Silo = _silo
-                            };
+                                Silo = _silo,
+                                Estado = CalcularEstadoUpdate(update, _silo.Grano)
+                        };
                             await cDispositivos.Post(dsp);
                         }
                         update.Dispositivo = dsp;
@@ -82,7 +81,7 @@ namespace SecureSilo.Server.Controllers
                         update.F = DateTime.Now.ToString();
                         this.context.Add(update);
                     }
-                }
+                
             }
             catch (Exception)
             {
@@ -157,16 +156,6 @@ namespace SecureSilo.Server.Controllers
                 .Include(c => c.Estado)
                 .Where(x => x.MAC == _silo.MAC).FirstOrDefault();
             return _silo;
-        }
-        private string PrepararJson(string _json)
-        {
-            _json = _json.Replace("\"M\"", "\"MAC\"");
-            _json = _json.Replace("\"F\"", "\"FechaHora\"");
-            _json = _json.Replace("\"A\"", "Movimiento");
-            _json = _json.Replace("\"T\"", "\"Temperatura\"");
-            _json = _json.Replace("\"H\"", "\"Humedad\"");
-            _json = _json.Replace("\"C\"", "\"CO2\"");
-            return _json;
         }
         #endregion
 

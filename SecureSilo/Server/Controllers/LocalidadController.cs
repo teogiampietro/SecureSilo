@@ -18,7 +18,7 @@ namespace SecureSilo.Server.Controllers
         {
             this.context = context;
         }
-        [HttpGet]
+        [HttpGet("{provinciaId}")]
         public async Task<ActionResult<List<Localidad>>> GetLocalidades(int provinciaId)
         {
             return await context.Localidades.Where(x =>x.Provincia.Id == provinciaId).ToListAsync();
