@@ -14,6 +14,9 @@ namespace SecureSilo.Shared
         public int Id { get; set; }
         public string MAC { get; set; }
         public string Descripcion { get; set; }
+        
+        //un silo tiene un estado actual
+        public int EstadoId { get; set; }
         public Estado Estado { get; set; }
 
         //Un silo se encuentra en un campo
@@ -27,7 +30,7 @@ namespace SecureSilo.Shared
         //Un silo tiene una lista de dispositivos
         public List<Dispositivo> Dispositivos { get; set; }
 
-       
+
 
 
     }

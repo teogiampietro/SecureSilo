@@ -43,45 +43,46 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
-            //jsonUpdateList = PrepararJson(jsonUpdateList);
             string[] updateList = jsonUpdateList.Split(";");
-
             DispositivosController cDispositivos = new DispositivosController(context);
-
             Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
             _silo = SiloExist(_silo);
             try
             {
                 if (_silo == null)
                 {
-                   //si no encuentro silo tengo que crear uno
+                    //si no encuentro silo tengo que crear uno
+                    _silo = new Silo
+                    {
+
+                    };
                 }
 
-                    //si encontró silo, ahora tengo que actualizar los dispositivos.
-                    updateList = updateList.Where((source, index) => index != 0).ToArray(); //remuevo el primer elemento, porque es un elemento de tipo silo
-                    foreach (var item in updateList)
+                //si encontró silo, ahora tengo que actualizar los dispositivos.
+                updateList = updateList.Where((source, index) => index != 0).ToArray(); //remuevo el primer elemento, porque es un elemento de tipo silo
+                foreach (var item in updateList)
+                {
+                    Update update = JsonSerializer.Deserialize<Update>(item.ToString());
+                    Dispositivo dsp = FindDispositivo(update.M);
+                    if (dsp == null)
                     {
-                        Update update = JsonSerializer.Deserialize<Update>(item.ToString());
-                        Dispositivo dsp = FindDispositivo(update.M);
-                        if (dsp == null)
+                        dsp = new Dispositivo
                         {
-                            dsp = new Dispositivo
-                            {
-                                MAC = update.M,
-                                Descripcion = string.Empty,
-                                Silo = _silo,
-                                Estado = CalcularEstadoUpdate(update, _silo.Grano)
+                            MAC = update.M,
+                            Descripcion = string.Empty,
+                            Silo = _silo,
+                            Estado = CalcularEstadoUpdate(update, _silo.Grano)
                         };
-                            await cDispositivos.Post(dsp);
-                        }
-                        update.Dispositivo = dsp;
-                        update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
-                        update.Dispositivo.Estado = CalcularEstadoUpdate(update, _silo.Grano);
-                        update.DispositivoID = dsp.Id;
-                        update.F = DateTime.Now.ToString();
-                        this.context.Add(update);
+                        await cDispositivos.Post(dsp);
                     }
-                
+                    update.Dispositivo = dsp;
+                    update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
+                    update.Dispositivo.Estado = CalcularEstadoUpdate(update, _silo.Grano);
+                    update.DispositivoID = dsp.Id;
+                    update.F = DateTime.Now.ToString();
+                    this.context.Add(update);
+                }
+
             }
             catch (Exception)
             {
@@ -116,26 +117,28 @@ namespace SecureSilo.Server.Controllers
         }
         private Estado CalcularEstadoUpdate(Update upd, Grano grano)
         {
+
             List<Estado> _estados = context.Estados.ToList();
 
             if (String.IsNullOrEmpty(upd.A) || upd.T != double.MinValue || upd.H != double.MinValue)
             {
                 if (upd.A == "ok")
                 {
-                    if (upd.T <= Constants.temperaturaValue && upd.H <= Constants.humedadValue)
+                    foreach (var item in grano.Parametros)
                     {
-                        return _estados[2];   //Ok
-                    }
-                    else
-                    {
-                        if ((upd.T > Constants.temperaturaValue && upd.T < Constants.temperaturaMaxValue) ||
-                             (upd.H > Constants.humedadValue && upd.T < Constants.humedadMaxValue))
+                        if (upd.H >= item.HumedadValue)
                         {
-                            return _estados[3]; //Advertencia
-                        }
-                        if (upd.T >= Constants.temperaturaMaxValue || upd.H >= Constants.humedadMaxValue)
-                        {
-                            return _estados[0]; //Alerta
+                            switch (item.Riesgo)
+                            {
+                                case "Alto":
+                                    return _estados[0];
+                                case "Medio":
+                                    return _estados[3];
+                                case "Bajo":
+                                    return _estados[2];
+                                default:
+                                    return _estados[1];
+                            }
                         }
                     }
                 }
@@ -143,9 +146,10 @@ namespace SecureSilo.Server.Controllers
                 {
                     return _estados[0]; //Alerta
                 }
-                return _estados[1]; //Sin Datos
+                return _estados[0]; //Alerta
+
+                //grano.Parametros.Where(a => a.Riesgo == "Alto").Select(b => b.HumedadValue);
             }
-            return _estados[1];
         }
 
 

@@ -34,7 +34,7 @@ namespace SecureSilo.Server.Data
 
                 new Parametro(){ Id = 1, Riesgo = "Alto", CO2Value = 10, HumedadValue = 16, TemperaturaValue = 26 ,GranoID=1},
                 new Parametro(){Id=2,Riesgo="Medio",CO2Value=10,HumedadValue=14,TemperaturaValue=24,GranoID=1},
-                new Parametro(){Id=3,Riesgo="Alto",CO2Value=10,HumedadValue=12,TemperaturaValue=22, GranoID = 1}
+                new Parametro(){Id=3,Riesgo="Bajo",CO2Value=10,HumedadValue=12,TemperaturaValue=22, GranoID = 1}
             };
             builder.Entity<Parametro>().HasData(parametros);                  
 
