@@ -342,20 +342,20 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstadoID")
+                    b.Property<int?>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SiloID")
+                    b.Property<int>("SiloId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstadoID");
+                    b.HasIndex("EstadoId");
 
-                    b.HasIndex("SiloID");
+                    b.HasIndex("SiloId");
 
                     b.ToTable("Dispositivos");
                 });
@@ -368,7 +368,6 @@ namespace SecureSilo.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -438,7 +437,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProvinciaId")
+                    b.Property<int>("ProvinciaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -516,7 +515,7 @@ namespace SecureSilo.Server.Migrations
                             CO2Value = 10.0,
                             GranoID = 1,
                             HumedadValue = 12.0,
-                            Riesgo = "Alto",
+                            Riesgo = "Bajo",
                             TemperaturaValue = 22.0
                         });
                 });
@@ -529,7 +528,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PaisId")
+                    b.Property<int>("PaisId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -552,7 +551,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EstadoId")
+                    b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("GranoID")
@@ -675,13 +674,11 @@ namespace SecureSilo.Server.Migrations
                 {
                     b.HasOne("SecureSilo.Shared.Estado", "Estado")
                         .WithMany()
-                        .HasForeignKey("EstadoID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EstadoId");
 
                     b.HasOne("SecureSilo.Shared.Silo", "Silo")
                         .WithMany("Dispositivos")
-                        .HasForeignKey("SiloID")
+                        .HasForeignKey("SiloId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -690,7 +687,9 @@ namespace SecureSilo.Server.Migrations
                 {
                     b.HasOne("SecureSilo.Shared.Provincia", "Provincia")
                         .WithMany()
-                        .HasForeignKey("ProvinciaId");
+                        .HasForeignKey("ProvinciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SecureSilo.Shared.Parametro", b =>
@@ -706,7 +705,9 @@ namespace SecureSilo.Server.Migrations
                 {
                     b.HasOne("SecureSilo.Shared.Pais", "Pais")
                         .WithMany()
-                        .HasForeignKey("PaisId");
+                        .HasForeignKey("PaisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SecureSilo.Shared.Silo", b =>
@@ -719,7 +720,9 @@ namespace SecureSilo.Server.Migrations
 
                     b.HasOne("SecureSilo.Shared.Estado", "Estado")
                         .WithMany()
-                        .HasForeignKey("EstadoId");
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SecureSilo.Shared.Grano", "Grano")
                         .WithMany()
