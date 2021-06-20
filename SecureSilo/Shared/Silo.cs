@@ -24,7 +24,7 @@ namespace SecureSilo.Shared
         public Campo Campo { get; set; }
 
         //Un silo posee un tipo de grano
-        public int? GranoID { get; set; }
+        public int GranoID { get; set; }
         public Grano Grano { get; set; }
 
         //Un silo tiene una lista de dispositivos
