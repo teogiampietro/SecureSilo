@@ -150,6 +150,7 @@ namespace SecureSilo.Server.Controllers
 
                 //grano.Parametros.Where(a => a.Riesgo == "Alto").Select(b => b.HumedadValue);
             }
+            return _estados[1];
         }
 
 

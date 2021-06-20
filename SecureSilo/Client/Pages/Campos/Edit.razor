@@ -12,7 +12,7 @@
 
 @code {
     [Parameter] public int IdCampo { get; set; }
-    Campo campo = new Campo();
+    Campo campo;
     protected async override Task OnParametersSetAsync()
     {
         campo = await Http.GetFromJsonAsync<Campo>($"campos/{IdCampo}");

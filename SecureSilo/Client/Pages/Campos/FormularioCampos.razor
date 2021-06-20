@@ -72,8 +72,8 @@
     {
         if (Campo.Localidad != null)
         {
-            provinciaId = Campo.Localidad.Provincia.Id;
-            await CargarLocalidades(Campo.Localidad.Id);
+            provinciaId = Campo.Localidad.ProvinciaId;
+            await CargarLocalidades(Campo.Localidad.ProvinciaId);
         }
         Provincia = await http.GetFromJsonAsync<List<Provincia>>("Localidad/provincias");
     }

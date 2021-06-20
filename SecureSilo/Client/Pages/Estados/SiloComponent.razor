@@ -10,10 +10,16 @@ else if (silos.Length == 0)
 }
 else
 {
-    <div class="btn-group btn-group-lg" role="group">
+<div class="btn-group btn-group-lg" role="group">
 
-        @foreach (var _silo in silos)
-            foreach (var _dsp in _silo.Dispositivos)
+    @foreach (var _silo in silos)
+        foreach (var _dsp in _silo.Dispositivos)
+        {
+            if (_dsp.Estado == null && !_dsp.EstadoId.HasValue)
+            {
+                <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">0000</button>
+            }
+            else
             {
                 @switch (_dsp.Estado.Id)
                 {
@@ -33,10 +39,12 @@ else
                         <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.Descripcion</button>
                         break;
                 }
-
             }
 
-    </div>
+
+        }
+
+</div>
 }
 
 @code {
