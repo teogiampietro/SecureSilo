@@ -42,12 +42,11 @@
         <label>Silo</label>
         <div>
             <InputSelectNumber class="form-control"
-                               @bind-Value="Dispositivo.SiloID"
-                               >
+                               @bind-Value="Dispositivo.SiloId">
                 <option value="0">-- Seleccione un Silo --</option>
                 @foreach (var item in Silos)
                 {
-                    @if (item.Id == Dispositivo.SiloID)
+                    @if (item.Id == Dispositivo.SiloId)
                     {
                         <option selected value="@item.Id">@item.Descripcion</option>
                     }
@@ -57,7 +56,7 @@
                     }
                 }
             </InputSelectNumber>
-            <ValidationMessage For="@(() => Dispositivo.SiloID)" />
+            <ValidationMessage For="@(() => Dispositivo.SiloId)" />
         </div>
     </div>
     <button type="submit" class="btn btn-success">@TextoBoton</button>
@@ -78,11 +77,12 @@
             campoId = Dispositivo.Silo.CampoID;
             await CargarSilos(Dispositivo.Silo.CampoID);
         }
+
         Campos = await http.GetFromJsonAsync<List<Campo>>("campos");
     }
     private async Task ValorCampoCambiado(int value)
     {
-        this.Dispositivo.SiloID = 0;
+        this.Dispositivo.SiloId = 0;
         campoId = value;
 
         await InvokeAsync(StateHasChanged);

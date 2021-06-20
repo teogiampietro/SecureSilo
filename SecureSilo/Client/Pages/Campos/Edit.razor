@@ -4,12 +4,15 @@
 
 <div class="container">
     <h3> Editar campo</h3>
-    <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+    @if (campo != null)
+    {
+        <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />
+    }
 </div>
 
 @code {
     [Parameter] public int IdCampo { get; set; }
-    Campo campo = new Campo();
+    Campo campo;
     protected async override Task OnParametersSetAsync()
     {
         campo = await Http.GetFromJsonAsync<Campo>($"campos/{IdCampo}");

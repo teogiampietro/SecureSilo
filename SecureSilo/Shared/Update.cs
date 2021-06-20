@@ -12,12 +12,12 @@ namespace SecureSilo.Shared
     {
         [Key]
         public int Id { get; set; }
-        public string NumeroSerie { get; set; }
-        public string FechaHora { get; set; }
-        public string Movimiento { get; set; }
-        public double Temperatura { get; set; }
-        public double Humedad { get; set; }
-        public double CO2 { get; set; }
+        public string M { get; set; }
+        public string F { get; set; }
+        public string A { get; set; }
+        public double T { get; set; }
+        public double H { get; set; }
+        public double C { get; set; }
         public int DispositivoID { get; set; }
         public Dispositivo Dispositivo { get; set; }
 

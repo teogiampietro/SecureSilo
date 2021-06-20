@@ -21,12 +21,12 @@ namespace SecureSilo.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Campo>>> Get()
         {
-            return await context.Campos.ToListAsync();
+            return await context.Campos.Include(a=>a.Localidad.Provincia).ToListAsync();
         }
         [HttpGet("{id}", Name = "obtenerCampo")]
         public async Task<ActionResult<Campo>> Get(int id)
         {
-            return await context.Campos.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Campos.Include(a => a.Localidad.Provincia).FirstOrDefaultAsync(x => x.Id == id);
         }
         [HttpGet("{campoId}/silos")]
         public async Task<List<Silo>> GetSilos(int campoId)

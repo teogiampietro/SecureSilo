@@ -1,9 +1,60 @@
-﻿<EditForm Model="@Campo" OnValidSubmit="@OnValidSubmit">
-    <div class="form-fiel">
-        <label>Descripción:</label>
+﻿@inject HttpClient http
+
+<EditForm Model="@Campo" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group">
+        <label>Nombre del campo:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Campo.Descripcion" />
             <ValidationMessage For="@(() => Campo.Descripcion)" />
+        </div>
+        <label>Ubicación:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Campo.Ubicacion" />
+            <ValidationMessage For="@(() => Campo.Ubicacion)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Provincia</label>
+        <div>
+            <InputSelectNumber class="form-control"
+                               ValueChanged="@((int value) => ValorProvinciaCambiado(value))"
+                               ValueExpression="@(() => provinciaId )"
+                               Value="provinciaId">
+                <option value="0">-- Seleccione una Provincia --</option>
+                @foreach (var item in Provincia)
+                {
+                    @if (item.Id == provinciaId)
+                    {
+                        <option selected value="@item.Id">@item.Descripcion</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+            </InputSelectNumber>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Localidad</label>
+        <div>
+            <InputSelectNumber class="form-control"
+                               @bind-Value="Campo.LocalidadId">
+                <option value="0">-- Seleccione un Silo --</option>
+                @foreach (var item in Localidad)
+                {
+                    @if (item.Id == Campo.LocalidadId)
+                    {
+                        <option selected value="@item.Id">@item.Descripcion</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+            </InputSelectNumber>
+            <ValidationMessage For="@(() =>Campo.LocalidadId)" />
         </div>
     </div>
     <button type="submit" class="btn btn-success">@TextoBoton</button>
@@ -13,4 +64,37 @@
     [Parameter] public Campo Campo { get; set; } = new Campo();
     [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
+    List<Provincia> Provincia = new List<Provincia>();
+    List<Localidad> Localidad = new List<Localidad>();
+    private int provinciaId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Campo.Localidad != null)
+        {
+            provinciaId = Campo.Localidad.ProvinciaId;
+            await CargarLocalidades(Campo.Localidad.ProvinciaId);
+        }
+        Provincia = await http.GetFromJsonAsync<List<Provincia>>("Localidad/provincias");
+    }
+    private async Task ValorProvinciaCambiado(int value)
+    {
+        this.Campo.LocalidadId = 0;
+        provinciaId = value;
+
+        await InvokeAsync(StateHasChanged);
+
+        if (value == 0)
+        {
+            Localidad.Clear();
+        }
+        else
+        {
+            await CargarLocalidades(value);
+        }
+    }
+    private async Task CargarLocalidades(int provinciaId)
+    {
+        Localidad = await http.GetFromJsonAsync<List<Localidad>>($"Localidad/{provinciaId}");
+    }
 }

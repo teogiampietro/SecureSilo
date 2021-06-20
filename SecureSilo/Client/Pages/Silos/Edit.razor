@@ -4,12 +4,15 @@
 
 <div class="container">
     <h3> Editar silo</h3>
-    <FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />
+    @if (silo != null)
+    {
+        <FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />
+    }
 </div>
 
 @code {
     [Parameter] public int IdSilo { get; set; }
-    Silo silo = new Silo();
+    Silo silo;
     protected async override Task OnParametersSetAsync()
     {
         silo = await Http.GetFromJsonAsync<Silo>($"silos/{IdSilo}");

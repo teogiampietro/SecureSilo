@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SecureSilo.Server.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,19 @@ namespace SecureSilo.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Estados",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Estados", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,17 +235,17 @@ namespace SecureSilo.Server.Migrations
                     HumedadValue = table.Column<double>(nullable: false),
                     TemperaturaValue = table.Column<double>(nullable: false),
                     CO2Value = table.Column<double>(nullable: false),
-                    GranoId = table.Column<int>(nullable: true)
+                    GranoID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Parametros", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Parametros_Granos_GranoId",
-                        column: x => x.GranoId,
+                        name: "FK_Parametros_Granos_GranoID",
+                        column: x => x.GranoID,
                         principalTable: "Granos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,7 +254,7 @@ namespace SecureSilo.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false),
                     Descripcion = table.Column<string>(nullable: true),
-                    PaisId = table.Column<int>(nullable: true)
+                    PaisId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,7 +264,7 @@ namespace SecureSilo.Server.Migrations
                         column: x => x.PaisId,
                         principalTable: "Paises",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -260,7 +273,7 @@ namespace SecureSilo.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false),
                     Descripcion = table.Column<string>(nullable: true),
-                    ProvinciaId = table.Column<int>(nullable: true)
+                    ProvinciaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,7 +283,7 @@ namespace SecureSilo.Server.Migrations
                         column: x => x.ProvinciaId,
                         principalTable: "Provincias",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -310,7 +323,7 @@ namespace SecureSilo.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MAC = table.Column<string>(nullable: true),
                     Descripcion = table.Column<string>(nullable: true),
-                    Estado = table.Column<string>(nullable: true),
+                    EstadoId = table.Column<int>(nullable: false),
                     CampoID = table.Column<int>(nullable: false),
                     GranoID = table.Column<int>(nullable: false)
                 },
@@ -321,6 +334,12 @@ namespace SecureSilo.Server.Migrations
                         name: "FK_Silos_Campos_CampoID",
                         column: x => x.CampoID,
                         principalTable: "Campos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Silos_Estados_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -339,15 +358,21 @@ namespace SecureSilo.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MAC = table.Column<string>(nullable: true),
                     Descripcion = table.Column<string>(nullable: true),
-                    Estado = table.Column<string>(nullable: true),
-                    SiloID = table.Column<int>(nullable: false)
+                    EstadoId = table.Column<int>(nullable: true),
+                    SiloId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dispositivos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dispositivos_Silos_SiloID",
-                        column: x => x.SiloID,
+                        name: "FK_Dispositivos_Estados_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Dispositivos_Silos_SiloId",
+                        column: x => x.SiloId,
                         principalTable: "Silos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -359,12 +384,12 @@ namespace SecureSilo.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NumeroSerie = table.Column<string>(nullable: true),
-                    FechaHora = table.Column<string>(nullable: true),
-                    Movimiento = table.Column<string>(nullable: true),
-                    Temperatura = table.Column<double>(nullable: false),
-                    Humedad = table.Column<double>(nullable: false),
-                    CO2 = table.Column<double>(nullable: false),
+                    M = table.Column<string>(nullable: true),
+                    F = table.Column<string>(nullable: true),
+                    A = table.Column<string>(nullable: true),
+                    T = table.Column<double>(nullable: false),
+                    H = table.Column<double>(nullable: false),
+                    C = table.Column<double>(nullable: false),
                     DispositivoID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -377,6 +402,42 @@ namespace SecureSilo.Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Estados",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, "Alerta" },
+                    { 2, "SinDatos" },
+                    { 3, "Ok" },
+                    { 4, "Advertencia" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Granos",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, "Soja" },
+                    { 2, "Trigo" },
+                    { 3, "Maiz" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Parametros",
+                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
+                values: new object[] { 1, 10.0, 1, 16.0, "Alto", 26.0 });
+
+            migrationBuilder.InsertData(
+                table: "Parametros",
+                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
+                values: new object[] { 2, 10.0, 1, 14.0, "Medio", 24.0 });
+
+            migrationBuilder.InsertData(
+                table: "Parametros",
+                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
+                values: new object[] { 3, 10.0, 1, 12.0, "Bajo", 22.0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -439,9 +500,14 @@ namespace SecureSilo.Server.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dispositivos_SiloID",
+                name: "IX_Dispositivos_EstadoId",
                 table: "Dispositivos",
-                column: "SiloID");
+                column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dispositivos_SiloId",
+                table: "Dispositivos",
+                column: "SiloId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Localidades_ProvinciaId",
@@ -449,9 +515,9 @@ namespace SecureSilo.Server.Migrations
                 column: "ProvinciaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parametros_GranoId",
+                name: "IX_Parametros_GranoID",
                 table: "Parametros",
-                column: "GranoId");
+                column: "GranoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
@@ -472,6 +538,11 @@ namespace SecureSilo.Server.Migrations
                 name: "IX_Silos_CampoID",
                 table: "Silos",
                 column: "CampoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Silos_EstadoId",
+                table: "Silos",
+                column: "EstadoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Silos_GranoID",
@@ -524,6 +595,9 @@ namespace SecureSilo.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Campos");
+
+            migrationBuilder.DropTable(
+                name: "Estados");
 
             migrationBuilder.DropTable(
                 name: "Granos");

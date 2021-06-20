@@ -12,6 +12,7 @@ namespace SecureSilo.Shared
         [Key]
         public int Id { get; set; }
         public string Descripcion { get; set; }
+        public int PaisId { get; set; }
         public Pais Pais { get; set; }
     }
 }

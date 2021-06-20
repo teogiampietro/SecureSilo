@@ -10,43 +10,44 @@ else if (silos.Length == 0)
 }
 else
 {
-    <div class="btn-group btn-group-lg" role="group">
+<div class="btn-group btn-group-lg" role="group">
 
-        @foreach (var _silo in silos)
-            foreach (var _dsp in _silo.Dispositivos)
+    @foreach (var _silo in silos)
+        foreach (var _dsp in _silo.Dispositivos)
+        {
+            if (_dsp.Estado == null && !_dsp.EstadoId.HasValue)
             {
-                @switch (_dsp.Estado)
+                <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">0000</button>
+            }
+            else
+            {
+                @switch (_dsp.Estado.Id)
                 {
-                    case Ok:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success">@_dsp.MAC</button>
+                    case 1:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@_dsp.Descripcion</button>
                         break;
-                    case Advertencia:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@_dsp.MAC</button>
+                    case 2:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.Descripcion</button>
                         break;
-                    case Alerta:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger ">@_dsp.MAC</button>
+                    case 3:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success ">@_dsp.Descripcion</button>
                         break;
-                    case NoDatos:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.MAC</button>
+                    case 4:
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@_dsp.Descripcion</button>
                         break;
                     default:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.MAC</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.Descripcion</button>
                         break;
                 }
-
             }
 
-    </div>
+
+        }
+
+</div>
 }
 
-
-
-
 @code {
-    private const string Alerta = "Alerta";
-    private const string NoDatos = "NoDatos";
-    private const string Ok = "Ok";
-    private const string Advertencia = "Advertencia";
 
     // [Parameter] public Silo Silo { get; set; } = new Silo();
     // List<Silo> silos = new List<Silo>();

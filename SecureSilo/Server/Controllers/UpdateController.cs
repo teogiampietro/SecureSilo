@@ -43,47 +43,61 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(string jsonUpdateList)
         {
-            DispositivosController cDispositivos = new DispositivosController(context);
             string[] updateList = jsonUpdateList.Split(";");
-            foreach (var item in updateList)
+            DispositivosController cDispositivos = new DispositivosController(context);
+            Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
+            _silo = SiloExist(_silo);
+            try
             {
-                try
+                if (_silo == null)
                 {
-                    Update update = JsonSerializer.Deserialize<Update>(item);
-                    Dispositivo dsp = FindDispositivo(update.NumeroSerie);
+                    //si no encuentro silo tengo que crear uno
+                    _silo = new Silo
+                    {
+
+                    };
+                }
+
+                //si encontró silo, ahora tengo que actualizar los dispositivos.
+                updateList = updateList.Where((source, index) => index != 0).ToArray(); //remuevo el primer elemento, porque es un elemento de tipo silo
+                foreach (var item in updateList)
+                {
+                    Update update = JsonSerializer.Deserialize<Update>(item.ToString());
+                    Dispositivo dsp = FindDispositivo(update.M);
                     if (dsp == null)
                     {
-                        //Si no encuentro el dispositivo, quiere decir que no está cargado. Es un nuevo dispositivo en el sistema.
-                        //Así que creo un nuevo dispositivo con un nuevo silo asignado. Deberá configurar el usuario.
                         dsp = new Dispositivo
                         {
-                            MAC = update.NumeroSerie,
+                            MAC = update.M,
                             Descripcion = string.Empty,
-                            Silo = FindFirstSilo()
+                            Silo = _silo,
+                            Estado = CalcularEstadoUpdate(update, _silo.Grano)
                         };
                         await cDispositivos.Post(dsp);
                     }
-                    //Si encuentro dispositivo es una actualización normal para un dispositivo ya cargado
                     update.Dispositivo = dsp;
                     update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
-                    update.Dispositivo.Estado = CalcularEstadoUpdate(update);
+                    update.Dispositivo.Estado = CalcularEstadoUpdate(update, _silo.Grano);
                     update.DispositivoID = dsp.Id;
-                    update.FechaHora = DateTime.Now.ToString();
+                    update.F = DateTime.Now.ToString();
                     this.context.Add(update);
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
             await context.SaveChangesAsync();
             return NoContent();
         }
         #region Private Methods
-        private Dispositivo FindDispositivo(string numeroSerie)
+        private Dispositivo FindDispositivo(string MAC)
         {
             Dispositivo newDispositivo = new Dispositivo();
-            newDispositivo = context.Dispositivos.Where(x => x.MAC == numeroSerie).FirstOrDefault();
+            newDispositivo = context.Dispositivos.Where(x => x.MAC == MAC).FirstOrDefault();
             return newDispositivo;
         }
         private Silo FindFirstSilo()
@@ -101,36 +115,52 @@ namespace SecureSilo.Server.Controllers
             }
             return newSilo;
         }
-        private string CalcularEstadoUpdate(Update upd)
+        private Estado CalcularEstadoUpdate(Update upd, Grano grano)
         {
-            if (upd.Movimiento != null || upd.Temperatura != double.MinValue || upd.Humedad != double.MinValue)
+
+            List<Estado> _estados = context.Estados.ToList();
+
+            if (String.IsNullOrEmpty(upd.A) || upd.T != double.MinValue || upd.H != double.MinValue)
             {
-                if (upd.Movimiento == "ok")
+                if (upd.A == "ok")
                 {
-                    if (upd.Temperatura <= Constants.temperaturaValue && upd.Humedad <= Constants.humedadValue)
+                    foreach (var item in grano.Parametros)
                     {
-                        return Constants.Ok;
+                        if (upd.H >= item.HumedadValue)
+                        {
+                            switch (item.Riesgo)
+                            {
+                                case "Alto":
+                                    return _estados[0];
+                                case "Medio":
+                                    return _estados[3];
+                                case "Bajo":
+                                    return _estados[2];
+                                default:
+                                    return _estados[1];
+                            }
+                        }
                     }
-                    else
-                    {
-                        if ((upd.Temperatura > Constants.temperaturaValue && upd.Temperatura < Constants.temperaturaMaxValue) ||
-                             (upd.Humedad > Constants.humedadValue && upd.Temperatura < Constants.humedadMaxValue))
-                        {
-                            return Constants.Advertencia;
-                        }
-                        if (upd.Temperatura >= Constants.temperaturaMaxValue || upd.Humedad >= Constants.humedadMaxValue)
-                        {
-                            return Constants.Alerta;
-                        }
-                    }                  
                 }
                 else
                 {
-                    return Constants.Alerta;
+                    return _estados[0]; //Alerta
                 }
-                return Constants.SinDatos;
+                return _estados[0]; //Alerta
+
+                //grano.Parametros.Where(a => a.Riesgo == "Alto").Select(b => b.HumedadValue);
             }
-            return Constants.SinDatos;
+            return _estados[1];
+        }
+
+
+        private Silo SiloExist(Silo _silo)
+        {
+            _silo = context.Silos.Include(a => a.Campo)
+                .Include(b => b.Grano.Parametros)
+                .Include(c => c.Estado)
+                .Where(x => x.MAC == _silo.MAC).FirstOrDefault();
+            return _silo;
         }
         #endregion
 

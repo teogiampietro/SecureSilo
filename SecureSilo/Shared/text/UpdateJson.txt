@@ -1,84 +1,12 @@
-{
-  "MAC": "0614AB1928E7",
-  "Descripcion": "",
-};
-{
-  "MAC": "467B3B4E897E",
-  "FechaHora": "",
-  "Movimiento": "ff",
-  "Temperatura": 21,
-  "Humedad": 25
-};
-{
-  "MAC": "3F97B02D0AA0",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ok",
-  "Temperatura": 24,
-  "Humedad": 14
-};
-{
-  "MAC": "B0979D8EE9FE",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "4C8251844B3F",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "2A719CB01000",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "0E78567EC438",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "670FA0F548E5",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "A08861598083",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "53CFBA9CE83A",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-};
-{
-  "MAC": "358BDD8C814D",
-  "FechaHora": "31/05/2021 11:25:00",
-  "Movimiento": "ff",
-  "Temperatura": 25,
-  "Humedad": 15
-}
-
-
-//TODO: Cambiar nombre panel por campo DONE
-//TODO: Agregar botones de cancelar en la modificación
-
-//https://inta.gob.ar/sites/default/files/script-tmp-inta_monitoreo_de_silobolsas_mediante_la_medicin_de_c.pdf
-//https://inta.gob.ar/sites/default/files/script-tmp-inta_almacen_granos14.pdf
-//https://inta.gob.ar/sites/default/files/script-tmp-inta_-_t7n1__chiesa.pdf
-//https://produccion-animal.com.ar/produccion_y_manejo_reservas/reservas_granos/58-conservacion_de_granos.pdf
+{"MAC": "0614AB1928E7"};
+{"M": "467B3B4E897E","F": "31/05/2021 11:25:00","A": "ff","T": 21,"H": 25,"C": 10};
+{"M": "3F97B02D0AA0","F": "31/05/2021 11:25:00","A": "ok","T": 24,"H": 14,"C": 10};
+{"M": "B0979D8EE9FE","F": "31/05/2021 11:25:00","A": "ok","T": 25,"H": 15,"C": 10};
+{"M": "4C8251844B3F","F": "31/05/2021 11:25:00","A": "ok","T": 24,"H": 10,"C": 10};
+{"M": "2A719CB01000","F": "31/05/2021 11:25:00","A": "ok","T": 22,"H": 11,"C": 10};
+{"M": "0E78567EC438","F": "31/05/2021 11:25:00","A": "ok","T": 22,"H": 11,"C": 10};
+{"M": "670FA0F548E5","F": "31/05/2021 11:25:00","A": "ok","T": 22,"H": 11,"C": 10};
+{"M": "A08861598083","F": "31/05/2021 11:25:00","A": "ok","T": 22,"H": 11,"C": 10};
+{"M": "53CFBA9CE83A","F": "31/05/2021 11:25:00","A": "ff","T": 25,"H": 11,"C": 10};
+{"M": "358BDD8C814D","F": "31/05/2021 11:25:00","A": "ok","T": 22,"H": 10,"C": 10}
 

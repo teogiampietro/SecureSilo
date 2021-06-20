@@ -26,6 +26,9 @@ else
 
                 <th>Código Campo</th>
                 <th>Descripción</th>
+                <th>Ubicación</th>
+                <th>Localidad</th>
+                <th>Provincia</th>
                 <th></th>
             </tr>
         </thead>
@@ -35,6 +38,9 @@ else
             <tr>
                 <td>@campo.Id</td>
                 <td>@campo.Descripcion</td>
+                <td>@campo.Ubicacion</td>
+                <td>@campo.Localidad.Descripcion</td>
+                <td>@campo.Localidad.Provincia.Descripcion</td>
                 <td>
                     <a class="btn btn-success" href="editar-campo/@campo.Id">Editar</a>
                     <button class="btn btn-danger" @onclick="@(() => BorrarCampo(campo.Id))">Borrar</button>

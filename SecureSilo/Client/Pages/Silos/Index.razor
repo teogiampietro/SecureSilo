@@ -25,6 +25,7 @@
                     <th>Código Silo</th>
                     <th>Descripción</th>
                     <th>Campo</th>
+                    <th>Grano</th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,6 +36,7 @@
                         <td>@silo.Id</td>
                         <td>@silo.Descripcion</td>
                         <td>@silo.Campo.Descripcion</td>
+                        <td>@silo.Grano.Descripcion</td>
                         <td>
                             <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
@@ -46,8 +48,6 @@
         </table>
     }
 </div>
-
-
 
 @code{
     Silo[] silos { get; set; }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using SecureSilo.Shared;
 using SecureSilo.Server.Data;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace SecureSilo.Server.Controllers
 {
@@ -22,12 +23,20 @@ namespace SecureSilo.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Silo>>> Get()
         {
-            return await context.Silos.Include(x => x.Dispositivos).Include(y => y.Campo).ToListAsync();
+            return await context.Silos
+                .Include("Dispositivos.Estado")
+                .Include(y => y.Campo)
+                .Include(z => z.Grano.Parametros)
+                .Include(a => a.Estado)
+                .ToListAsync();
         }
         [HttpGet("{id}", Name = "obtenerSilo")]
         public async Task<ActionResult<Silo>> Get(int id)
         {
-            return await context.Silos.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Silos
+                .Include(a => a.Grano)
+                .Include(b => b.Campo)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
