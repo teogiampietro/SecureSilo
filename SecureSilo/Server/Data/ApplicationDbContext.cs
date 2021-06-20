@@ -17,6 +17,7 @@ namespace SecureSilo.Server.Data
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,7 +37,7 @@ namespace SecureSilo.Server.Data
                 new Parametro(){Id=2,Riesgo="Medio",CO2Value=10,HumedadValue=14,TemperaturaValue=24,GranoID=1},
                 new Parametro(){Id=3,Riesgo="Bajo",CO2Value=10,HumedadValue=12,TemperaturaValue=22, GranoID = 1}
             };
-            builder.Entity<Parametro>().HasData(parametros);                  
+            builder.Entity<Parametro>().HasData(parametros);
 
             var estados = new List<Estado>()
             {
@@ -47,6 +48,7 @@ namespace SecureSilo.Server.Data
             };
 
             builder.Entity<Estado>().HasData(estados);
+
             base.OnModelCreating(builder);
         }
 
