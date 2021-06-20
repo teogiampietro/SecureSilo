@@ -15,12 +15,10 @@ namespace SecureSilo.Shared
         public string MAC { get; set; }
         public string Descripcion { get; set; }
 
-        public int EstadoID { get; set; }
+        public int? EstadoId { get; set; }
         public Estado Estado { get; set; }
 
-        // silo ... dispositivo
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un silo")]     
-        public int SiloID {get; set; }
+        public int SiloId {get; set; }
         public Silo Silo { get; set; }
         
         //dispositivo ... updates
