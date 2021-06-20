@@ -33,7 +33,10 @@ namespace SecureSilo.Server.Controllers
         [HttpGet("{id}", Name = "obtenerSilo")]
         public async Task<ActionResult<Silo>> Get(int id)
         {
-            return await context.Silos.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Silos
+                .Include(a => a.Grano)
+                .Include(b => b.Campo)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
