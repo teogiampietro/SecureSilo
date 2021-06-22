@@ -409,7 +409,7 @@ namespace SecureSilo.Server.Migrations
                 values: new object[,]
                 {
                     { 1, "Alerta" },
-                    { 2, "SinDatos" },
+                    { 2, "SinEstado" },
                     { 3, "Ok" },
                     { 4, "Advertencia" }
                 });

@@ -10,8 +10,8 @@ using SecureSilo.Server.Data;
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210620203655_granoid")]
-    partial class granoid
+    [Migration("20210620235331_removedIntnullable")]
+    partial class removedIntnullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -380,22 +380,27 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
-                            Descripcion = "Alerta"
+                            Descripcion = "Default"
                         },
                         new
                         {
                             Id = 2,
-                            Descripcion = "SinEstado"
+                            Descripcion = "ALERTA"
                         },
                         new
                         {
                             Id = 3,
-                            Descripcion = "Ok"
+                            Descripcion = "SIN_DATOS"
                         },
                         new
                         {
                             Id = 4,
-                            Descripcion = "Advertencia"
+                            Descripcion = "OK"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "ADVERTENCIA"
                         });
                 });
 
@@ -495,29 +500,29 @@ namespace SecureSilo.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 4,
                             CO2Value = 10.0,
                             GranoID = 1,
                             HumedadValue = 16.0,
-                            Riesgo = "Alto",
+                            Riesgo = "ALTO",
                             TemperaturaValue = 26.0
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 5,
                             CO2Value = 10.0,
                             GranoID = 1,
                             HumedadValue = 14.0,
-                            Riesgo = "Medio",
+                            Riesgo = "MEDIO",
                             TemperaturaValue = 24.0
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 6,
                             CO2Value = 10.0,
                             GranoID = 1,
                             HumedadValue = 12.0,
-                            Riesgo = "Bajo",
+                            Riesgo = "BAJO",
                             TemperaturaValue = 22.0
                         });
                 });
@@ -553,7 +558,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EstadoId")
+                    b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("GranoID")
@@ -722,7 +727,9 @@ namespace SecureSilo.Server.Migrations
 
                     b.HasOne("SecureSilo.Shared.Estado", "Estado")
                         .WithMany()
-                        .HasForeignKey("EstadoId");
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SecureSilo.Shared.Grano", "Grano")
                         .WithMany()

@@ -8,7 +8,13 @@
             <ValidationMessage For="@(() => Silo.Descripcion)" />
         </div>
     </div>
-
+    <div class="form-group">
+        <label>MAC:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Silo.MAC" />
+            <ValidationMessage For="@(() => Silo.MAC)" />
+        </div>
+    </div>
     <div class="form-group">
         <label>Campo</label>
         <div>

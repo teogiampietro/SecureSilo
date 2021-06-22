@@ -2417,5 +2417,3 @@ INSERT INTO Localidades(Id, ProvinciaId, Descripcion) VALUES
 (2380, 25, 'Yánima'),
 (2381, 25, 'Yerba Buena'),
 (2382, 25, 'Yerba Buena (S)');
-
- 

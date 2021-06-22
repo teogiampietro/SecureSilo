@@ -41,9 +41,24 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
         {
-            context.Add(silo);
-            await context.SaveChangesAsync();
-            return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);
+            try
+            {
+                if (silo.Campo == null && silo.Grano == null)
+                {
+                    silo.Grano = context.Granos.FirstOrDefault();
+                    silo.Campo = context.Campos.FirstOrDefault();
+                    if (silo.Estado == null)
+                        silo.Estado = context.Estados.FirstOrDefault();
+                }
+                context.Add(silo);
+                await context.SaveChangesAsync();
+                return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
+            
         }
         [HttpPut]
         public async Task<ActionResult> Put(Silo silo)

@@ -24,6 +24,7 @@
                 <tr>
                     <th>Código Silo</th>
                     <th>Descripción</th>
+                    <td>MAC</td>
                     <th>Campo</th>
                     <th>Grano</th>
                     <th></th>
@@ -32,17 +33,19 @@
             <tbody>
                 @foreach (var silo in silos)
                 {
-                    <tr>
-                        <td>@silo.Id</td>
-                        <td>@silo.Descripcion</td>
-                        <td>@silo.Campo.Descripcion</td>
-                        <td>@silo.Grano.Descripcion</td>
-                        <td>
-                            <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
-                        </td>
+                <tr>
+                    <td>@silo.Id</td>
+                    <td>@silo.Descripcion</td>
+                    <td>@silo.MAC</td>
+                    <td>@silo.Campo.Descripcion</td>
+                    <td>@silo.Grano.Descripcion</td>
 
-                    </tr>
+                    <td>
+                        <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
+                    </td>
+
+                </tr>
                 }
             </tbody>
         </table>

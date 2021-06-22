@@ -370,6 +370,9 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Riesgo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Estados");
@@ -378,22 +381,32 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
-                            Descripcion = "Alerta"
+                            Descripcion = "DEFAULT",
+                            Riesgo = "SIN_RIESGO"
                         },
                         new
                         {
                             Id = 2,
-                            Descripcion = "SinDatos"
+                            Descripcion = "OK",
+                            Riesgo = "BAJO"
                         },
                         new
                         {
                             Id = 3,
-                            Descripcion = "Ok"
+                            Descripcion = "ADVERTENCIA",
+                            Riesgo = "MEDIO"
                         },
                         new
                         {
                             Id = 4,
-                            Descripcion = "Advertencia"
+                            Descripcion = "ALERTA",
+                            Riesgo = "ALTO"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "SIN_DATOS",
+                            Riesgo = "SIN_RIESGO"
                         });
                 });
 
@@ -469,13 +482,13 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("CO2Value")
-                        .HasColumnType("float");
-
                     b.Property<int>("GranoID")
                         .HasColumnType("int");
 
-                    b.Property<double>("HumedadValue")
+                    b.Property<double>("HumedadMaxValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("HumedadMinValue")
                         .HasColumnType("float");
 
                     b.Property<string>("Riesgo")
@@ -494,29 +507,83 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 16.0,
-                            Riesgo = "Alto",
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
+                            Riesgo = "ALTO",
                             TemperaturaValue = 26.0
                         },
                         new
                         {
                             Id = 2,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 14.0,
-                            Riesgo = "Medio",
-                            TemperaturaValue = 24.0
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
+                            Riesgo = "MEDIO",
+                            TemperaturaValue = 26.0
                         },
                         new
                         {
                             Id = 3,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 12.0,
-                            Riesgo = "Bajo",
-                            TemperaturaValue = 22.0
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
+                            Riesgo = "BAJO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GranoID = 2,
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
+                            Riesgo = "ALTO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            GranoID = 2,
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
+                            Riesgo = "MEDIO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            GranoID = 2,
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
+                            Riesgo = "BAJO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            GranoID = 3,
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
+                            Riesgo = "ALTO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            GranoID = 3,
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
+                            Riesgo = "MEDIO",
+                            TemperaturaValue = 26.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            GranoID = 3,
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
+                            Riesgo = "BAJO",
+                            TemperaturaValue = 26.0
                         });
                 });
 
@@ -551,7 +618,7 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EstadoId")
+                    b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("GranoID")
@@ -720,7 +787,9 @@ namespace SecureSilo.Server.Migrations
 
                     b.HasOne("SecureSilo.Shared.Estado", "Estado")
                         .WithMany()
-                        .HasForeignKey("EstadoId");
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SecureSilo.Shared.Grano", "Grano")
                         .WithMany()

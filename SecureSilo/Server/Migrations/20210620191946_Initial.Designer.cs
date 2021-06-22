@@ -385,7 +385,7 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 2,
-                            Descripcion = "SinDatos"
+                            Descripcion = "SinEstado"
                         },
                         new
                         {
