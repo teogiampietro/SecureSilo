@@ -1,65 +1,41 @@
 ﻿@inject HttpClient Http
-<h3>Silo</h3>
-@if (silos == null)
-{
-    <text> Cargando silos... </text>
-}
-else if (silos.Length == 0)
-{
-    <text> No se encontraron silos en la base de datos. </text>
-}
-else
-{
-<div class="btn-group btn-group-lg" role="group">
 
-    @foreach (var _silo in silos)
-        foreach (var _dsp in _silo.Dispositivos)
+<div>
+    <br />
+    <h4>Silo ID: @Silo.Id / Campo: @Silo.Campo.Descripcion / Estado: @Silo.Estado.Descripcion</h4>
+    <div class="btn-group btn-group-lg" role="group">
+        @foreach (var _dsp in Silo.Dispositivos)
         {
             if (_dsp.Estado == null && !_dsp.EstadoId.HasValue)
             {
-                <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">0000</button>
+                <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary"></button>
             }
             else
             {
-                @switch (_dsp.Estado.Id)
+                string valor = String.Format("{0:D4}", _dsp.Id);
+                switch (_dsp.Estado.Id)
                 {
                     case 1:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@_dsp.Descripcion</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@valor</button>
                         break;
                     case 2:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.Descripcion</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@valor</button>
                         break;
                     case 3:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success ">@_dsp.Descripcion</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success ">@valor</button>
                         break;
                     case 4:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@_dsp.Descripcion</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@valor</button>
                         break;
                     default:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@_dsp.Descripcion</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@valor</button>
                         break;
                 }
             }
-
-
         }
-
+    </div>
 </div>
-}
 
 @code {
-
-    // [Parameter] public Silo Silo { get; set; } = new Silo();
-    // List<Silo> silos = new List<Silo>();
-    Silo[] silos { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CargarSilo();
-    }
-    async Task CargarSilo()
-    {
-        silos = await Http.GetFromJsonAsync<Silo[]>("Silos");
-    }
-
+    [Parameter] public Silo Silo { get; set; } = new Silo();
 }

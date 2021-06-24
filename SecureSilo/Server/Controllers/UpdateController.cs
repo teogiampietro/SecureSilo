@@ -50,8 +50,8 @@ namespace SecureSilo.Server.Controllers
             //va a la controladora de dispositivos y inicializa el contexto
             DispositivosController cDispositivos = new DispositivosController(context);
             //en un objeto silo, graba la mac para luego buscar por la misma
-            Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);      
-           
+            Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
+            estados = context.Estados.ToList();
             try
             {
                 if (!SiloExist(_silo))
@@ -68,7 +68,7 @@ namespace SecureSilo.Server.Controllers
                     silo = context.Silos.Where(a => a.MAC == newSilo.MAC).FirstOrDefault();
                 }
                 //traigo los estados de la base
-                estados = context.Estados.ToList();
+                
 
                 //remuevo el primer elemento, porque es un elemento de tipo silo
                 updateList = updateList.Where((source, index) => index != 0).ToArray();
@@ -110,7 +110,7 @@ namespace SecureSilo.Server.Controllers
         private Dispositivo FindDispositivo(string MAC)
         {
             Dispositivo newDispositivo = new Dispositivo();
-            newDispositivo = context.Dispositivos.Where(x => x.MAC == MAC).FirstOrDefault();
+            newDispositivo = context.Dispositivos.Where(x => x.MAC == MAC && x.SiloId == silo.Id).FirstOrDefault();
             return newDispositivo;
         }
         private Estado CalcularEstadoUpdate(Update upd, Grano grano)
