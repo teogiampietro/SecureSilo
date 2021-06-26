@@ -1,18 +1,12 @@
-﻿
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3" @onclick="ToggleNavMenu">
+﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3" >
     <a class="navbar-brand" href="/">AlarmSilo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon" ></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarCollapse">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <AuthorizeView>
                 <Authorized>
-                    <li class="nav-item active">
-                        <NavLink class="nav-link" href="estados">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estados
-                        </NavLink>
-                    </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="campos">
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Campos
@@ -29,8 +23,18 @@
                         </NavLink>
                     </li>
                     <li class="nav-item active">
-                        <NavLink class="nav-link" href="historial-updates">
+                        <NavLink class="nav-link" href="estados">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estados
+                        </NavLink>
+                    </li>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="historial">
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Historial
+                        </NavLink>
+                    </li>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="estadisticas">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estadísticas
                         </NavLink>
                     </li>
                 </Authorized>
@@ -42,6 +46,7 @@
 
 @code {
     private bool collapseNavMenu = true;
+    private bool expandSubNav;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

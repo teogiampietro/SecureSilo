@@ -1,0 +1,78 @@
+﻿@page "/estados"
+@inject HttpClient Http
+<div class="container">
+    <br />
+    <h2 class="text-center">Estados de tus silos</h2>
+
+    <EditForm Model="@campoId">
+        <div class="form-group">
+            <h5 class="text-center">Campo</h5>
+            <div>
+                <InputSelectNumber class="form-control"
+                                   ValueChanged="@((int value) => CargarSilo(value))"
+                                   ValueExpression="@(() => campoId )"
+                                   Value="campoId">
+                    >
+                    <option value="0">-- Seleccione un Campo --</option>
+                    @foreach (var campo in Campos)
+                    {
+                        @if (campo.Id == campoId)
+                        {
+                            <option selected value="@campo.Id">@campo.Descripcion</option>
+                        }
+                        else
+                        {
+                            <option value="@campo.Id">@campo.Descripcion</option>
+                        }
+                    }
+                </InputSelectNumber>
+            </div>
+        </div>
+        <DataAnnotationsValidator />
+    </EditForm>
+
+
+    @if (silos == null)
+    {
+        //no hago nada
+    }
+    else if (silos.Length == 0)
+    {
+        if (campoId != 0)
+        {
+            <text> No se encontraron silos para el campo seleccionado.</text>
+        }
+    }
+    else
+    {
+<div>
+    @foreach (var item in silos.ToList())
+    {
+        if (item.Dispositivos.Count > 0)
+        {
+            <SecureSilo.Client.Pages.Estados.Estados.SiloComponent Silo="@item" />
+        }
+    }
+</div>
+    }
+</div>
+@code {
+    List<Campo> Campos = new List<Campo>();
+    private int campoId = 0;
+    Silo[] silos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Campos = await Http.GetFromJsonAsync<List<Campo>>("campos");
+        if (campoId != 0)
+        {
+            await CargarSilo(campoId);
+        }
+    }
+    async Task CargarSilo(int campodId)
+    {
+        campoId = campodId;
+        silos = await Http.GetFromJsonAsync<Silo[]>($"Silos/GetSiloxCampo/{campodId}");
+
+    }
+}

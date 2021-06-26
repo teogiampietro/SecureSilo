@@ -13,9 +13,9 @@ namespace SecureSilo.Shared
         [Key]
         public int Id { get; set; }
         public string Riesgo { get; set; }
-        public double HumedadValue { get; set; }
+        public double HumedadMinValue { get; set; }
+        public double HumedadMaxValue { get; set; }
         public double TemperaturaValue { get; set; }
-        public double CO2Value { get; set; }
         public int GranoID { get; set; }
         public Grano Grano { get; set; }
     }

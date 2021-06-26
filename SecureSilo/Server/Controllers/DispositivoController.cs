@@ -19,30 +19,21 @@ namespace SecureSilo.Server.Controllers
         {
             this.context = context;
         }
-        [HttpGet]
-        public async Task<ActionResult<List<Dispositivo>>> Get()
-        {
-            return await context.Dispositivos.Include(x => x.Silo).Include(y => y.Silo.Campo).ToListAsync();
-        }
-        [HttpGet("{id}", Name = "obtenerDispositivo")]
-        public async Task<ActionResult<Dispositivo>> Get(int id)
-        {
-            return await context.Dispositivos.Include(x => x.Silo).FirstOrDefaultAsync(x => x.Id == id);
-        }
         [HttpPost]
         public async Task<ActionResult<List<Dispositivo>>> Post(Dispositivo dispositivo)
         {
+            //TODO: agregar validacion que el silo no puede tener más de 10 dispositivos
             context.Add(dispositivo);
             await context.SaveChangesAsync();
             if (String.IsNullOrEmpty(dispositivo.Descripcion))
             {
-                return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id, descripcion = ("dsp"+ dispositivo.Id)}, dispositivo);
+                return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id, descripcion = ("dsp" + dispositivo.Id) }, dispositivo);
             }
             else
             {
                 return new CreatedAtRouteResult("obtenerDispositivo", new { id = dispositivo.Id }, dispositivo);
             }
-            
+
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
@@ -59,6 +50,27 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+        #region GET
+        [HttpGet]
+        public async Task<ActionResult<List<Dispositivo>>> Get()
+        {
+            return await context.Dispositivos.Include(x => x.Silo).Include(y => y.Silo.Campo).ToListAsync();
+        }
+        [HttpGet("{id}", Name = "obtenerDispositivo")]
+        public async Task<ActionResult<Dispositivo>> Get(int id)
+        {
+            return await context.Dispositivos.Include(x => x.Silo).FirstOrDefaultAsync(x => x.Id == id);
+        }
+        [HttpGet("GetDispositivoPorSilo/{idSilo}", Name = "obtenerDispositivoxSilo")]
+        public async Task<ActionResult<List<Dispositivo>>> GetDispositivosPorSilo(int idSilo)
+        {
+            return await context.Dispositivos   
+                .Include(x => x.Updates)
+                .Where(x => x.SiloId == idSilo)
+                .ToListAsync();
+        }
+        #endregion
+
 
     }
 }

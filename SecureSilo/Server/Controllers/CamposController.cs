@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using SecureSilo.Shared;
 using SecureSilo.Server.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace SecureSilo.Server.Controllers
 {

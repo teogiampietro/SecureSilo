@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SecureSilo.Shared
+﻿namespace SecureSilo.Shared
 {
     public static class Constants
     {
@@ -18,10 +14,16 @@ namespace SecureSilo.Shared
 
         //Estados
         public const string Ok = "OK";
-        public const string SinDatos = "SIN_DATOS";
+        public const string SinEstado = "SIN_DATOS";
         public const string Advertencia = "ADVERTENCIA";
         public const string Alerta = "ALERTA";
+        public const string Default = "DEFAULT";
 
+        //Riesgos
+        public const string Alto = "ALTO";
+        public const string Medio = "MEDIO";
+        public const string Bajo = "BAJO";
+        public const string NoValue = "SIN_RIESGO";
     }
 
 }

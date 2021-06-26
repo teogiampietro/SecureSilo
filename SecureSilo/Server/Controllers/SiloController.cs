@@ -38,12 +38,37 @@ namespace SecureSilo.Server.Controllers
                 .Include(b => b.Campo)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        [HttpGet("GetSiloxCampo/{campoId}", Name = "GetSiloxCampo")]
+        public async Task<ActionResult<List<Silo>>> GetSiloxCampo(int campoId)
+        {
+            return await context.Silos
+                .Include(a => a.Grano)
+                .Include(b => b.Campo)  
+                .Include(c => c.Dispositivos).ThenInclude(y=>y.Estado)
+                .Where(x => x.CampoID == campoId)            
+                .ToListAsync();
+        }
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
         {
-            context.Add(silo);
-            await context.SaveChangesAsync();
-            return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);
+            try
+            {
+                if (silo.Campo == null && silo.Grano == null)
+                {
+                    silo.Grano = context.Granos.FirstOrDefault();
+                    silo.Campo = context.Campos.FirstOrDefault();
+                    if (silo.Estado == null)
+                        silo.Estado = context.Estados.FirstOrDefault();
+                }
+                context.Add(silo);
+                await context.SaveChangesAsync();
+                return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
+            
         }
         [HttpPut]
         public async Task<ActionResult> Put(Silo silo)
