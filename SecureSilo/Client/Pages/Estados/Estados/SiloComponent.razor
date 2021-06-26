@@ -1,6 +1,6 @@
 ﻿@inject HttpClient Http
 
-<div>
+<div class="text-center">
     <br />
     <h4>Silo ID: @Silo.Id / Campo: @Silo.Campo.Descripcion / Estado: @Silo.Estado.Descripcion</h4>
     <div class="btn-group btn-group-lg" role="group">
@@ -15,17 +15,14 @@
                 string valor = String.Format("{0:D4}", _dsp.Id);
                 switch (_dsp.Estado.Id)
                 {
-                    case 1:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@valor</button>
-                        break;
                     case 2:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@valor</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success">@valor</button>
                         break;
                     case 3:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-success ">@valor</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning ">@valor</button>
                         break;
                     case 4:
-                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-warning">@valor</button>
+                        <button type="button" class="pr-lg-4 pl-lg-4 btn btn-danger">@valor</button>
                         break;
                     default:
                         <button type="button" class="pr-lg-4 pl-lg-4 btn btn-secondary">@valor</button>

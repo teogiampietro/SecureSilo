@@ -3,7 +3,8 @@
 @inject NavigationManager NavManager
 
 <div class="container">
-    <h3> Editar silo</h3>
+    <br />
+    <h3 class="text-center"> Editar silo</h3>
     @if (silo != null)
     {
         <FormularioSilos TextoBoton="Editar Silo" OnValidSubmit="@EditarSilo" Silo="@silo" />

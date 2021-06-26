@@ -1,0 +1,82 @@
+﻿@page "/campos"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@attribute [Authorize]
+
+<div class="container">
+    <br />
+    <h2 class="text-center">Campos</h2>
+
+    @if (campos == null)
+    {
+        <text> Cargando campos...</text>
+    }
+    else if (campos.Length == 0)
+    {
+        <text> No se encontraron campos en la base de datos. </text>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th>Código Campo</th>
+                    <th>Descripción</th>
+                    <th>Ubicación</th>
+                    <th>Localidad</th>
+                    <th>Provincia</th>
+                    <th>
+                        <div>
+                            <a class="btn btn-success" href="crear-campo">Nuevo campo</a>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var campo in campos)
+                {
+                    <tr>
+                        <td>@campo.Id</td>
+                        <td>@campo.Descripcion</td>
+                        <td>@campo.Ubicacion</td>
+                        <td>@campo.Localidad.Descripcion</td>
+                        <td>@campo.Localidad.Provincia.Descripcion</td>
+                        <td>
+                            <a class="btn btn-success" href="editar-campo/@campo.Id">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => BorrarCampo(campo.Id))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+</div>
+
+@code {
+    Campo[] campos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCampo();
+    }
+
+    async Task CargarCampo()
+    {
+        campos = await Http.GetFromJsonAsync<Campo[]>("campos");
+    }
+
+    async Task BorrarCampo(int idCampo)
+    {
+        var campoSeleccionado = campos.First(x => x.Id == idCampo);
+        string mensajeConfirmacion = $"¿Desea borrar al campo {campoSeleccionado.Descripcion}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
+        {
+            await Http.DeleteAsync($"campos/{idCampo}");
+            await CargarCampo();
+        }
+
+    }
+}

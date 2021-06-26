@@ -1,0 +1,45 @@
+﻿@page "/estadisticas"
+@inject HttpClient Http
+<div class="container">
+    <br />
+    <h2 class="text-center">Estadisticas de los campos</h2>
+    <EditForm Model="@campo">
+        <div class="form-group">
+            <h5 class="text-center">Campo</h5>
+            <div>
+                <InputSelectNumber class="form-control"
+                                   @bind-Value="campo">
+                    <option value="0">-- Seleccione un Campo --</option>
+                    @foreach (var campo in Campos)
+                    {
+                        @if (campo.Id == campoId)
+                        {
+                            <option selected value="@campo.Id">@campo.Descripcion</option>
+                        }
+                        else
+                        {
+                            <option value="@campo.Id">@campo.Descripcion</option>
+                        }
+                    }
+                </InputSelectNumber>
+            </div>
+        </div>
+        <DataAnnotationsValidator />
+    </EditForm>
+
+    <h1 class="text-center">WORK IN PROGRESS</h1>
+</div>
+
+
+@code {
+    List<Campo> Campos = new List<Campo>();
+    private int campoId = 0;
+    private int campo;
+    Silo silo = new Silo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Campos = await Http.GetFromJsonAsync<List<Campo>>("campos");
+    }
+
+}

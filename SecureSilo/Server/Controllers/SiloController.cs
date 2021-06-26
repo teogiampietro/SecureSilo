@@ -38,6 +38,16 @@ namespace SecureSilo.Server.Controllers
                 .Include(b => b.Campo)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        [HttpGet("GetSiloxCampo/{campoId}", Name = "GetSiloxCampo")]
+        public async Task<ActionResult<List<Silo>>> GetSiloxCampo(int campoId)
+        {
+            return await context.Silos
+                .Include(a => a.Grano)
+                .Include(b => b.Campo)  
+                .Include(c => c.Dispositivos).ThenInclude(y=>y.Estado)
+                .Where(x => x.CampoID == campoId)            
+                .ToListAsync();
+        }
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
         {

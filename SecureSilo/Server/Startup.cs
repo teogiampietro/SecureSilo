@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using SecureSilo.Server.Data;
 using SecureSilo.Server.Models;
-using Newtonsoft.Json;
-using Microsoft.OpenApi.Models;
 using System;
-using Swashbuckle.Swagger;
+using System.Linq;
 
 namespace SecureSilo.Server
 {
@@ -43,6 +43,10 @@ namespace SecureSilo.Server
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             AddSwagger(services);
+            services.AddSwaggerGen(c =>
+            {
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
             services.AddAuthentication()
                 .AddIdentityServerJwt();
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -80,7 +84,7 @@ namespace SecureSilo.Server
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
             });
-
+            
             app.UseRouting();
 
             app.UseIdentityServer();

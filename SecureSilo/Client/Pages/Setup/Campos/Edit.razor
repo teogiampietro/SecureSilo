@@ -3,7 +3,8 @@
 @inject NavigationManager NavManager
 
 <div class="container">
-    <h3> Editar campo</h3>
+    <br />
+    <h3 class="text-center"> Editar campo</h3>
     @if (campo != null)
     {
         <FormularioCampos TextoBoton="Editar Campo" OnValidSubmit="@EditarCampo" Campo="@campo" />

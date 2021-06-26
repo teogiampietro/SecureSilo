@@ -95,8 +95,9 @@ namespace SecureSilo.Server.Controllers
                     update.F = DateTime.Now.ToString();
                     this.context.Add(update);
                 }
-                _silo.Estado = CalcularEstadoSilo(silo);
-                context.Entry(_silo).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                silo.Estado = CalcularEstadoSilo(silo);
+                context.Entry(silo).State = EntityState.Modified;
             }
             catch (Exception e)
             { 
@@ -121,11 +122,15 @@ namespace SecureSilo.Server.Controllers
             }
             if (String.IsNullOrEmpty(upd.A) || upd.T != double.MinValue || upd.H != double.MinValue)
             {
-                if (upd.A == Constants.Ok)
+                if (upd.A != Constants.Ok)
+                {
+                    return estados[3]; //Alerta
+                }
+                else
                 {
                     foreach (var item in grano.Parametros)
                     {
-                        if (upd.H >= item.HumedadMinValue && 
+                        if (upd.H >= item.HumedadMinValue &&
                             upd.H < item.HumedadMaxValue)
                         {
                             switch (item.Riesgo)
@@ -140,14 +145,9 @@ namespace SecureSilo.Server.Controllers
                                     return estados[4];
                             }
                         }
-                    }
+                    }                  
                 }
-                else
-                {
-                    return estados[4]; //Alerta
-                }
-
-                return estados[4]; //Alerta
+                return estados[3]; //Alerta
             }
 
             return estados[1];

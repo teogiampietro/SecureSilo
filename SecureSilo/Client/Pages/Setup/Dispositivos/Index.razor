@@ -5,11 +5,9 @@
 @attribute [Authorize]
 
 <div class="container">
-    <h1>Dispositivos</h1>
+    <br />
+    <h2 class="text-center">Dispositivos</h2>
 
-    <div>
-        <a class="btn btn-success" href="crear-dispositivo">Configurar nuevo dispositivo</a>
-    </div>
     @if (dispositivos == null)
     {
         <text> Cargando dispositivos...</text>
@@ -28,7 +26,11 @@
                     <th>Descripción</th>
                     <th>Campo</th>
                     <th>Silo</th>
-                    <th></th>
+                    <th>
+                        <div>
+                            <a class="btn btn-success" href="crear-dispositivo">Configurar dispositivo</a>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +70,7 @@
     async Task BorrarDispositivo(int idDispositivo)
     {
         var dispositivoSeleccionado = dispositivos.First(x => x.Id == idDispositivo);
-        string mensajeConfirmacion = $"¿Desea borrar al usuario {dispositivoSeleccionado.Descripcion}?";
+        string mensajeConfirmacion = $"¿Desea dar de baja al dispositivo {dispositivoSeleccionado.Descripcion}?";
         if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
         {
             await Http.DeleteAsync($"dispositivos/{idDispositivo}");

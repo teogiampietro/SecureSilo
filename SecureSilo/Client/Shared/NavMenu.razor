@@ -28,32 +28,15 @@
                         </NavLink>
                     </li>
                     <li class="nav-item active">
-                        <NavLink class="nav-link" href="historial-updates">
+                        <NavLink class="nav-link" href="historial">
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Historial
                         </NavLink>
                     </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown04">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="estadisticas">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estadísticas
+                        </NavLink>
                     </li>
-
-                    <NavLink class="nav-link active" @onclick="()=>expandSubNav = !expandSubNav">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-                    </NavLink>
-                    @if (expandSubNav)
-                    {
-                        <NavLink class="expand-menu" href="">
-                            <span>Sub1</span>
-                        </NavLink>
-                        <NavLink class="expand-menu" href="">
-                            <span>Sub2</span>
-                        </NavLink>
-                    }
                 </Authorized>
             </AuthorizeView>                             
         </ul>

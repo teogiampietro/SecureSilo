@@ -4,10 +4,9 @@
 
 @attribute [Authorize]
 <div class="container">
-    <h1>Silos</h1>
-    <div>
-        <a class="btn btn-success" href="crear-silo">Nuevo Silo</a>
-    </div>
+    <br />  
+    <h2 class="text-center">Silos</h2>
+
     @if (silos == null)
     {
         <text> Cargando silos... </text>
@@ -22,11 +21,15 @@
             <thead>
                 <tr>
                     <th>Código Silo</th>
+                    <th>MAC</th>
                     <th>Descripción</th>
-                    <td>MAC</td>
                     <th>Campo</th>
                     <th>Grano</th>
-                    <th></th>
+                    <th>
+                        <div>
+                            <a class="btn btn-success" href="crear-silo">Nuevo silo</a>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -34,8 +37,8 @@
                 {
                 <tr>
                     <td>@silo.Id</td>
-                    <td>@silo.Descripcion</td>
                     <td>@silo.MAC</td>
+                    <td>@silo.Descripcion</td>
                     <td>@silo.Campo.Descripcion</td>
                     <td>@silo.Grano.Descripcion</td>
 

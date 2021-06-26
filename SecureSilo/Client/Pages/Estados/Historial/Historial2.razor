@@ -1,0 +1,135 @@
+﻿@page "/historial"
+@inject HttpClient Http
+
+<div class="container">
+    <br />
+    <h2 class="text-center">Historial de actualizaciones</h2>
+
+    <EditForm Model="@Dispositivo">
+        <div class="row">
+            <div class="col-sm">
+                <h5 class="text-center" >Campo</h5>
+                <div class="form-group">
+                    <div>
+                        <InputSelectNumber class="form-control"
+                                           ValueChanged="@((int valueCampo) => ValorCampoCambiado(valueCampo))"
+                                           ValueExpression="@(() => campoId )"
+                                           Value="campoId">
+                            <option value="0">-- Seleccione un Campo --</option>
+                            @foreach (var item in Campos)
+                            {
+                                @if (item.Id == campoId)
+                                {
+                                    <option selected value="@item.Id">@item.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h5 class="text-center">Silo</h5>
+                <div class="form-group">
+                    <div>
+                        <InputSelectNumber class="form-control"
+                                           ValueChanged="@((int valueSilo) => ValorSiloCambiado(valueSilo))"
+                                           ValueExpression="@(() => siloId )"
+                                           Value="siloId">
+                            <option value="0">-- Seleccione un Silo --</option>
+                            @foreach (var item in Silos)
+                            {
+                                @if (item.Id == Dispositivo.SiloId)
+                                {
+                                    <option selected value="@item.Id">@item.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </EditForm>
+    @if (dispositivos.Count != 0)
+    {
+        @foreach (var dispositivo in dispositivos)
+
+        {
+            <h4 class="d-flex justify-content-center font-weight-bold">@(dispositivo.Descripcion + ": " + dispositivo.MAC  )</h4>
+            <div class="table embed-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Fecha Hora</th>
+                            <th>Temperatura</th>
+                            <th>Humedad</th>
+                            <th>Movimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var update in dispositivo.Updates)
+                        {
+                            <tr>
+                                <td>@update.Id</td>
+                                <td>@update.F</td>
+                                <td>@update.T</td>
+                                <td>@update.H</td>
+                                <td>@update.A</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public Dispositivo Dispositivo { get; set; } = new Dispositivo();
+    List<Silo> Silos = new List<Silo>();
+    List<Campo> Campos = new List<Campo>();
+    List<Dispositivo> dispositivos = new List<Dispositivo>();
+    private int campoId = 0;
+    private int siloId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Campos = await Http.GetFromJsonAsync<List<Campo>>("campos");
+    }
+    private async Task ValorCampoCambiado(int valueCampo)
+    {
+        this.Dispositivo.SiloId = 0;
+        campoId = valueCampo;
+
+        await InvokeAsync(StateHasChanged);
+
+        if (valueCampo == 0)
+        {
+            Silos.Clear();
+        }
+        else
+        {
+            await CargarSilos(valueCampo);
+        }
+    }
+    private async Task CargarSilos(int campoId)
+    {
+        Silos = await Http.GetFromJsonAsync<List<Silo>>($"campos/{campoId}/silos");
+    }
+
+    private async Task ValorSiloCambiado(int valueSilo)
+    {
+        siloId = valueSilo;
+        dispositivos = await Http.GetFromJsonAsync<List<Dispositivo>>($"Dispositivos/GetDispositivoPorSilo/{valueSilo}");
+    }
+}
+
