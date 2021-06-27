@@ -1,5 +1,6 @@
 ﻿@page "/estadisticas"
 @inject HttpClient Http
+@inject IJSRuntime JsRunT
 <div class="container">
     <br />
     <h2 class="text-center">Estadisticas de los campos</h2>
@@ -27,9 +28,8 @@
         <DataAnnotationsValidator />
     </EditForm>
 
-    <h1 class="text-center">WORK IN PROGRESS</h1>
+    <div id="chartDiv" style="height: 400px;"></div>
 </div>
-
 
 @code {
     List<Campo> Campos = new List<Campo>();
@@ -37,9 +37,21 @@
     private int campo;
     Silo silo = new Silo();
 
+    private int PointCount = 123;
+
     protected override async Task OnInitializedAsync()
     {
         Campos = await Http.GetFromJsonAsync<List<Campo>>("campos");
+
+        double[] ys = new double[15] { 20, 23, 24, 31, 12, 23, 20, 19, 20, 23, 24, 26, 28, 30, 28 };
+        double[] xs = new double[15] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        PlotData(xs, ys);
     }
+
+    private void PlotData(double[] xs, double[] ys)
+    {
+        JsRunT.InvokeVoidAsync("generateChart", new { xs, ys });
+    }
+
 
 }
