@@ -56,7 +56,6 @@
                 </div>
             </div>
         </div>
-
     </EditForm>
     @if (dispositivos.Count != 0)
     {
@@ -94,7 +93,7 @@
 </div>
 
 @code {
-    [Parameter] public Dispositivo Dispositivo { get; set; } = new Dispositivo();
+    Dispositivo Dispositivo = new Dispositivo();
     List<Silo> Silos = new List<Silo>();
     List<Campo> Campos = new List<Campo>();
     List<Dispositivo> dispositivos = new List<Dispositivo>();

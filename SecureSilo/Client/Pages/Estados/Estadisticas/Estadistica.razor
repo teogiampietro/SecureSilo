@@ -4,54 +4,131 @@
 <div class="container">
     <br />
     <h2 class="text-center">Estadisticas de los campos</h2>
-    <EditForm Model="@campo">
-        <div class="form-group">
-            <h5 class="text-center">Campo</h5>
-            <div>
-                <InputSelectNumber class="form-control"
-                                   @bind-Value="campo">
-                    <option value="0">-- Seleccione un Campo --</option>
-                    @foreach (var campo in Campos)
-                    {
-                        @if (campo.Id == campoId)
-                        {
-                            <option selected value="@campo.Id">@campo.Descripcion</option>
-                        }
-                        else
-                        {
-                            <option value="@campo.Id">@campo.Descripcion</option>
-                        }
-                    }
-                </InputSelectNumber>
+
+    <EditForm Model="@Dispositivo">
+        <div class="row">
+            <div class="col-sm">
+                <h5 class="text-center">Campo</h5>
+                <div class="form-group">
+                    <div>
+                        <InputSelectNumber class="form-control"
+                                           ValueChanged="@((int valueCampo) => ValorCampoCambiado(valueCampo))"
+                                           ValueExpression="@(() => campoId )"
+                                           Value="campoId">
+                            <option value="0">-- Seleccione un Campo --</option>
+                            @foreach (var item in Campos)
+                            {
+                                @if (item.Id == campoId)
+                                {
+                                    <option selected value="@item.Id">@item.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h5 class="text-center">Silo</h5>
+                <div class="form-group">
+                    <div>
+                        <InputSelectNumber class="form-control"
+                                           ValueChanged="@((int valueSilo) => ValorSiloCambiado(valueSilo))"
+                                           ValueExpression="@(() => siloId )"
+                                           Value="siloId">
+                            <option value="0">-- Seleccione un Silo --</option>
+                            @foreach (var item in Silos)
+                            {
+                                @if (item.Id == siloId)
+                                {
+                                    <option selected value="@item.Id">@item.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
             </div>
         </div>
-        <DataAnnotationsValidator />
+        <div class=" text-center">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" @onclick="Temperatura">Temperatura</button>
+                <button type="button" class="btn btn-primary"@onclick="Humedad">Humedad</button>
+                <button type="button" class="btn btn-primary"@onclick="CO2">Dióxido de carbono</button>
+            </div>
+        </div>
     </EditForm>
-
     <div id="chartDiv" style="height: 400px;"></div>
 </div>
 
 @code {
     List<Campo> Campos = new List<Campo>();
+    List<Silo> Silos = new List<Silo>();
+    ResponseChart response = new ResponseChart();
+    Dispositivo Dispositivo = new Dispositivo();
     private int campoId = 0;
-    private int campo;
-    Silo silo = new Silo();
+    private int siloId = 0;
 
-    private int PointCount = 123;
+    private double[] temperatura;
+    private double[] humedad;
+    private double[] co2;
+
+    private double[] dias;
 
     protected override async Task OnInitializedAsync()
     {
         Campos = await Http.GetFromJsonAsync<List<Campo>>("campos");
 
-        double[] ys = new double[15] { 20, 23, 24, 31, 12, 23, 20, 19, 20, 23, 24, 26, 28, 30, 28 };
-        double[] xs = new double[15] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        PlotData(xs, ys);
+        dias = new double[15] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }; //, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+        //PlotData(xs, ys,"Dias","Temperatura");
     }
-
-    private void PlotData(double[] xs, double[] ys)
+    private async Task ValorCampoCambiado(int valueCampo)
     {
-        JsRunT.InvokeVoidAsync("generateChart", new { xs, ys });
+        this.Dispositivo.SiloId = 0;
+        campoId = valueCampo;
+
+        await InvokeAsync(StateHasChanged);
+
+        if (valueCampo == 0)
+        {
+            Silos.Clear();
+        }
+        else
+        {
+            await CargarSilos(valueCampo);
+        }
+    }
+    private async Task CargarSilos(int campoId)
+    {
+        Silos = await Http.GetFromJsonAsync<List<Silo>>($"campos/{campoId}/silos");
+    }
+    private async Task ValorSiloCambiado(int valueSilo)
+    {
+        siloId = valueSilo;
+        response = await Http.GetFromJsonAsync<ResponseChart>($"Silos/GetSiloChart/{valueSilo}");
     }
 
+    private void PlotData(double[] xs, double[] ys, string tiempo, string valor)
+    {
+        JsRunT.InvokeVoidAsync("generateChart", new { xs, ys, tiempo, valor });
+    }
+    private void Temperatura()
+    {
+        PlotData( dias, response.temperatura, "Dias", "Temperatura");
+    }
+    private void Humedad()
+    {
+        PlotData( dias, response.humedad, "Dias", "Humedad");
+    }
+    private void CO2()
+    {
+        PlotData( dias, response.co2, "Dias", "CO2");
+    }
 
 }

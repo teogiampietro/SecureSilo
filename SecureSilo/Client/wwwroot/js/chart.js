@@ -4,12 +4,16 @@ google.charts.setOnLoadCallback(initChart);
 function initChart() {
     var xs = [];
     var ys = [];
-    window.generateChart({ xs, ys });
+    var tiempo = "";
+    var valor = "";
+    window.generateChart({ xs, ys,tiempo,valor });
 }
 
 window.generateChart = (params) => {
     var xs = params.xs;
     var ys = params.ys;
+    var tiempo = params.tiempo;
+    var valor = params.valor;
 
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'X');
@@ -21,8 +25,8 @@ window.generateChart = (params) => {
     };
 
     var options = {
-        hAxis: { title: 'Dias' },
-        vAxis: { title: 'Temperatura' },
+        hAxis: { title: tiempo },
+        vAxis: { title: valor },
         title: 'Temperatura de los últimos 30 días',
         legend: { position: 'none' }
     };
