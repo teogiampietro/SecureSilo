@@ -13,12 +13,12 @@ namespace SecureSilo.Server.Controllers
     [ApiController]
     [Route("[controller]")]
    
-    public class UpdateController : ControllerBase
+    public class ActualizacionController : ControllerBase
     {
         public readonly ApplicationDbContext context;
         private Silo silo = new Silo();
         private List<Estado> estados = new List<Estado>();
-        public UpdateController(ApplicationDbContext context)
+        public ActualizacionController(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -33,9 +33,9 @@ namespace SecureSilo.Server.Controllers
         }
 
         [HttpGet("{id}", Name = "obtenerUpdate")]
-        public async Task<ActionResult<Update>> Get(int id)
+        public async Task<ActionResult<Actualizacion>> Get(int id)
         {
-            return await context.Updates.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Actualizaciones.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         [HttpGet("getFiltered/{nombreDispositivoFiltro}")]
@@ -75,7 +75,7 @@ namespace SecureSilo.Server.Controllers
 
                 foreach (var item in updateList)
                 {
-                    Update update = JsonSerializer.Deserialize<Update>(item.ToString());
+                    Actualizacion update = JsonSerializer.Deserialize<Actualizacion>(item.ToString());
                     Dispositivo dsp = FindDispositivo(update.M);
                     if (dsp == null)
                     {
@@ -114,7 +114,7 @@ namespace SecureSilo.Server.Controllers
             newDispositivo = context.Dispositivos.Where(x => x.MAC == MAC && x.SiloId == silo.Id).FirstOrDefault();
             return newDispositivo;
         }
-        private Estado CalcularEstadoUpdate(Update upd, Grano grano)
+        private Estado CalcularEstadoUpdate(Actualizacion upd, Grano grano)
         {
             if (grano.Parametros == null)
             {

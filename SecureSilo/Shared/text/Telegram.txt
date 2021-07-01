@@ -1,0 +1,8 @@
+﻿https://www.youtube.com/watch?v=-Er2kaKxaBg
+
+ngrok http -host-header=localhost 53661
+
+https://api.telegram.org/bot'TOKEN'/setwebhook?url=NGROKURL+RUTACONTROLLER 
+
+ejemplo:
+https://api.telegram.org/bot1809980038:AAH51WjegA2rQ27xs5EOiHxevDTtgNOPVu4/setwebhook?url=https://df1f14961e5a.ngrok.io/api/bot

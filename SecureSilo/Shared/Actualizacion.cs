@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecureSilo.Shared
 {
-   public class Update
+   public class Actualizacion
     {
         [Key]
         public int Id { get; set; }

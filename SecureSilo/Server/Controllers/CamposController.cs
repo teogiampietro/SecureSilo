@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SecureSilo.Server.Data;
+using SecureSilo.Shared;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using SecureSilo.Shared;
-using SecureSilo.Server.Data;
-using Microsoft.AspNetCore.Identity;
+using SecureSilo.Server.Models;
 
 namespace SecureSilo.Server.Controllers
 {
@@ -15,9 +16,11 @@ namespace SecureSilo.Server.Controllers
     public class CamposController : ControllerBase
     {
         public readonly ApplicationDbContext context;
-        public CamposController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public CamposController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
+            _userManager = userManager;
         }
         [HttpGet]
         public async Task<ActionResult<List<Campo>>> Get()
@@ -38,6 +41,8 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Campo campo)
         {
+            var asd =  _userManager.GetUserId(HttpContext.User);
+            campo.UserId = asd;
             context.Add(campo);
             await context.SaveChangesAsync();
             return new CreatedAtRouteResult("obtenerCampo", new { id = campo.Id }, campo);

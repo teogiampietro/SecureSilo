@@ -89,7 +89,7 @@ namespace SecureSilo.Server.Controllers
         public async Task<ActionResult<ResponseChart>> GetSiloChart(int idSilo)
         {
             ResponseChart response = new ResponseChart();
-            var updatesFiltrados = (from updates in this.context.Updates
+            var updatesFiltrados = (from updates in this.context.Actualizaciones
                                join dispositivos in context.Dispositivos on updates.DispositivoID equals dispositivos.Id
                                where dispositivos.SiloId == idSilo
                                select updates).Take(15);

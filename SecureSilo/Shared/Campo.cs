@@ -16,7 +16,7 @@ namespace SecureSilo.Shared
         //tiene una lista de silos
         public List<Silo> ListaSilos { get; set; }
         //tiene un usuario
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int LocalidadId { get; set; }
         public Localidad Localidad { get; set; }
     }

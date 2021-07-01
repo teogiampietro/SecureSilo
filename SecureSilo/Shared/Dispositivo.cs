@@ -22,7 +22,7 @@ namespace SecureSilo.Shared
         public Silo Silo { get; set; }
         
         //dispositivo ... updates
-        public List<Update> Updates { get; set; }
+        public List<Actualizacion> Updates { get; set; }
        
 
     }
