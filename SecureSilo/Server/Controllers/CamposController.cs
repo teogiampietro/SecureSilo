@@ -41,8 +41,8 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Campo campo)
         {
-            var asd =  _userManager.GetUserId(HttpContext.User);
-            campo.UserId = asd;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            campo.UserId = userId;
             context.Add(campo);
             await context.SaveChangesAsync();
             return new CreatedAtRouteResult("obtenerCampo", new { id = campo.Id }, campo);

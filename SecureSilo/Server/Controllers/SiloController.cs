@@ -92,7 +92,9 @@ namespace SecureSilo.Server.Controllers
             var updatesFiltrados = (from updates in this.context.Actualizaciones
                                join dispositivos in context.Dispositivos on updates.DispositivoID equals dispositivos.Id
                                where dispositivos.SiloId == idSilo
-                               select updates).Take(15);
+                               orderby updates.F descending
+                               select updates
+                               ).Take(30);
 
             response.humedad = updatesFiltrados.Select(x => x.H).ToArray();
             response.co2 = updatesFiltrados.Select(x => x.C).ToArray();
