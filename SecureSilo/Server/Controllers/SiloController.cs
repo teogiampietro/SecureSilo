@@ -24,6 +24,7 @@ namespace SecureSilo.Server.Controllers
             this.context = context;
             _userManager = userManager;
         }
+        #region CUD
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
         {
@@ -62,57 +63,67 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
-
+        #endregion
+        #region GETTERS
+        //Endpoint para obtener todos los silos
         [HttpGet]
         public async Task<ActionResult<List<Silo>>> Get()
         {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var asd = await context.Silos
-                .Include("Dispositivos.Estado")
-                .Include(y => y.Campo)
-                .Include(z => z.Grano.Parametros)
-                .Include(a => a.Estado)
-                .Where(x => x.UserId== User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .Include(a => a.Dispositivos).ThenInclude(x => x.Estado)
+                .Include(b => b.Campo)
+                .Include(c => c.Grano)
+                .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .ToListAsync();
             return asd;
         }
+        //Endpoint para obtener un silo por id
         [HttpGet("{id}", Name = "obtenerSilo")]
         public async Task<ActionResult<Silo>> Get(int id)
         {
             return await context.Silos
                 .Include(a => a.Grano)
                 .Include(b => b.Campo)
-                .Where(x => x.UserId== User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        //Endpoint para traer una lista de silos que pertenecen a un campo
         [HttpGet("GetSiloxCampo/{campoId}", Name = "GetSiloxCampo")]
         public async Task<ActionResult<List<Silo>>> GetSiloxCampo(int campoId)
         {
             return await context.Silos
                 .Include(a => a.Grano)
                 .Include(b => b.Campo)
-                .Include(c => c.Dispositivos).ThenInclude(y => y.Estado)
+                .Include(c => c.Dispositivos).ThenInclude(c => c.Estado)
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .Where(x => x.CampoID == campoId)
                 .ToListAsync();
         }
+        //Endpoint para las gráficas de la ventana estadísticas
         [HttpGet("GetSiloChart/{idSilo}")]
-        public async Task<ActionResult<ResponseChart>> GetSiloChart(int idSilo)
-        {
+        public async Task<ActionResult<ResponseChart>> GetSiloChart(int idSilo, int dias = 30)
+        {           
             ResponseChart response = new ResponseChart();
             var updatesFiltrados = (from updates in this.context.Actualizaciones
                                     join dispositivos in context.Dispositivos on updates.DispositivoID equals dispositivos.Id
-                                    where dispositivos.SiloId == idSilo 
-                                    && dispositivos.UserId ==  User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                    orderby updates.F descending
-                                    select updates
-                               ).Take(30);
+                                    where dispositivos.SiloId == idSilo
+                                    && dispositivos.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                    group updates by updates.F into g
+                                    orderby g.Key descending
+                                    select new
+                                    {
+                                        g.Key,
+                                        temperatura = g.Average(x => x.T),
+                                        co2 = g.Average(x => x.C),
+                                        humedad = g.Average(x => x.H)
+                                    }
+                               ).Take(dias);
 
-            response.humedad = updatesFiltrados.Select(x => x.H).ToArray();
-            response.co2 = updatesFiltrados.Select(x => x.C).ToArray();
-            response.temperatura = updatesFiltrados.Select(x => x.T).ToArray();
+            response.humedad = await updatesFiltrados.Select(x => x.humedad).ToArrayAsync();
+            response.co2 = await updatesFiltrados.Select(x => x.co2).ToArrayAsync();
+            response.temperatura = await updatesFiltrados.Select(x => x.temperatura).ToArrayAsync();
             return response;
         }
-
+        #endregion
     }
 }

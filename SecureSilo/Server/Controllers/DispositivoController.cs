@@ -24,10 +24,17 @@ namespace SecureSilo.Server.Controllers
             this.context = context;
             _userManager = userManager;
         }
+        #region CUD
         [HttpPost]
         public async Task<ActionResult<List<Dispositivo>>> Post(Dispositivo dispositivo)
         {
-            //TODO: agregar validacion que el silo no puede tener más de 10 dispositivos
+            Silo silo = this.context.Silos
+                .Include(x=>x.Dispositivos)
+                .Where(x => x.Id == dispositivo.SiloId).FirstOrDefault();
+            if (silo.Dispositivos != null && silo.Dispositivos.Count >= 10)
+            {
+                return new BadRequestResult();
+            }
             dispositivo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             context.Add(dispositivo);
             await context.SaveChangesAsync();
@@ -56,7 +63,9 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
         #region GET
+        //Endpoint para traer todos los dispositivos
         [HttpGet]
         public async Task<ActionResult<List<Dispositivo>>> Get()
         {
@@ -66,6 +75,7 @@ namespace SecureSilo.Server.Controllers
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .ToListAsync();
         }
+        //Endpoint para traer un dispositivos por id
         [HttpGet("{id}", Name = "obtenerDispositivo")]
         public async Task<ActionResult<Dispositivo>> Get(int id)
         {
@@ -74,17 +84,16 @@ namespace SecureSilo.Server.Controllers
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        //Endpoint para traer una lista de dispositivos que pertenecen a un id de silo
         [HttpGet("GetDispositivoPorSilo/{idSilo}", Name = "obtenerDispositivoxSilo")]
         public async Task<ActionResult<List<Dispositivo>>> GetDispositivosPorSilo(int idSilo)
         {
-            return await context.Dispositivos   
+            return await context.Dispositivos
                 .Include(x => x.Updates)
                 .Where(x => x.SiloId == idSilo)
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .ToListAsync();
         }
         #endregion
-
-
     }
 }
