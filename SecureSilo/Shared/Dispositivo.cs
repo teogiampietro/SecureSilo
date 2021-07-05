@@ -23,7 +23,7 @@ namespace SecureSilo.Shared
         
         //dispositivo ... updates
         public List<Actualizacion> Updates { get; set; }
-       
+        public string UserId { get; set; }
 
     }
 }

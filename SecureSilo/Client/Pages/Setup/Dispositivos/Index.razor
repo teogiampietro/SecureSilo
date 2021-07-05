@@ -14,10 +14,22 @@
     }
     else if (dispositivos.Length == 0)
     {
+        <div>
+            <a class="btn btn-success" href="crear-dispositivo">Configurar dispositivo</a>
+        </div>
         <text> No se encontraron dispositivos en la base de datos. </text>
+
     }
     else
     {
+        <label>Update</label>
+        <label class="sr-only" for="nombre-filtro">Filtrar</label>
+        <input type="text" class="form-control mb-2 mr-sm-2"
+               @bind="jsonActualizacion" placeholder="Filtrar por Dispositivo" />
+        <button type="button" class="btn btn-dark mr-sm-2 mb-2"
+                @onclick="Actualizaciones ">
+            Filtrar
+        </button>
         <table class="table">
             <thead>
                 <tr>
@@ -56,6 +68,7 @@
 
 @code {
     Dispositivo[] dispositivos { get; set; }
+    string jsonActualizacion = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +89,9 @@
             await Http.DeleteAsync($"dispositivos/{idDispositivo}");
             await CargarDispositivos();
         }
-
+    }
+    async Task Actualizaciones()
+    {
+        await Http.PostAsJsonAsync("actualizacion", jsonActualizacion);
     }
 }

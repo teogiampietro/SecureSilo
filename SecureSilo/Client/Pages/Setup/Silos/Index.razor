@@ -4,7 +4,7 @@
 
 @attribute [Authorize]
 <div class="container">
-    <br />  
+    <br />
     <h2 class="text-center">Silos</h2>
 
     @if (silos == null)
@@ -13,6 +13,9 @@
     }
     else if (silos.Length == 0)
     {
+        <div>
+            <a class="btn btn-success" href="crear-silo">Nuevo silo</a>
+        </div>
         <text> No se encontraron silos en la base de datos. </text>
     }
     else
@@ -35,19 +38,19 @@
             <tbody>
                 @foreach (var silo in silos)
                 {
-                <tr>
-                    <td>@silo.Id</td>
-                    <td>@silo.MAC</td>
-                    <td>@silo.Descripcion</td>
-                    <td>@silo.Campo.Descripcion</td>
-                    <td>@silo.Grano.Descripcion</td>
+                    <tr>
+                        <td>@silo.Id</td>
+                        <td>@silo.MAC</td>
+                        <td>@silo.Descripcion</td>
+                        <td>@silo.Campo.Descripcion</td>
+                        <td>@silo.Grano.Descripcion</td>
 
-                    <td>
-                        <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
-                    </td>
+                        <td>
+                            <a class="btn btn-success" href="editar-silo/@silo.Id">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => BorrarSilo(silo.Id))">Borrar</button>
+                        </td>
 
-                </tr>
+                    </tr>
                 }
             </tbody>
         </table>

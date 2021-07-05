@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecureSilo.Shared;
 using SecureSilo.Server.Data;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using SecureSilo.Server.Models;
 
 namespace SecureSilo.Server.Controllers
 {
@@ -15,9 +18,11 @@ namespace SecureSilo.Server.Controllers
     public class SilosController : ControllerBase
     {
         public readonly ApplicationDbContext context;
-        public SilosController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public SilosController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
+            _userManager = userManager;
         }
         [HttpPost]
         public async Task<ActionResult> Post(Silo silo)
@@ -31,6 +36,7 @@ namespace SecureSilo.Server.Controllers
                     if (silo.Estado == null)
                         silo.Estado = context.Estados.FirstOrDefault();
                 }
+                silo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 context.Add(silo);
                 await context.SaveChangesAsync();
                 return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);
@@ -60,12 +66,15 @@ namespace SecureSilo.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Silo>>> Get()
         {
-            return await context.Silos
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var asd = await context.Silos
                 .Include("Dispositivos.Estado")
                 .Include(y => y.Campo)
                 .Include(z => z.Grano.Parametros)
                 .Include(a => a.Estado)
+                .Where(x => x.UserId== User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .ToListAsync();
+            return asd;
         }
         [HttpGet("{id}", Name = "obtenerSilo")]
         public async Task<ActionResult<Silo>> Get(int id)
@@ -73,6 +82,7 @@ namespace SecureSilo.Server.Controllers
             return await context.Silos
                 .Include(a => a.Grano)
                 .Include(b => b.Campo)
+                .Where(x => x.UserId== User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
         [HttpGet("GetSiloxCampo/{campoId}", Name = "GetSiloxCampo")]
@@ -82,6 +92,7 @@ namespace SecureSilo.Server.Controllers
                 .Include(a => a.Grano)
                 .Include(b => b.Campo)
                 .Include(c => c.Dispositivos).ThenInclude(y => y.Estado)
+                .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .Where(x => x.CampoID == campoId)
                 .ToListAsync();
         }
@@ -90,10 +101,11 @@ namespace SecureSilo.Server.Controllers
         {
             ResponseChart response = new ResponseChart();
             var updatesFiltrados = (from updates in this.context.Actualizaciones
-                               join dispositivos in context.Dispositivos on updates.DispositivoID equals dispositivos.Id
-                               where dispositivos.SiloId == idSilo
-                               orderby updates.F descending
-                               select updates
+                                    join dispositivos in context.Dispositivos on updates.DispositivoID equals dispositivos.Id
+                                    where dispositivos.SiloId == idSilo 
+                                    && dispositivos.UserId ==  User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                    orderby updates.F descending
+                                    select updates
                                ).Take(30);
 
             response.humedad = updatesFiltrados.Select(x => x.H).ToArray();

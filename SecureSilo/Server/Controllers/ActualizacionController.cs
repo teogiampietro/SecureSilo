@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecureSilo.Shared;
 using SecureSilo.Server.Data;
 using System.Text.Json;
+using SecureSilo.Server.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace SecureSilo.Server.Controllers
 {
@@ -16,11 +19,13 @@ namespace SecureSilo.Server.Controllers
     public class ActualizacionController : ControllerBase
     {
         public readonly ApplicationDbContext context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private Silo silo = new Silo();
         private List<Estado> estados = new List<Estado>();
-        public ActualizacionController(ApplicationDbContext context)
+        public ActualizacionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
+            _userManager = userManager;
         }
         [HttpGet(Name = "listaUpdates")]
         public async Task<ActionResult<List<Dispositivo>>> Get()
@@ -48,7 +53,7 @@ namespace SecureSilo.Server.Controllers
         {
             string[] updateList = jsonUpdateList.Split(";");
             //va a la controladora de dispositivos y inicializa el contexto
-            DispositivosController cDispositivos = new DispositivosController(context);
+            DispositivosController cDispositivos = new DispositivosController(context, _userManager);
             //en un objeto silo, graba la mac para luego buscar por la misma
             Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
             estados = context.Estados.ToList();
@@ -61,7 +66,7 @@ namespace SecureSilo.Server.Controllers
                     newSilo.Descripcion = "SIN_ASIGNAR";
                     newSilo.MAC = _silo.MAC;
                     newSilo.Estado = estados[0];
-                    SilosController cSilo = new SilosController(context);
+                    SilosController cSilo = new SilosController(context, _userManager);
                     //aca le pega a la base con el silo nuevo creado
                     await cSilo.Post(newSilo);
                     //se trae el silo nuevo creado y este es el silo con el que vamos a trabajar
@@ -84,8 +89,9 @@ namespace SecureSilo.Server.Controllers
                             MAC = update.M,
                             Descripcion = string.Empty,
                             Silo = silo,
-                            Estado = estados[0]
-                        };
+                            Estado = estados[0],
+                            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                    };
                         await cDispositivos.Post(dsp);
                     }
                     update.Dispositivo = dsp;
