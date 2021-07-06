@@ -27,7 +27,7 @@ window.generateChart = (params) => {
     var options = {
         hAxis: { title: tiempo },
         vAxis: { title: valor },
-        title: 'Temperatura de los últimos 30 días',
+        title: 'Temperatura de los últimos '+ tiempo+' días',
         legend: { position: 'none' }
     };
 

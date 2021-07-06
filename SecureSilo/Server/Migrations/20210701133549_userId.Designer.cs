@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210701133549_userId")]
+    partial class userId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,41 +303,6 @@ namespace SecureSilo.Server.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SecureSilo.Shared.Actualizacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("A")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("C")
-                        .HasColumnType("float");
-
-                    b.Property<int>("DispositivoID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("F")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("H")
-                        .HasColumnType("float");
-
-                    b.Property<string>("M")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("T")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DispositivoID");
-
-                    b.ToTable("Actualizaciones");
-                });
-
             modelBuilder.Entity("SecureSilo.Shared.Campo", b =>
                 {
                     b.Property<int>("Id")
@@ -385,9 +352,6 @@ namespace SecureSilo.Server.Migrations
 
                     b.Property<int>("SiloId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -665,9 +629,6 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CampoID");
@@ -677,6 +638,41 @@ namespace SecureSilo.Server.Migrations
                     b.HasIndex("GranoID");
 
                     b.ToTable("Silos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("A")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("C")
+                        .HasColumnType("float");
+
+                    b.Property<int>("DispositivoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("F")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("H")
+                        .HasColumnType("float");
+
+                    b.Property<string>("M")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("T")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DispositivoID");
+
+                    b.ToTable("Updates");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -726,15 +722,6 @@ namespace SecureSilo.Server.Migrations
                     b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SecureSilo.Shared.Actualizacion", b =>
-                {
-                    b.HasOne("SecureSilo.Shared.Dispositivo", "Dispositivo")
-                        .WithMany("Updates")
-                        .HasForeignKey("DispositivoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -809,6 +796,15 @@ namespace SecureSilo.Server.Migrations
                     b.HasOne("SecureSilo.Shared.Grano", "Grano")
                         .WithMany()
                         .HasForeignKey("GranoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Dispositivo", "Dispositivo")
+                        .WithMany("Updates")
+                        .HasForeignKey("DispositivoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -29,6 +29,7 @@ namespace SecureSilo.Shared
 
         //Un silo tiene una lista de dispositivos
         public List<Dispositivo> Dispositivos { get; set; }
+        public string UserId { get; set; }
 
 
 

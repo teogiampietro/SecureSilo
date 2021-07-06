@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:1958",
-      "sslPort": 44336
+      "applicationUrl": "http://localhost:53661",
+      "sslPort": 0
     }
   },
   "profiles": {
@@ -17,7 +17,6 @@
     },
     "SecureSilo.Server": {
       "commandName": "Project",
-      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
