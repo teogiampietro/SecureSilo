@@ -92,6 +92,7 @@ namespace SecureSilo.Server.Controllers
                             MAC = update.M,
                             Descripcion = string.Empty,
                             Silo = silo,
+                            SiloId = silo.Id,
                             Estado = estados[0],
                             UserId = userId
                         };
