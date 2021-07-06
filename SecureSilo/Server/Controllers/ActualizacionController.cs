@@ -48,9 +48,14 @@ namespace SecureSilo.Server.Controllers
         {
             return await context.Dispositivos.Include(x => x.Updates).Where(y => y.Descripcion == nombreDispositivoFiltro).ToListAsync();
         }
+        //Recibe un string de updates para un determiado silo
         [HttpPost]
-        public async Task<ActionResult> Post(string jsonUpdateList)
+        public async Task<ActionResult> Post([FromQuery]string jsonUpdateList)
         {
+            if (string.IsNullOrEmpty(jsonUpdateList))
+            {
+                return new BadRequestResult();
+            }
             string[] updateList = jsonUpdateList.Split(";");
             //va a la controladora de dispositivos y inicializa el contexto
             DispositivosController cDispositivos = new DispositivosController(context, _userManager);
@@ -72,9 +77,6 @@ namespace SecureSilo.Server.Controllers
                     //se trae el silo nuevo creado y este es el silo con el que vamos a trabajar
                     silo = context.Silos.Where(a => a.MAC == newSilo.MAC).FirstOrDefault();
                 }
-                //traigo los estados de la base
-                
-
                 //remuevo el primer elemento, porque es un elemento de tipo silo
                 updateList = updateList.Where((source, index) => index != 0).ToArray();
 
@@ -84,14 +86,15 @@ namespace SecureSilo.Server.Controllers
                     Dispositivo dsp = FindDispositivo(update.M);
                     if (dsp == null)
                     {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                         dsp = new Dispositivo
                         {
                             MAC = update.M,
                             Descripcion = string.Empty,
                             Silo = silo,
                             Estado = estados[0],
-                            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                    };
+                            UserId = userId
+                        };
                         await cDispositivos.Post(dsp);
                     }
                     update.Dispositivo = dsp;
@@ -142,7 +145,7 @@ namespace SecureSilo.Server.Controllers
                             switch (item.Riesgo)
                             {
                                 case Constants.Alto:
-                                    return estados[3]; //alerta
+                                    return estados[2]; //advertencia
                                 case Constants.Medio:
                                     return estados[2]; //advertencia
                                 case Constants.Bajo:
@@ -161,16 +164,16 @@ namespace SecureSilo.Server.Controllers
         private Estado CalcularEstadoSilo(Silo silo)
         {
             List<Dispositivo> dispositivosRevisar = new List<Dispositivo>();
-            dispositivosRevisar = silo.Dispositivos.Where(a => a.Estado == estados[3]).ToList();
-            dispositivosRevisar = silo.Dispositivos.Where(b => b.Estado == estados[2]).ToList();
+            dispositivosRevisar.AddRange(silo.Dispositivos.Where(a => a.Estado == estados[3]).ToList());
+            dispositivosRevisar.AddRange(silo.Dispositivos.Where(b => b.Estado == estados[2]).ToList());
 
             if (dispositivosRevisar != null && dispositivosRevisar.Count > 0)
             {
-                if (dispositivosRevisar.Where(x => x.Estado == estados[3]) != null)
+                if (dispositivosRevisar.Any(x => x.Estado == estados[3]))
                 {
                     return estados[3];
                 }
-                else if (dispositivosRevisar.Where(x => x.Estado == estados[2]) != null)
+                else if (dispositivosRevisar.Any(x => x.Estado == estados[2]) )
                 {
                     return estados[2];
                 }

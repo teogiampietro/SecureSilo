@@ -28,14 +28,18 @@ namespace SecureSilo.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Dispositivo>>> Post(Dispositivo dispositivo)
         {
-            Silo silo = this.context.Silos
+            Silo silo = new Silo();
+            silo = this.context.Silos
                 .Include(x=>x.Dispositivos)
-                .Where(x => x.Id == dispositivo.SiloId).FirstOrDefault();
+                .Where(x => x.Id == dispositivo.Silo.Id).FirstOrDefault();
             if (silo.Dispositivos != null && silo.Dispositivos.Count >= 10)
             {
                 return new BadRequestResult();
             }
-            dispositivo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(dispositivo.UserId) )
+            {
+                dispositivo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }           
             context.Add(dispositivo);
             await context.SaveChangesAsync();
             if (String.IsNullOrEmpty(dispositivo.Descripcion))

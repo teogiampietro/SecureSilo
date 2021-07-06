@@ -8,7 +8,7 @@
     <EditForm Model="@Dispositivo">
         <div class="row">
             <div class="col-sm">
-                <h5 class="text-center" >Campo</h5>
+                <h5 class="text-center">Campo</h5>
                 <div class="form-group">
                     <div>
                         <InputSelectNumber class="form-control"
@@ -67,10 +67,10 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Fecha Hora</th>
                             <th>Temperatura</th>
                             <th>Humedad</th>
+                            <th>CO2</th>
                             <th>Movimiento</th>
                         </tr>
                     </thead>
@@ -78,10 +78,10 @@
                         @foreach (var update in dispositivo.Updates)
                         {
                             <tr>
-                                <td>@update.Id</td>
                                 <td>@update.F</td>
                                 <td>@update.T</td>
                                 <td>@update.H</td>
+                                <td>@update.C</td>
                                 <td>@update.A</td>
                             </tr>
                         }
@@ -89,7 +89,16 @@
                 </table>
             </div>
         }
+
     }
+    else
+    {
+        if (siloId != 0)
+        {
+            <text>Este silo no posee actualizaciones</text>
+        }
+    }
+
 </div>
 
 @code {

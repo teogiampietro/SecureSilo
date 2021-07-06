@@ -91,16 +91,20 @@ namespace SecureSilo.Server.Controllers
         [HttpGet("GetSiloxCampo/{campoId}", Name = "GetSiloxCampo")]
         public async Task<ActionResult<List<Silo>>> GetSiloxCampo(int campoId)
         {
-            return await context.Silos
-                .Include(a => a.Grano)
+            var response = await context.Silos
+                .Include(a => a.Grano.Parametros)
                 .Include(b => b.Campo)
                 .Include(c => c.Dispositivos).ThenInclude(c => c.Estado)
+                .Include(d => d.Estado)
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .Where(x => x.CampoID == campoId)
                 .ToListAsync();
+
+            return response;
         }
+
         //Endpoint para las gráficas de la ventana estadísticas
-        [HttpGet("GetSiloChart/{idSilo}")]
+        [HttpGet("GetSiloChart/{idSilo}&{dias}")]
         public async Task<ActionResult<ResponseChart>> GetSiloChart(int idSilo, int dias = 30)
         {           
             ResponseChart response = new ResponseChart();
