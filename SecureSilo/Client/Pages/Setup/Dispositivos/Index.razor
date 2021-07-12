@@ -7,7 +7,19 @@
 <div class="container">
     <br />
     <h2 class="text-center">Dispositivos</h2>
-
+    <div class="row">
+        <div class="col-sm-10">
+            <label class="sr-only" for="nombre-filtro">Filtrar</label>
+            <input type="text" class="form-control mb-2 mr-sm-2"
+                   @bind="jsonUpdateList" placeholder="Simulador de actualizacion, solo para desarrollo" />
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-dark mr-sm-2 mb-2"
+                    @onclick="Actualizaciones ">
+                Enviar
+            </button>
+        </div>
+    </div>
     @if (dispositivos == null)
     {
         <text> Cargando dispositivos...</text>
@@ -22,20 +34,6 @@
     }
     else
     {
-        <div class="row">
-            <div class="col-sm-10">
-                <label class="sr-only" for="nombre-filtro">Filtrar</label>
-                <input type="text" class="form-control mb-2 mr-sm-2"
-                       @bind="jsonUpdateList" placeholder="Simulador de actualizacion, solo para desarrollo" />
-            </div>
-            <div class="col-sm-2">
-                <button type="button" class="btn btn-dark mr-sm-2 mb-2"
-                        @onclick="Actualizaciones ">
-                    Enviar
-                </button>
-            </div>
-        </div>
-
         <table class="table">
             <thead>
                 <tr>
@@ -101,6 +99,6 @@
 
         var content = new StringContent(jsonUpdateList, System.Text.Encoding.UTF8);
 
-        await Http.PostAsync($"actualizacion?jsonUpdateList={jsonUpdateList}",content);
+        await Http.PostAsync($"actualizacion?jsonUpdateList={jsonUpdateList}", content);
     }
 }
