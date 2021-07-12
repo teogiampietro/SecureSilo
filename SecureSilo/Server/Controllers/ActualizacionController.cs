@@ -65,6 +65,7 @@ namespace SecureSilo.Server.Controllers
             //en un objeto silo, graba la mac para luego buscar por la misma
             Silo _silo = JsonSerializer.Deserialize<Silo>(updateList[0]);
             estados = context.Estados.ToList();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
                 if (!SiloExist(_silo))
@@ -74,7 +75,8 @@ namespace SecureSilo.Server.Controllers
                     {
                         Descripcion = "SIN_ASIGNAR",
                         MAC = _silo.MAC,
-                        Estado = estados[0]
+                        Estado = estados[0],
+                        UserId = userId
                     };
                     SilosController cSilo = new SilosController(context, _userManager);
                     //aca le pega a la base con el silo nuevo creado
@@ -93,7 +95,7 @@ namespace SecureSilo.Server.Controllers
                     Dispositivo dsp = FindDispositivo(update.M);
                     if (dsp == null)
                     {
-                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        
                         dsp = new Dispositivo
                         {
                             MAC = update.M,
@@ -209,19 +211,19 @@ namespace SecureSilo.Server.Controllers
                 return true;
         }
 
-        private StringBuilder ArmarString()
+        private string ArmarBodyEmail()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Informe de alerta:");
-            sb.AppendLine("Le informamos que en el campo " + silo.Campo.Descripcion);
+            sb.Append("Le informamos que en el campo " + silo.Campo.Descripcion);
             sb.Append(", el silo " + silo.Descripcion);
-            sb.Append(" en el ultimo recibo de actualizacion recibio una falla.");
+            sb.AppendLine(" en el ultimo recibo de actualizacion recibio una falla.");
             sb.AppendLine("Recomendamos tomar acciones.");
             sb.AppendLine("Localidad:" + silo.Campo.Localidad);
             sb.AppendLine("Ubicacion:" + silo.Campo.Ubicacion);
             sb.AppendLine("");
             sb.AppendLine("Sistema de monitoreo AlarmSilo");
-            return sb;
+            return sb.ToString();
         }
 
         private void EnviarMailAsync()
@@ -230,10 +232,9 @@ namespace SecureSilo.Server.Controllers
             //capturar mail según dueño del campo
             var mailCampo = context.Users.Where(x => x.Id == silo.UserId).FirstOrDefault();
 
-            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA ALARM SILO", ArmarString().ToString());
+            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA ALARM SILO", ArmarBodyEmail());
             if (resultado == true)
                 flag = true;
-
         }
         #endregion
 

@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace SecureSilo.Server.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
     public class MailServiceController : ControllerBase
     {
         private readonly string from = "securesilo@gmail.com";
@@ -21,7 +19,7 @@ namespace SecureSilo.Server.Controllers
             this.context = context;
             _userManager = userManager;
         }
-        [HttpPost]
+
         public bool SendMessage(string to, string subject, string bodyText)
         {
             MimeMessage message = new MimeMessage();
