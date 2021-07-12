@@ -10,22 +10,25 @@ using System.Text.Json;
 using SecureSilo.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Text;
 
 namespace SecureSilo.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-   
+
     public class ActualizacionController : ControllerBase
     {
         public readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> _userManager;
         private Silo silo = new Silo();
         private List<Estado> estados = new List<Estado>();
+        private bool flag;
         public ActualizacionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
             _userManager = userManager;
+            flag = false;
         }
         [HttpGet(Name = "listaUpdates")]
         public async Task<ActionResult<List<Dispositivo>>> Get()
@@ -50,7 +53,7 @@ namespace SecureSilo.Server.Controllers
         }
         //Recibe un string de updates para un determiado silo
         [HttpPost]
-        public async Task<ActionResult> Post([FromQuery]string jsonUpdateList)
+        public async Task<ActionResult> Post([FromQuery] string jsonUpdateList)
         {
             if (string.IsNullOrEmpty(jsonUpdateList))
             {
@@ -67,18 +70,22 @@ namespace SecureSilo.Server.Controllers
                 if (!SiloExist(_silo))
                 {
                     //si no encuentro silo creo uno
-                    Silo newSilo = new Silo();
-                    newSilo.Descripcion = "SIN_ASIGNAR";
-                    newSilo.MAC = _silo.MAC;
-                    newSilo.Estado = estados[0];
+                    Silo newSilo = new Silo
+                    {
+                        Descripcion = "SIN_ASIGNAR",
+                        MAC = _silo.MAC,
+                        Estado = estados[0]
+                    };
                     SilosController cSilo = new SilosController(context, _userManager);
                     //aca le pega a la base con el silo nuevo creado
                     await cSilo.Post(newSilo);
                     //se trae el silo nuevo creado y este es el silo con el que vamos a trabajar
-                    silo = context.Silos.Where(a => a.MAC == newSilo.MAC).FirstOrDefault();
+                    silo = context.Silos.Where(a => a.MAC == newSilo.MAC)
+                                        .FirstOrDefault();
                 }
                 //remuevo el primer elemento, porque es un elemento de tipo silo
-                updateList = updateList.Where((source, index) => index != 0).ToArray();
+                updateList = updateList.Where((source, index) => index != 0)
+                                       .ToArray();
 
                 foreach (var item in updateList)
                 {
@@ -109,7 +116,7 @@ namespace SecureSilo.Server.Controllers
                 context.Entry(silo).State = EntityState.Modified;
             }
             catch (Exception e)
-            { 
+            {
                 throw new InvalidOperationException(e.Message);
             }
 
@@ -154,7 +161,7 @@ namespace SecureSilo.Server.Controllers
                                     return estados[4];
                             }
                         }
-                    }                  
+                    }
                 }
                 return estados[3]; //Alerta
             }
@@ -171,9 +178,12 @@ namespace SecureSilo.Server.Controllers
             {
                 if (dispositivosRevisar.Any(x => x.Estado == estados[3]))
                 {
+                    if (flag == false)
+                        EnviarMailAsync();
+
                     return estados[3];
                 }
-                else if (dispositivosRevisar.Any(x => x.Estado == estados[2]) )
+                else if (dispositivosRevisar.Any(x => x.Estado == estados[2]))
                 {
                     return estados[2];
                 }
@@ -196,6 +206,33 @@ namespace SecureSilo.Server.Controllers
                 return false;
             else
                 return true;
+        }
+
+        private StringBuilder ArmarString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Informe de alerta:");
+            sb.AppendLine("Le informamos que en el campo " + silo.Campo.Descripcion);
+            sb.Append(", el silo " + silo.Descripcion);
+            sb.Append(" en el ultimo recibo de actualizacion recibio una falla.");
+            sb.AppendLine("Recomendamos tomar acciones.");
+            sb.AppendLine("Localidad:" + silo.Campo.Localidad);
+            sb.AppendLine("Ubicacion:" + silo.Campo.Ubicacion);
+            sb.AppendLine("");
+            sb.AppendLine("Sistema de monitoreo AlarmSilo");
+            return sb;
+        }
+
+        private void EnviarMailAsync()
+        {
+            MailServiceController mail = new MailServiceController(context, _userManager);
+            //capturar mail según dueño del campo
+            var mailCampo = context.Users.Where(x => x.Id == silo.UserId).FirstOrDefault();
+
+            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA ALARM SILO", ArmarString().ToString());
+            if (resultado == true)
+                flag = true;
+
         }
         #endregion
 

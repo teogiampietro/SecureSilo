@@ -1,8 +1,8 @@
-﻿using MimeKit;
-using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Mvc;
-using SecureSilo.Server.Data;
+﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using SecureSilo.Server.Data;
 using SecureSilo.Server.Models;
 using System.Threading.Tasks;
 
@@ -22,12 +22,12 @@ namespace SecureSilo.Server.Controllers
             _userManager = userManager;
         }
         [HttpPost]
-        public ActionResult<bool> SendMessage(string to, string subject, string bodyText)
+        public bool SendMessage(string to, string subject, string bodyText)
         {
             MimeMessage message = new MimeMessage();
-            message.From.Add(new MailboxAddress(from));
+            message.From.Add(address: new MailboxAddress(from));
 
-            message.To.Add(new MailboxAddress(to));
+            message.To.Add(address: new MailboxAddress(to));
 
             message.Subject = subject;
 
