@@ -37,7 +37,9 @@ namespace SecureSilo.Server.Controllers
                     if (silo.Estado == null)
                         silo.Estado = context.Estados.FirstOrDefault();
                 }
-                silo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(silo.UserId))
+                    silo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                
                 context.Add(silo);
                 await context.SaveChangesAsync();
                 return new CreatedAtRouteResult("obtenerSilos", new { id = silo.Id }, silo);

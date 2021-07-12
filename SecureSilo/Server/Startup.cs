@@ -32,8 +32,8 @@ namespace SecureSilo.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
+            {          
+                options.SignIn.RequireConfirmedAccount = false; //TODO: poner en true 
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -54,9 +54,7 @@ namespace SecureSilo.Server
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });       
             services.AddControllersWithViews();
-            services.AddRazorPages();
-
-            
+            services.AddRazorPages();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,9 +95,6 @@ namespace SecureSilo.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
-
-
-
         }
         private void AddSwagger(IServiceCollection services)
         {
