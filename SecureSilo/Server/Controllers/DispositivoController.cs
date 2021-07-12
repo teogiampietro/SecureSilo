@@ -31,7 +31,7 @@ namespace SecureSilo.Server.Controllers
             Silo silo = new Silo();
             silo = this.context.Silos
                 .Include(x=>x.Dispositivos)
-                .Where(x => x.Id == dispositivo.Silo.Id).FirstOrDefault();
+                .Where(x => x.Id == dispositivo.SiloId).FirstOrDefault();
             if (silo.Dispositivos != null && silo.Dispositivos.Count >= 10)
             {
                 return new BadRequestResult();
