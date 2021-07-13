@@ -1,4 +1,9 @@
-﻿INSERT INTO paises ( Descripcion) VALUES
+﻿INSERT INTO dbo.AspNetRoles (id,name) VALUES
+(1,'ADMIN'),
+(2,'CLIENT');
+
+
+INSERT INTO paises ( Descripcion) VALUES
 ('Argentina');
 
 
