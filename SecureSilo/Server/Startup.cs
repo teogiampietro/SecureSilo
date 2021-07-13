@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,14 +33,15 @@ namespace SecureSilo.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
-            {          
+            {
                 options.SignIn.RequireConfirmedAccount = false; //TODO: poner en true 
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             })
+                .AddRoles<IdentityRole>() 
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
             AddSwagger(services);
@@ -47,14 +49,17 @@ namespace SecureSilo.Server
             {
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
+
             services.AddAuthentication()
-                .AddIdentityServerJwt();
+             .AddIdentityServerJwt();
+
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });       
+            });
             services.AddControllersWithViews();
-            services.AddRazorPages();            
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +87,7 @@ namespace SecureSilo.Server
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
             });
-            
+
             app.UseRouting();
 
             app.UseIdentityServer();
