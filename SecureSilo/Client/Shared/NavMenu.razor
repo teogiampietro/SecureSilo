@@ -1,7 +1,9 @@
-﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3" >
+﻿@inject HttpClient http
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3">
     <a class="navbar-brand" href="/">AlarmSilo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon" ></span>
+        <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
@@ -37,8 +39,22 @@
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Estadísticas
                         </NavLink>
                     </li>
+                    @if (roles != null && roles.Length > 0)
+                        foreach (var item in roles)
+                        {
+                            if (item.RolName == "admin")
+                            {
+                                <li class="nav-item active">
+                                    <NavLink class="nav-link" href="suscripciones">
+                                        <span class="oi oi-list-rich" aria-hidden="true"></span> Suscripciones
+                                    </NavLink>
+                                </li>
+                            }
+                        }
+
                 </Authorized>
-            </AuthorizeView>                             
+            </AuthorizeView>
+
         </ul>
         <LoginDisplay />
     </div>
@@ -47,11 +63,22 @@
 @code {
     private bool collapseNavMenu = true;
     private bool expandSubNav;
+    ResponseUserRol[] roles { get; set; }
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetUserRoles();
+    }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    async Task GetUserRoles()
+    {
+        roles = await http.GetFromJsonAsync<ResponseUserRol[]>("User");
     }
 }
