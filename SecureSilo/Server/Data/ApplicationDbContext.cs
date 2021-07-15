@@ -76,5 +76,6 @@ namespace SecureSilo.Server.Data
         public DbSet<Grano> Granos { get; set; }
         public DbSet<Parametro> Parametros { get; set; }
         public DbSet<Estado> Estados { get; set; }
+        public DbSet<Suscripcion> Suscripciones { get; set; }
     }
 }

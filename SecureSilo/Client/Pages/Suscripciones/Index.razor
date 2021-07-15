@@ -1,13 +1,91 @@
 ﻿@page "/suscripciones"
+@inject HttpClient http
+@inject IJSRuntime JS
 
 <div class="container">
 
     <br />
     <h2 class="text-center"> Suscripciones</h2>
 
+    <div class="d-flex justify-content-center">
+        <label class="sr-only" for="nombre-filtro">Filtrar</label>
+        <input type="text" class="form-control mb-2 mr-sm-2"
+               @bind="cliente" placeholder="Filtrar por Dispositivo" />
+        <button type="button" class="btn btn-dark mr-sm-2 mb-2"
+                @onclick="Filtrar">
+            Filtrar
+        </button>
+        <button type="button" class="btn btn-danger  mb-2"
+                @onclick="Limpiar">
+            Limpiar
+        </button>
+    </div>
 
+    @if (suscripciones == null)
+    {
+        <text> Cargando </text>
+    }
+    else if (suscripciones.Length == 0)
+    {
+        <text> No se encuentran resultados. </Text>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Categoria</th>
+                    <th>Estado</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sub in suscripciones)
+                {
+                    <tr>
+                        <td> @sub.UserId</td>
+                        <td> @sub.Fecha.Month.ToString() </td>
+                        <td> @sub.Categoria.Descripción</td>
+                        <td> @sub.Estado </td>
+                        <td>@sub.Categoria.Costo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 
 @code {
+    Suscripcion[] suscripciones { get; set; }
+    private string cliente = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarSuscripciones();
+    }
+    async Task CargarSuscripciones()
+    {
+        suscripciones = await http.GetFromJsonAsync<Suscripcion[]>("Suscripcion");
+    }
+
+    private async Task Filtrar()
+    {
+        if (cliente == string.Empty)
+        {
+            await CargarSuscripciones();
+        }
+        else
+        {
+            suscripciones = await http.GetFromJsonAsync<Suscripcion[]>($"Suscripcion/por-cliente/{cliente}");
+        }
+
+    }
+    private async Task Limpiar()
+    {
+        cliente = string.Empty;
+        await CargarSuscripciones();
+
+    }
 }

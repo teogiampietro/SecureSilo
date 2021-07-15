@@ -6,5 +6,6 @@ namespace SecureSilo.Server.Models
     public class ApplicationUser : IdentityUser
     {
         public List<Campo> Campos { get; set; }
+        public List<Suscripcion> Suscripciones { get; set; }
     }
 }

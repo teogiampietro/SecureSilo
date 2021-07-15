@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210715141338_suscripciones")]
+    partial class suscripciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -704,9 +706,6 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
@@ -720,8 +719,6 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CategoriaId");
 
@@ -864,10 +861,6 @@ namespace SecureSilo.Server.Migrations
 
             modelBuilder.Entity("SecureSilo.Shared.Suscripcion", b =>
                 {
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
-                        .WithMany("Suscripciones")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("SecureSilo.Shared.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaId")
