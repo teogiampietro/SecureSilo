@@ -79,6 +79,6 @@
 
     async Task GetUserRoles()
     {
-        roles = await http.GetFromJsonAsync<ResponseUserRol[]>("User");
+        roles = await http.GetFromJsonAsync<ResponseUserRol[]>("User/roles");
     }
 }

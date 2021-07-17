@@ -1,0 +1,27 @@
+﻿@page "/gestionar-suscripcion/{UserName}/editar"
+@inject HttpClient http
+
+<div class="container">
+    <br />
+    <h1>    easdasdasd</h1>
+    <EditForm Model="@Suscripcion" OnValidSubmit="@OnValidSubmit">
+        <h1>    @Suscripcion</h1>
+    </EditForm>
+</div>
+
+
+@code
+{
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public string UserName { get; set; }
+
+    ResponseSuscripcion[] Suscripcion { get; set; } 
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarSuscripciones();
+    }
+    async Task CargarSuscripciones()
+    {
+        Suscripcion = await http.GetFromJsonAsync<ResponseSuscripcion[]>($"Suscripcion/por-cliente/{UserName}");
+    }
+}

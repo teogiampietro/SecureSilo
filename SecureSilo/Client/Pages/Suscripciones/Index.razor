@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-center">
         <label class="sr-only" for="nombre-filtro">Filtrar</label>
         <input type="text" class="form-control mb-2 mr-sm-2"
-               @bind="cliente" placeholder="Filtrar por Dispositivo" />
+               @bind="usernName" placeholder="Filtrar por nombre de usuario" />
         <button type="button" class="btn btn-dark mr-sm-2 mb-2"
                 @onclick="Filtrar">
             Filtrar
@@ -21,11 +21,11 @@
         </button>
     </div>
 
-    @if (suscripciones == null)
+    @if (users == null)
     {
         <text> Cargando </text>
     }
-    else if (suscripciones.Length == 0)
+    else if (users.Length == 0)
     {
         <text> No se encuentran resultados. </Text>
     }
@@ -34,22 +34,20 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Categoria</th>
-                    <th>Estado</th>
-                    <th>Valor</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var sub in suscripciones)
+                @foreach (var user in users)
                 {
                     <tr>
-                        <td> @sub.UserId</td>
-                        <td> @sub.Fecha.Month.ToString() </td>
-                        <td> @sub.Categoria.Descripción</td>
-                        <td> @sub.Estado </td>
-                        <td>@sub.Categoria.Costo</td>
+                        <td> @user.UserId</td>
+                        <td> @user.UserName</td>
+                        <td> @user.UserMail </td>
+                        <td> <a class="btn btn-success" href="gestionar-suscripcion/@user.UserId/editar">Gestionar</a></td>
                     </tr>
                 }
             </tbody>
@@ -58,34 +56,35 @@
 </div>
 
 @code {
-    Suscripcion[] suscripciones { get; set; }
-    private string cliente = string.Empty;
+    ResponseIndexSuscripcion[] users { get; set; }
+    private string usernName = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarSuscripciones();
+        await CargarUsuarios();
     }
-    async Task CargarSuscripciones()
+    async Task CargarUsuarios()
     {
-        suscripciones = await http.GetFromJsonAsync<Suscripcion[]>("Suscripcion");
+        users = await http.GetFromJsonAsync<ResponseIndexSuscripcion[]>("User/users");
     }
 
     private async Task Filtrar()
     {
-        if (cliente == string.Empty)
+        if (usernName == string.Empty)
         {
-            await CargarSuscripciones();
+            await CargarUsuarios();
         }
         else
         {
-            suscripciones = await http.GetFromJsonAsync<Suscripcion[]>($"Suscripcion/por-cliente/{cliente}");
+            users = await http.GetFromJsonAsync<ResponseIndexSuscripcion[]>($"User/users-name/{usernName}");
         }
 
     }
     private async Task Limpiar()
     {
-        cliente = string.Empty;
-        await CargarSuscripciones();
+        usernName = string.Empty;
+        await CargarUsuarios();
 
     }
+
 }
