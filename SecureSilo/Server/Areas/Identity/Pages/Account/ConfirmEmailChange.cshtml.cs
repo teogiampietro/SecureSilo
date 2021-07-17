@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using SecureSilo.Server.Models;
+using SecureSilo.Shared.Identity;
 
 namespace SecureSilo.Server.Areas.Identity.Pages.Account
 {

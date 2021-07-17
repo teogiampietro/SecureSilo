@@ -9,7 +9,7 @@ namespace SecureSilo.Shared
     {
         [Key]
         public int Id { get; set; }
-        public string Descripción { get; set; }
+        public string Descripcion { get; set; }
         public double Costo { get; set; }
     }
 }

@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecureSilo.Server.Data;
-using SecureSilo.Server.Models;
 using SecureSilo.Shared;
-using System;
+using SecureSilo.Shared.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -68,7 +67,7 @@ namespace SecureSilo.Server.Controllers
                               UserName = users.UserName,
                               UserMail = users.Email
                           })
-                          .Where(x=> x.UserName == userName)
+                          .Where(x=> x.UserName.Contains(userName))
                           .ToListAsync();
         }
     }

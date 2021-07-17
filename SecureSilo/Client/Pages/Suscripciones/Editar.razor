@@ -1,27 +1,82 @@
-﻿@page "/gestionar-suscripcion/{UserName}/editar"
+﻿@page "/suscripcion/{UserName}/gestionar"
 @inject HttpClient http
 
 <div class="container">
     <br />
-    <h1>    easdasdasd</h1>
-    <EditForm Model="@Suscripcion" OnValidSubmit="@OnValidSubmit">
-        <h1>    @Suscripcion</h1>
-    </EditForm>
+    <div class="row">
+        <div class="col-sm-10">
+            <h1>Gestion de suscripciones</h1>
+        </div>
+        <div class="col-sm-2">
+            <a class="btn btn-success" href="suscripcion/nuevo-pago">Nuevo pago</a>
+        </div>
+    </div>
+    @if (response.Suscripciones == null)
+    {
+        <text> Cargando </text>
+    }
+    else if (response.Suscripciones.Count == 0)
+    {
+        <text> No se encuentran resultados. </text>
+    }
+    else
+    {
+        <EditForm Model="@response">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email usuario:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@response.User.Email" />
+                            <ValidationMessage For="@(() => response.User.Email)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label>Nombre usuario:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@response.User.UserName" />
+                        <ValidationMessage For="@(() => response.User.UserName)" />
+                    </div>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var response in response.Suscripciones)
+                    {
+                        <tr>
+                            <td> @response.Fecha.ToString("dd:MM:yyyy")</td>
+                            <td> @response.Categoria.Descripcion</td>
+                            <td> $@response.Categoria.Costo</td>
+                            <td> @response.Estado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </EditForm>
+    }
 </div>
-
 
 @code
 {
-    [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public string UserName { get; set; }
 
-    ResponseSuscripcion[] Suscripcion { get; set; } 
+    private ResponseSuscripcion response { get; set; } = new ResponseSuscripcion();
+
     protected override async Task OnInitializedAsync()
     {
         await CargarSuscripciones();
     }
     async Task CargarSuscripciones()
     {
-        Suscripcion = await http.GetFromJsonAsync<ResponseSuscripcion[]>($"Suscripcion/por-cliente/{UserName}");
+        response = await http.GetFromJsonAsync<ResponseSuscripcion>($"Suscripcion/por-cliente/{UserName}");
     }
 }

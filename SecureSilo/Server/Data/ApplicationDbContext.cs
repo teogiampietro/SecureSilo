@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SecureSilo.Server.Models;
 using SecureSilo.Shared;
+using SecureSilo.Shared.Identity;
 using System.Collections.Generic;
 
 namespace SecureSilo.Server.Data
@@ -50,6 +50,14 @@ namespace SecureSilo.Server.Data
             };
             builder.Entity<Estado>().HasData(estados);
 
+            var categoria = new List<Categoria>()
+            {
+                new Categoria(){Id=1,Costo=2500,Descripcion="Base" },
+                new Categoria(){Id=2,Costo=5000,Descripcion="Pro" },
+                new Categoria(){Id=3,Costo=7000,Descripcion="VIP" }
+            };
+            builder.Entity<Categoria>().HasData(categoria);
+
             base.OnModelCreating(builder);
         }
 
@@ -77,5 +85,6 @@ namespace SecureSilo.Server.Data
         public DbSet<Parametro> Parametros { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Suscripcion> Suscripciones { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }

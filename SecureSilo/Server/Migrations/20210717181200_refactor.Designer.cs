@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210717181200_refactor")]
+    partial class refactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,32 +314,12 @@ namespace SecureSilo.Server.Migrations
                     b.Property<double>("Costo")
                         .HasColumnType("float");
 
-                    b.Property<string>("Descripcion")
+                    b.Property<string>("Descripción")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categorias");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Costo = 2500.0,
-                            Descripcion = "Base"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Costo = 5000.0,
-                            Descripcion = "Pro"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Costo = 7000.0,
-                            Descripcion = "VIP"
-                        });
+                    b.ToTable("Categoria");
                 });
 
             modelBuilder.Entity("SecureSilo.Shared.Dispositivo", b =>
