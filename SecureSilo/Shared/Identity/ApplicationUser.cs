@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SecureSilo.Shared;
 using System.Collections.Generic;
-namespace SecureSilo.Server.Models
+
+namespace SecureSilo.Shared.Identity
 {
     public class ApplicationUser : IdentityUser
     {

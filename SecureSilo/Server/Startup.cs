@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SecureSilo.Server.Data;
-using SecureSilo.Server.Models;
+using SecureSilo.Shared.Identity;
 using System;
 using System.Linq;
 
