@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SecureSilo.Server.Models;
 using SecureSilo.Shared;
+using SecureSilo.Shared.Identity;
 using System.Collections.Generic;
 
 namespace SecureSilo.Server.Data
