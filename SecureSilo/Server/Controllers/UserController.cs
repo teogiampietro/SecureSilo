@@ -67,7 +67,7 @@ namespace SecureSilo.Server.Controllers
                               UserName = users.UserName,
                               UserMail = users.Email
                           })
-                          .Where(x=> x.UserName == userName)
+                          .Where(x=> x.UserName.Contains(userName))
                           .ToListAsync();
         }
     }

@@ -36,10 +36,13 @@ namespace SecureSilo.Server.Controllers
 
             var users = await this.context.Users.Where(x => x.Id == UserId).FirstOrDefaultAsync();
 
-            var subs = await this.context.Suscripciones.Where(x => x.UserId == users.Id).ToListAsync();
+            var subs = await this.context.Suscripciones
+                .Include(x => x.Categoria)
+                .Where(x => x.UserId == UserId)
+                .ToListAsync();
 
             response.Suscripciones = subs;
-            response.User = users.Id;
+            response.User = users;
 
             return response;
         }
