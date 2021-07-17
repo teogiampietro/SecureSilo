@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using SecureSilo.Server.Models;
+using SecureSilo.Shared.Identity;
 
 namespace SecureSilo.Server.Areas.Identity.Pages.Account
 {
