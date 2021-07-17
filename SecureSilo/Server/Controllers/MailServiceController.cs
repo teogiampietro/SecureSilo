@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using SecureSilo.Server.Data;
-using SecureSilo.Server.Models;
-using System.Threading.Tasks;
+using SecureSilo.Shared.Identity;
 
 namespace SecureSilo.Server.Controllers
 {

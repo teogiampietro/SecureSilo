@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecureSilo.Server.Data;
 using SecureSilo.Shared;
+using SecureSilo.Shared.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using SecureSilo.Server.Models;
 
 namespace SecureSilo.Server.Controllers
 {

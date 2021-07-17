@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using SecureSilo.Shared;
 using SecureSilo.Server.Data;
 using System.Text.Json;
-using SecureSilo.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Text;
+using SecureSilo.Shared.Identity;
 
 namespace SecureSilo.Server.Controllers
 {

@@ -7,7 +7,7 @@ using SecureSilo.Shared;
 using SecureSilo.Server.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using SecureSilo.Server.Models;
+using SecureSilo.Shared.Identity;
 
 namespace SecureSilo.Server.Controllers
 {
