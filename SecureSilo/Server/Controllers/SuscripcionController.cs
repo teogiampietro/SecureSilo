@@ -39,7 +39,7 @@ namespace SecureSilo.Server.Controllers
             var subs = await this.context.Suscripciones.Where(x => x.UserId == users.Id).ToListAsync();
 
             response.Suscripciones = subs;
-            response.User = users;
+            response.User = users.Id;
 
             return response;
         }
