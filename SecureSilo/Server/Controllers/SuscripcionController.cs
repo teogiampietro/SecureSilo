@@ -29,12 +29,19 @@ namespace SecureSilo.Server.Controllers
                 .ToListAsync();
         }
 
-        [HttpGet("por-cliente/{cliente}")]
-        public async Task<ActionResult<List<Suscripcion>>> Get(string cliente)
+        [HttpGet("por-cliente/{UserId}")]
+        public async Task<ActionResult<ResponseSuscripcion>> Get(string UserId)
         {
-            return await this.context.Suscripciones.Include(x => x.Categoria)
-                .Where(x => x.UserId == cliente)
-                .ToListAsync();
+            ResponseSuscripcion response = new ResponseSuscripcion();
+
+            var users = await this.context.Users.Where(x => x.Id == UserId).FirstOrDefaultAsync();
+
+            var subs = await this.context.Suscripciones.Where(x => x.UserId == users.Id).ToListAsync();
+
+            response.Suscripciones = subs;
+            response.User = users;
+
+            return response;
         }
     }
 }

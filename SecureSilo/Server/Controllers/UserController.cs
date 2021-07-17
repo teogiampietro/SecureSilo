@@ -25,25 +25,51 @@ namespace SecureSilo.Server.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("roles")]
         public async Task<ActionResult<List<ResponseUserRol>>> GetRoles()
         {
             List<ResponseUserRol> roles = new List<ResponseUserRol>();
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(user))
-                return roles;
-           
-            roles = await (from userRoles in context.UserRoles
-                         join rol in context.Roles on userRoles.RoleId equals rol.Id
-                         where userRoles.UserId == user
-                         select new ResponseUserRol()
-                         {
-                             RolName = rol.Name,
-                             User = userRoles.UserId
-                         }).ToListAsync();
+            if (!string.IsNullOrEmpty(user))
+            {
+                roles = await (from userRoles in context.UserRoles
+                               join rol in context.Roles on userRoles.RoleId equals rol.Id
+                               where userRoles.UserId == user
+                               select new ResponseUserRol()
+                               {
+                                   RolName = rol.Name,
+                                   User = userRoles.UserId
+                               }).ToListAsync();
+            } 
             return roles;
 
+        }
+
+        [HttpGet("users")]
+        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsers()
+        {
+            return await (from users in context.Users
+                          select new ResponseIndexSuscripcion()
+                          {
+                              UserId = users.Id,
+                              UserName = users.UserName,
+                              UserMail = users.Email
+                          })
+                          .ToListAsync();
+        }
+
+        [HttpGet("users-name/{userName}")]
+        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsersxName(string userName)
+        {
+            return await (from users in context.Users
+                          select new ResponseIndexSuscripcion()
+                          {
+                              UserId = users.Id,
+                              UserName = users.UserName,
+                              UserMail = users.Email
+                          })
+                          .Where(x=> x.UserName == userName)
+                          .ToListAsync();
         }
     }
 }
