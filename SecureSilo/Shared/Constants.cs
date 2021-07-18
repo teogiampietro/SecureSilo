@@ -2,15 +2,19 @@
 {
     public static class Constants
     {
+        enum EnumPagos
+        {
+           Pagado,
+           Debe,
+           Generado
+        }
+        public const string PAGADO = "PAGADO";
+        public const string DEBE = "DEBE";
+        public const string GENERADO = "GENERADO";
 
-        //TODO: Parametrizar?
-        public const double humedadValue = 14;
-        public const double temperaturaValue = 24;
-        public const double dioxidValue = 10;
-
-        public const double humedadMaxValue = 16;
-        public const double temperaturaMaxValue = 30;
-        public const double dioxidMaxValue = 15;
+        public const string FORMA_DE_PAGO_MERCADOPAGO = "MERCADOPAGO";
+        public const string FORMA_DE_PAGO_TRANSFERENCIA_EFECTIVO = "TRANS/EFT";
+        public const string FORMA_DE_PAGO_CREDITO = "TARJETA_CREDITO";
 
         //Estados
         public const string Ok = "OK";

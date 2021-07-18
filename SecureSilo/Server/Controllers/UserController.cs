@@ -57,8 +57,8 @@ namespace SecureSilo.Server.Controllers
                           .ToListAsync();
         }
 
-        [HttpGet("users-name/{userName}")]
-        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsersxName(string userName)
+        [HttpGet("users-name/{UserName}")]
+        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsersxName(string UserName)
         {
             return await (from users in context.Users
                           select new ResponseIndexSuscripcion()
@@ -67,7 +67,7 @@ namespace SecureSilo.Server.Controllers
                               UserName = users.UserName,
                               UserMail = users.Email
                           })
-                          .Where(x=> x.UserName.Contains(userName))
+                          .Where(x=> x.UserName.Contains(UserName))
                           .ToListAsync();
         }
     }

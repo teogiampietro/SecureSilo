@@ -28,16 +28,25 @@ namespace SecureSilo.Server.Controllers
             return await this.context.Suscripciones.Include(x => x.Categoria)
                 .ToListAsync();
         }
-
+        [HttpGet("{UserId}")]
+        public async Task<ActionResult<Suscripcion>> GetPorUserId(string UserId)
+        {
+            return await this.context.Suscripciones
+                    .Include(x => x.Categoria)
+                    .Include(x => x.FormaDePago)
+                    .Where(x => x.UserId == UserId)
+                    .FirstOrDefaultAsync();
+        }
         [HttpGet("por-cliente/{UserId}")]
         public async Task<ActionResult<ResponseSuscripcion>> Get(string UserId)
-        {
+            {
             ResponseSuscripcion response = new ResponseSuscripcion();
 
             var users = await this.context.Users.Where(x => x.Id == UserId).FirstOrDefaultAsync();
 
             var subs = await this.context.Suscripciones
                 .Include(x => x.Categoria)
+                .Include(x => x.FormaDePago)
                 .Where(x => x.UserId == UserId)
                 .ToListAsync();
 
@@ -45,6 +54,20 @@ namespace SecureSilo.Server.Controllers
             response.User = users;
 
             return response;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ResponseSuscripcion>> Post(Suscripcion suscripcion)
+        {
+            context.Suscripciones.Add(suscripcion);
+            await context.SaveChangesAsync();
+            return await Get(suscripcion.UserId);
+        }
+
+        [HttpGet("forma-pago")]
+        public async Task<ActionResult<List<FormaDePago>>> GetFormasPago()
+        {
+            return await this.context.FormasDePagos.ToListAsync();
         }
     }
 }

@@ -3,10 +3,8 @@
 @inject IJSRuntime JS
 
 <div class="container">
-
     <br />
     <h2 class="text-center"> Suscripciones</h2>
-
     <div class="d-flex justify-content-center">
         <label class="sr-only" for="nombre-filtro">Filtrar</label>
         <input type="text" class="form-control mb-2 mr-sm-2"
@@ -54,7 +52,6 @@
         </table>
     }
 </div>
-
 @code {
     ResponseIndexSuscripcion[] users { get; set; }
     private string usernName = string.Empty;
@@ -67,7 +64,6 @@
     {
         users = await http.GetFromJsonAsync<ResponseIndexSuscripcion[]>("User/users");
     }
-
     private async Task Filtrar()
     {
         if (usernName == string.Empty)
@@ -78,13 +74,11 @@
         {
             users = await http.GetFromJsonAsync<ResponseIndexSuscripcion[]>($"User/users-name/{usernName}");
         }
-
     }
     private async Task Limpiar()
     {
         usernName = string.Empty;
         await CargarUsuarios();
-
     }
 
 }

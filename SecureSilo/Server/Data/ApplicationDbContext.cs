@@ -58,6 +58,15 @@ namespace SecureSilo.Server.Data
             };
             builder.Entity<Categoria>().HasData(categoria);
 
+            var formadepago = new List<FormaDePago>()
+            {
+                new FormaDePago(){Id =1, Descripcion="Efectivo"},
+                new FormaDePago(){Id =2, Descripcion="Transferencia"},
+                new FormaDePago(){Id =3, Descripcion="Mercado Pago"},
+                new FormaDePago(){Id =4, Descripcion="Tarjeta Credito"}
+            };
+            builder.Entity<FormaDePago>().HasData(formadepago);
+
             base.OnModelCreating(builder);
         }
 
@@ -86,5 +95,6 @@ namespace SecureSilo.Server.Data
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Suscripcion> Suscripciones { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<FormaDePago> FormasDePagos { get; set; }
     }
 }
