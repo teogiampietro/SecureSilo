@@ -6,8 +6,8 @@
             <div class="form-group">
                 <div>
                     <label>Fecha de pago:</label>
-                    <InputDate class="form-control" @bind-Value="@suscripcion.Fecha" />
-                    <ValidationMessage For="@(() => suscripcion.Fecha)" />                    
+                    <InputDate class="form-control"  @bind-Value="@suscripcion.Fecha" />
+                    <ValidationMessage For="@(() => suscripcion.Fecha)" />                   
                 </div>
             </div>
             <div class="form-group">
@@ -96,6 +96,7 @@
         await CargarCategorias();
         await CargarFormaPago();
         suscripcion.Estado = pago;
+        suscripcion.Fecha = (DateTime.MinValue == suscripcion.Fecha ? DateTime.Today : DateTime.Today);
     }
     async Task CargarCategorias()
     {
