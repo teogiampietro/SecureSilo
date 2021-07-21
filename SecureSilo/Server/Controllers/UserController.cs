@@ -39,7 +39,7 @@ namespace SecureSilo.Server.Controllers
                                    RolName = rol.Name,
                                    User = userRoles.UserId
                                }).ToListAsync();
-            } 
+            }
             return roles;
 
         }
@@ -57,8 +57,8 @@ namespace SecureSilo.Server.Controllers
                           .ToListAsync();
         }
 
-        [HttpGet("users-name/{userName}")]
-        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsersxName(string userName)
+        [HttpGet("users-name/{UserName}")]
+        public async Task<ActionResult<List<ResponseIndexSuscripcion>>> GetUsersxName(string UserName)
         {
             return await (from users in context.Users
                           select new ResponseIndexSuscripcion()
@@ -67,8 +67,24 @@ namespace SecureSilo.Server.Controllers
                               UserName = users.UserName,
                               UserMail = users.Email
                           })
-                          .Where(x=> x.UserName.Contains(userName))
+                          .Where(x => x.UserName.Contains(UserName))
                           .ToListAsync();
+        }
+
+        [HttpGet("user-active")]
+        public async Task<bool> GetUserState(string email)
+        {
+            var response = await context.Users.Where(x => x.Email == email).Select(x => x.Active).FirstOrDefaultAsync();
+            return response;
+        }
+        [HttpPut("estado")]
+        public async Task<ActionResult<bool>> ActivarDesactivarUser(RequestEstadoUsuario user)
+        {
+            var appUser = await _userManager.FindByIdAsync(user.UserId);
+            appUser.Active = user.Active;
+            context.Users.Update(appUser);
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210718132359_pagos")]
+    partial class pagos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -421,43 +423,6 @@ namespace SecureSilo.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SecureSilo.Shared.FormaDePago", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FormasDePagos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Descripcion = "Efectivo"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Descripcion = "Transferencia"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Descripcion = "Mercado Pago"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Descripcion = "Tarjeta Credito"
-                        });
-                });
-
             modelBuilder.Entity("SecureSilo.Shared.Grano", b =>
                 {
                     b.Property<int>("Id")
@@ -497,9 +462,6 @@ namespace SecureSilo.Server.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -776,14 +738,11 @@ namespace SecureSilo.Server.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FormaDePagoId")
-                        .HasColumnType("int");
+                    b.Property<string>("FormaDePago")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -793,8 +752,6 @@ namespace SecureSilo.Server.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CategoriaId");
-
-                    b.HasIndex("FormaDePagoId");
 
                     b.ToTable("Suscripciones");
                 });
@@ -942,12 +899,6 @@ namespace SecureSilo.Server.Migrations
                     b.HasOne("SecureSilo.Shared.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecureSilo.Shared.FormaDePago", "FormaDePago")
-                        .WithMany()
-                        .HasForeignKey("FormaDePagoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
