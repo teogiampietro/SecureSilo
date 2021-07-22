@@ -16,6 +16,12 @@ namespace SecureSilo.Shared
         public Categoria Categoria { get; set; }
         public int CategoriaId { get; set; }     
         public double Total { get; set; }
+        public bool Pagado { get; set; }
+
+        public Suscripcion()
+        {
+            Pagado = false;
+        }
         
     }
 }

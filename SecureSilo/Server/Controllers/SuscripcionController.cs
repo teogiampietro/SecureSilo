@@ -56,6 +56,20 @@ namespace SecureSilo.Server.Controllers
             return response;
         }
 
+        [HttpGet("forma-pago")]
+        public async Task<ActionResult<List<FormaDePago>>> GetFormasPago()
+        {
+            return await this.context.FormasDePagos.ToListAsync();
+        }
+
+        [HttpGet("cliente")]
+        public async Task<ActionResult<List<Suscripcion>>> GetCliente()
+        {
+            return await this.context.Suscripciones.Include(x => x.Categoria)
+                .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && !x.Pagado)
+                .ToListAsync();
+        }
+
         [HttpPost]
         public async Task<ActionResult<ResponseSuscripcion>> Post(Suscripcion suscripcion)
         {
@@ -64,10 +78,12 @@ namespace SecureSilo.Server.Controllers
             return await Get(suscripcion.UserId);
         }
 
-        [HttpGet("forma-pago")]
-        public async Task<ActionResult<List<FormaDePago>>> GetFormasPago()
+        [HttpPut]
+        public async Task<ActionResult<ResponseSuscripcion>> Pagada(Suscripcion suscripcion)
         {
-            return await this.context.FormasDePagos.ToListAsync();
+            context.Entry(suscripcion).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
