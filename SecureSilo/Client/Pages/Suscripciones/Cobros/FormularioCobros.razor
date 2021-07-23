@@ -1,0 +1,59 @@
+﻿@inject HttpClient Http
+
+<EditForm Model="@suscripcion" OnValidSubmit="@OnValidSubmit">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <div>
+                    <label>Fecha de emisión:</label>
+                    <InputDate class="form-control" @bind-Value="@suscripcion.FechaEmision" />
+                    <ValidationMessage For="@(() => suscripcion.FechaEmision)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label>Pago:</label>
+                    <InputSelectNumber class="form-control"
+                                       ValueChanged="@((string value) => ValorPago(value))"
+                                       ValueExpression="@(() => suscripcion.Estado)"
+                                       Value="suscripcion.Estado">
+                        <option value="@Constants.GENERADO">GENERADO</option>
+                        <option value="@Constants.PAGADO">PAGADO</option>
+                    </InputSelectNumber>
+                </div>
+            </div>         
+            <div class="form-group">
+                <label>Observaciones:</label>
+                <div>
+                    <InputTextArea class="form-control" @bind-Value="@suscripcion.Observaciones" />
+                    <ValidationMessage For="@(() => suscripcion.Observaciones)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">@TextoBoton</button>
+            </div>
+        </div>
+    </div>
+    <DataAnnotationsValidator />
+</EditForm>
+
+
+@code {
+
+    [Parameter] public Suscripcion suscripcion { get; set; } = new Suscripcion();
+    [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    private string pago = Constants.GENERADO;
+
+    protected override async Task OnInitializedAsync()
+    {
+        suscripcion.Estado = pago;
+        suscripcion.FechaEmision = (DateTime.MinValue == suscripcion.FechaEmision ? DateTime.Today : DateTime.Today);
+    }
+    private void ValorPago(string pago)
+    {
+        this.pago = pago;
+        suscripcion.Estado = pago;
+    }
+}

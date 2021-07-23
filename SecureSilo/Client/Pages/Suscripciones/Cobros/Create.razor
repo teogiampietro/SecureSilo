@@ -1,0 +1,19 @@
+﻿@page "/suscripcion/{UserId}/nuevo-cobro"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+<div class="container">
+    <br />
+    <h3 class="text-center">Enviar un nuevo cobro</h3>
+    <FormularioCobros TextoBoton="Confirmar" OnValidSubmit="@NuevaSuscripcion" suscripcion="@suscripcion" />
+</div>
+@code {
+    [Parameter] public string UserId { get; set; }
+    Suscripcion suscripcion = new Suscripcion();
+    async Task NuevaSuscripcion()
+    {
+        suscripcion.UserId = UserId;
+        await Http.PostAsJsonAsync("Suscripcion/solicitud-pago", suscripcion);
+        NavManager.NavigateTo($"/suscripcion/{UserId}/gestionar");
+    }
+
+}

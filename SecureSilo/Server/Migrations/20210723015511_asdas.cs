@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SecureSilo.Server.Migrations
 {
-    public partial class Initial : Migration
+    public partial class asdas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,11 +39,26 @@ namespace SecureSilo.Server.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categorias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(nullable: true),
+                    Costo = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,11 +84,25 @@ namespace SecureSilo.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(nullable: true)
+                    Descripcion = table.Column<string>(nullable: true),
+                    Riesgo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Estados", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FormasDePagos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FormasDePagos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,15 +255,54 @@ namespace SecureSilo.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Suscripciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Pagado = table.Column<bool>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    FechaEmision = table.Column<DateTime>(nullable: false),
+                    FechaPago = table.Column<DateTime>(nullable: false),
+                    CategoriaId = table.Column<int>(nullable: false),
+                    FormaDePagoId = table.Column<int>(nullable: false),
+                    Observaciones = table.Column<string>(nullable: true),
+                    Estado = table.Column<string>(nullable: true),
+                    Total = table.Column<double>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suscripciones", x => new { x.Id, x.Pagado });
+                    table.ForeignKey(
+                        name: "FK_Suscripciones_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Suscripciones_Categorias_CategoriaId",
+                        column: x => x.CategoriaId,
+                        principalTable: "Categorias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Suscripciones_FormasDePagos_FormaDePagoId",
+                        column: x => x.FormaDePagoId,
+                        principalTable: "FormasDePagos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Parametros",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Riesgo = table.Column<string>(nullable: true),
-                    HumedadValue = table.Column<double>(nullable: false),
+                    HumedadMinValue = table.Column<double>(nullable: false),
+                    HumedadMaxValue = table.Column<double>(nullable: false),
                     TemperaturaValue = table.Column<double>(nullable: false),
-                    CO2Value = table.Column<double>(nullable: false),
                     GranoID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -294,7 +362,7 @@ namespace SecureSilo.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(nullable: true),
                     Ubicacion = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
                     LocalidadId = table.Column<int>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: true)
                 },
@@ -325,7 +393,8 @@ namespace SecureSilo.Server.Migrations
                     Descripcion = table.Column<string>(nullable: true),
                     EstadoId = table.Column<int>(nullable: false),
                     CampoID = table.Column<int>(nullable: false),
-                    GranoID = table.Column<int>(nullable: false)
+                    GranoID = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -359,7 +428,8 @@ namespace SecureSilo.Server.Migrations
                     MAC = table.Column<string>(nullable: true),
                     Descripcion = table.Column<string>(nullable: true),
                     EstadoId = table.Column<int>(nullable: true),
-                    SiloId = table.Column<int>(nullable: false)
+                    SiloId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -379,7 +449,7 @@ namespace SecureSilo.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Updates",
+                name: "Actualizaciones",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -394,9 +464,9 @@ namespace SecureSilo.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Updates", x => x.Id);
+                    table.PrimaryKey("PK_Actualizaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Updates_Dispositivos_DispositivoID",
+                        name: "FK_Actualizaciones_Dispositivos_DispositivoID",
                         column: x => x.DispositivoID,
                         principalTable: "Dispositivos",
                         principalColumn: "Id",
@@ -404,14 +474,37 @@ namespace SecureSilo.Server.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Categorias",
+                columns: new[] { "Id", "Costo", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, 2500.0, "Base" },
+                    { 2, 5000.0, "Standar" },
+                    { 3, 7000.0, "Pro" },
+                    { 4, 9000.0, "Premium" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Estados",
+                columns: new[] { "Id", "Descripcion", "Riesgo" },
+                values: new object[,]
+                {
+                    { 1, "DEFAULT", "SIN_RIESGO" },
+                    { 2, "OK", "BAJO" },
+                    { 3, "ADVERTENCIA", "MEDIO" },
+                    { 4, "ALERTA", "ALTO" },
+                    { 5, "SIN_DATOS", "SIN_RIESGO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "FormasDePagos",
                 columns: new[] { "Id", "Descripcion" },
                 values: new object[,]
                 {
-                    { 1, "Alerta" },
-                    { 2, "SinEstado" },
-                    { 3, "Ok" },
-                    { 4, "Advertencia" }
+                    { 1, "Efectivo" },
+                    { 2, "Transferencia" },
+                    { 3, "Mercado Pago" },
+                    { 4, "Tarjeta Credito" }
                 });
 
             migrationBuilder.InsertData(
@@ -426,18 +519,24 @@ namespace SecureSilo.Server.Migrations
 
             migrationBuilder.InsertData(
                 table: "Parametros",
-                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
-                values: new object[] { 1, 10.0, 1, 16.0, "Alto", 26.0 });
+                columns: new[] { "Id", "GranoID", "HumedadMaxValue", "HumedadMinValue", "Riesgo", "TemperaturaValue" },
+                values: new object[,]
+                {
+                    { 1, 1, 99.0, 14.0, "ALTO", 35.0 },
+                    { 2, 1, 14.0, 10.0, "MEDIO", 35.0 },
+                    { 3, 1, 10.0, 0.0, "BAJO", 35.0 },
+                    { 4, 2, 99.0, 14.0, "ALTO", 35.0 },
+                    { 5, 2, 14.0, 10.0, "MEDIO", 35.0 },
+                    { 6, 2, 10.0, 0.0, "BAJO", 35.0 },
+                    { 7, 3, 99.0, 14.0, "ALTO", 35.0 },
+                    { 8, 3, 14.0, 10.0, "MEDIO", 35.0 },
+                    { 9, 3, 10.0, 0.0, "BAJO", 35.0 }
+                });
 
-            migrationBuilder.InsertData(
-                table: "Parametros",
-                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
-                values: new object[] { 2, 10.0, 1, 14.0, "Medio", 24.0 });
-
-            migrationBuilder.InsertData(
-                table: "Parametros",
-                columns: new[] { "Id", "CO2Value", "GranoID", "HumedadValue", "Riesgo", "TemperaturaValue" },
-                values: new object[] { 3, 10.0, 1, 12.0, "Bajo", 22.0 });
+            migrationBuilder.CreateIndex(
+                name: "IX_Actualizaciones_DispositivoID",
+                table: "Actualizaciones",
+                column: "DispositivoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -550,13 +649,26 @@ namespace SecureSilo.Server.Migrations
                 column: "GranoID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Updates_DispositivoID",
-                table: "Updates",
-                column: "DispositivoID");
+                name: "IX_Suscripciones_ApplicationUserId",
+                table: "Suscripciones",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suscripciones_CategoriaId",
+                table: "Suscripciones",
+                column: "CategoriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suscripciones_FormaDePagoId",
+                table: "Suscripciones",
+                column: "FormaDePagoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Actualizaciones");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -582,13 +694,19 @@ namespace SecureSilo.Server.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "Updates");
+                name: "Suscripciones");
+
+            migrationBuilder.DropTable(
+                name: "Dispositivos");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Dispositivos");
+                name: "Categorias");
+
+            migrationBuilder.DropTable(
+                name: "FormasDePagos");
 
             migrationBuilder.DropTable(
                 name: "Silos");

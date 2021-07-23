@@ -1,5 +1,6 @@
 ﻿@page "/suscripcion/{UserName}/gestionar"
-@inject HttpClient http
+@inject HttpClient Http
+@inject IJSRuntime JS
 
 <div class="container">
     <br />
@@ -14,7 +15,7 @@
                 <div class="col-sm-10">
                     <h1>Gestion de suscripciones</h1>
                 </div> <div class="col-sm-2">
-                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-pago">Nuevo pago</a>
+                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
                 </div>
             </div>
             <div class="row">
@@ -36,16 +37,17 @@
                 </div>
             </div>
         </EditForm>
-        
+
         <table class="table">
             <thead>
                 <tr>
-                    <th>Fecha</th>
+                    <th>Fecha emision</th>
+                    <th>Fecha pago</th>
                     <th>Categoria</th>
                     <th>Forma de pago</th>
                     <th>Estado</th>
-                    <th>Por Cateogria</th>
                     <th>Total</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +60,7 @@
             <div class="col-sm-10">
                 <h1>Gestion de suscripciones</h1>
             </div> <div class="col-sm-2">
-                <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-pago">Nuevo pago</a>
+                <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
             </div>
         </div>
 
@@ -84,12 +86,13 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th>Fecha emision</th>
+                        <th>Fecha pago</th>
                         <th>Categoria</th>
                         <th>Forma de pago</th>
                         <th>Estado</th>
-                        <th>Por Cateogria</th>
                         <th>Total</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,11 +100,19 @@
                     {
                         <tr>
                             <td> @response.FechaEmision.ToString("dd/MM/yyyy")</td>
+                            @if (response.FechaEmision == response.FechaPago)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@response.FechaPago</td>
+                            }
                             <td> @response.Categoria.Descripcion</td>
                             <td> @response.FormaDePago.Descripcion</td>
                             <td> @response.Estado</td>
                             <td> $@response.Categoria.Costo</td>
-                            <td> @response.Total</td>
+                            <td> <button class="btn btn-danger" @onclick="@(() => AnularSuscripcion(response.Id))">X</button></td>
                         </tr>
                     }
                 </tbody>
@@ -122,6 +133,17 @@
     }
     async Task CargarSuscripciones()
     {
-        response = await http.GetFromJsonAsync<ResponseSuscripcion>($"Suscripcion/por-cliente/{UserName}");
+        response = await Http.GetFromJsonAsync<ResponseSuscripcion>($"Suscripcion/por-cliente/{UserName}");
+    }
+    async Task AnularSuscripcion(int idSuscripcion)
+    {
+        var solicitudSeleccionada = response.Suscripciones.First(x => x.Id == idSuscripcion);
+        string mensajeConfirmacion = $"¿Anular la solicitud de pago numero {solicitudSeleccionada.Id}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensajeConfirmacion))
+        {
+            await Http.DeleteAsync($"suscripcion/{idSuscripcion}");
+            await CargarSuscripciones();
+        }
+
     }
 }

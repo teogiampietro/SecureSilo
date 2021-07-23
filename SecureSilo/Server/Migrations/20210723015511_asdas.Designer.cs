@@ -10,8 +10,8 @@ using SecureSilo.Server.Data;
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210621043902_riesgo")]
-    partial class riesgo
+    [Migration("20210723015511_asdas")]
+    partial class asdas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -238,13 +238,276 @@ namespace SecureSilo.Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SecureSilo.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("SecureSilo.Shared.Actualizacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("A")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("C")
+                        .HasColumnType("float");
+
+                    b.Property<int>("DispositivoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("F")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("H")
+                        .HasColumnType("float");
+
+                    b.Property<string>("M")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("T")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DispositivoID");
+
+                    b.ToTable("Actualizaciones");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Campo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocalidadId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ubicacion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("LocalidadId");
+
+                    b.ToTable("Campos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Categoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Costo")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categorias");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Costo = 2500.0,
+                            Descripcion = "Base"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Costo = 5000.0,
+                            Descripcion = "Standar"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Costo = 7000.0,
+                            Descripcion = "Pro"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Costo = 9000.0,
+                            Descripcion = "Premium"
+                        });
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Dispositivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EstadoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MAC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiloId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstadoId");
+
+                    b.HasIndex("SiloId");
+
+                    b.ToTable("Dispositivos");
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Estado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Riesgo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estados");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "DEFAULT",
+                            Riesgo = "SIN_RIESGO"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "OK",
+                            Riesgo = "BAJO"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "ADVERTENCIA",
+                            Riesgo = "MEDIO"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Descripcion = "ALERTA",
+                            Riesgo = "ALTO"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "SIN_DATOS",
+                            Riesgo = "SIN_RIESGO"
+                        });
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.FormaDePago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FormasDePagos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Efectivo"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Transferencia"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Mercado Pago"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Descripcion = "Tarjeta Credito"
+                        });
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Grano", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Granos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Soja"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Trigo"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Maiz"
+                        });
+                });
+
+            modelBuilder.Entity("SecureSilo.Shared.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -303,142 +566,6 @@ namespace SecureSilo.Server.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SecureSilo.Shared.Campo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocalidadId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ubicacion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("LocalidadId");
-
-                    b.ToTable("Campos");
-                });
-
-            modelBuilder.Entity("SecureSilo.Shared.Dispositivo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EstadoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MAC")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SiloId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstadoId");
-
-                    b.HasIndex("SiloId");
-
-                    b.ToTable("Dispositivos");
-                });
-
-            modelBuilder.Entity("SecureSilo.Shared.Estado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Riesgo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estados");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Descripcion = "DEFAULT"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Descripcion = "OK"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Descripcion = "ADVERTENCIA"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Descripcion = "ALERTA"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Descripcion = "SIN_DATOS"
-                        });
-                });
-
-            modelBuilder.Entity("SecureSilo.Shared.Grano", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Granos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Descripcion = "Soja"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Descripcion = "Trigo"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Descripcion = "Maiz"
-                        });
-                });
-
             modelBuilder.Entity("SecureSilo.Shared.Localidad", b =>
                 {
                     b.Property<int>("Id")
@@ -479,13 +606,13 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("CO2Value")
-                        .HasColumnType("float");
-
                     b.Property<int>("GranoID")
                         .HasColumnType("int");
 
-                    b.Property<double>("HumedadValue")
+                    b.Property<double>("HumedadMaxValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("HumedadMinValue")
                         .HasColumnType("float");
 
                     b.Property<string>("Riesgo")
@@ -504,29 +631,83 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 16.0,
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
                             Riesgo = "ALTO",
-                            TemperaturaValue = 26.0
+                            TemperaturaValue = 35.0
                         },
                         new
                         {
                             Id = 2,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 14.0,
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
                             Riesgo = "MEDIO",
-                            TemperaturaValue = 24.0
+                            TemperaturaValue = 35.0
                         },
                         new
                         {
                             Id = 3,
-                            CO2Value = 10.0,
                             GranoID = 1,
-                            HumedadValue = 12.0,
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
                             Riesgo = "BAJO",
-                            TemperaturaValue = 22.0
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GranoID = 2,
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
+                            Riesgo = "ALTO",
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            GranoID = 2,
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
+                            Riesgo = "MEDIO",
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            GranoID = 2,
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
+                            Riesgo = "BAJO",
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            GranoID = 3,
+                            HumedadMaxValue = 99.0,
+                            HumedadMinValue = 14.0,
+                            Riesgo = "ALTO",
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            GranoID = 3,
+                            HumedadMaxValue = 14.0,
+                            HumedadMinValue = 10.0,
+                            Riesgo = "MEDIO",
+                            TemperaturaValue = 35.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            GranoID = 3,
+                            HumedadMaxValue = 10.0,
+                            HumedadMinValue = 0.0,
+                            Riesgo = "BAJO",
+                            TemperaturaValue = 35.0
                         });
                 });
 
@@ -570,6 +751,9 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("MAC")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CampoID");
@@ -581,39 +765,50 @@ namespace SecureSilo.Server.Migrations
                     b.ToTable("Silos");
                 });
 
-            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+            modelBuilder.Entity("SecureSilo.Shared.Suscripcion", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("A")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("C")
-                        .HasColumnType("float");
-
-                    b.Property<int>("DispositivoID")
                         .HasColumnType("int");
 
-                    b.Property<string>("F")
+                    b.Property<bool>("Pagado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("H")
-                        .HasColumnType("float");
+                    b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("M")
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FormaDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("T")
+                    b.Property<double>("Total")
                         .HasColumnType("float");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("DispositivoID");
+                    b.HasKey("Id", "Pagado");
 
-                    b.ToTable("Updates");
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("FormaDePagoId");
+
+                    b.ToTable("Suscripciones");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -627,7 +822,7 @@ namespace SecureSilo.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -636,7 +831,7 @@ namespace SecureSilo.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -651,7 +846,7 @@ namespace SecureSilo.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -660,16 +855,25 @@ namespace SecureSilo.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SecureSilo.Shared.Actualizacion", b =>
+                {
+                    b.HasOne("SecureSilo.Shared.Dispositivo", "Dispositivo")
+                        .WithMany("Updates")
+                        .HasForeignKey("DispositivoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SecureSilo.Shared.Campo", b =>
                 {
-                    b.HasOne("SecureSilo.Server.Models.ApplicationUser", null)
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
                         .WithMany("Campos")
                         .HasForeignKey("ApplicationUserId");
 
@@ -741,11 +945,21 @@ namespace SecureSilo.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SecureSilo.Shared.Update", b =>
+            modelBuilder.Entity("SecureSilo.Shared.Suscripcion", b =>
                 {
-                    b.HasOne("SecureSilo.Shared.Dispositivo", "Dispositivo")
-                        .WithMany("Updates")
-                        .HasForeignKey("DispositivoID")
+                    b.HasOne("SecureSilo.Shared.Identity.ApplicationUser", null)
+                        .WithMany("Suscripciones")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("SecureSilo.Shared.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecureSilo.Shared.FormaDePago", "FormaDePago")
+                        .WithMany()
+                        .HasForeignKey("FormaDePagoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

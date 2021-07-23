@@ -53,8 +53,9 @@ namespace SecureSilo.Server.Data
             var categoria = new List<Categoria>()
             {
                 new Categoria(){Id=1,Costo=2500,Descripcion="Base" },
-                new Categoria(){Id=2,Costo=5000,Descripcion="Pro" },
-                new Categoria(){Id=3,Costo=7000,Descripcion="VIP" }
+                new Categoria(){Id=2,Costo=5000,Descripcion="Standar" },
+                new Categoria(){Id=3,Costo=7000,Descripcion="Pro" },
+                new Categoria(){Id=4,Costo=9000,Descripcion="Premium" }
             };
             builder.Entity<Categoria>().HasData(categoria);
 
@@ -66,7 +67,7 @@ namespace SecureSilo.Server.Data
                 new FormaDePago(){Id =4, Descripcion="Tarjeta Credito"}
             };
             builder.Entity<FormaDePago>().HasData(formadepago);
-
+            builder.Entity<Suscripcion>().HasKey(x => new { x.Id, x.Pagado });
             base.OnModelCreating(builder);
         }
 

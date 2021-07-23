@@ -330,13 +330,19 @@ namespace SecureSilo.Server.Migrations
                         {
                             Id = 2,
                             Costo = 5000.0,
-                            Descripcion = "Pro"
+                            Descripcion = "Standar"
                         },
                         new
                         {
                             Id = 3,
                             Costo = 7000.0,
-                            Descripcion = "VIP"
+                            Descripcion = "Pro"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Costo = 9000.0,
+                            Descripcion = "Premium"
                         });
                 });
 
@@ -760,9 +766,10 @@ namespace SecureSilo.Server.Migrations
             modelBuilder.Entity("SecureSilo.Shared.Suscripcion", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Pagado")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -773,7 +780,10 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Fecha")
+                    b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPago")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("FormaDePagoId")
@@ -782,16 +792,13 @@ namespace SecureSilo.Server.Migrations
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Pagado")
-                        .HasColumnType("bit");
-
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id", "Pagado");
 
                     b.HasIndex("ApplicationUserId");
 
