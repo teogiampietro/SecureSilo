@@ -5,49 +5,16 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <div>
-                    <label>Fecha de emisión:</label>
+                    <label>Fecha de pago:</label>
                     <InputDate class="form-control" @bind-Value="@suscripcion.FechaPago" />
                     <ValidationMessage For="@(() => suscripcion.FechaPago)" />
                 </div>
             </div>
             <div class="form-group">
                 <div>
-                    <label>Pago:</label>
-                    <InputSelectNumber class="form-control"
-                                       ValueChanged="@((string value) => ValorPago(value))"
-                                       ValueExpression="@(() => suscripcion.Estado)"
-                                       Value="suscripcion.Estado">
-                        <option value="@Constants.GENERADO">GENERADO</option>
-                        <option value="@Constants.PAGADO">PAGADO</option>
-                        <option value="@Constants.DEBE">DEBE</option>
-                    </InputSelectNumber>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Categoria</label>
-                <InputSelectNumber class="form-control"
-                                   @bind-Value="suscripcion.CategoriaId">
-                    <option value="0">-- Seleccione una Categoria --</option>
-                    @foreach (var item in Categorias)
-                    {
-                        @if (item.Id == categoriaId)
-                        {
-                            <option selected value="@item.Id">@item.Descripcion</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Id">@item.Descripcion</option>
-                        }
-                    }
-                </InputSelectNumber>
-                <ValidationMessage For="@(() => suscripcion.CategoriaId)" />
-            </div>
-            <div class="form-group">
-                <div>
                     <label>Forma de pago:</label>
                     <InputSelectNumber class="form-control"
                                        @bind-Value="suscripcion.FormaDePagoId">
-                        <option value="0">-- Seleccione un Silo --</option>
                         @foreach (var item in FormasPago)
                         {
                             @if (item.Id == suscripcion.FormaDePagoId)
@@ -85,30 +52,24 @@
     [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
 
-    List<Categoria> Categorias = new List<Categoria>();
     List<FormaDePago> FormasPago = new List<FormaDePago>();
-    private int categoriaId = 0;
+
     private int formaPagoId = 0;
     private string pago = Constants.GENERADO;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarCategorias();
         await CargarFormaPago();
         suscripcion.Estado = pago;
         suscripcion.FechaPago = (DateTime.MinValue == suscripcion.FechaPago ? DateTime.Today : DateTime.Today);
     }
-    async Task CargarCategorias()
-    {
-        Categorias = await Http.GetFromJsonAsync<List<Categoria>>("Categorias");
-    }
+
     async Task CargarFormaPago()
     {
         FormasPago = await Http.GetFromJsonAsync<List<FormaDePago>>("Suscripcion/forma-pago");
     }
-    private void ValorPago(string pago)
+    private void CambioFormaDePago(int value)
     {
-        this.pago = pago;
-        suscripcion.Estado = pago;
+
     }
 }

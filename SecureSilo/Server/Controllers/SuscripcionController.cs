@@ -29,6 +29,13 @@ namespace SecureSilo.Server.Controllers
             return await this.context.Suscripciones.Include(x => x.Categoria)
                 .ToListAsync();
         }
+        [HttpGet("{SubId}")]
+        public async Task<ActionResult<Suscripcion>> Get(int SubId)
+        {
+            return await this.context.Suscripciones.Include(x => x.Categoria)
+                .Where(x => x.Id == SubId)
+                .FirstOrDefaultAsync();
+        }
         [HttpGet("{UserId}")]
         public async Task<ActionResult<Suscripcion>> GetPorUserId(string UserId)
         {
@@ -73,26 +80,26 @@ namespace SecureSilo.Server.Controllers
         #endregion
 
 
-        [HttpPost("solicitud-pago")]
+        [HttpPost]
         public async Task<ActionResult<ResponseSuscripcion>> Post(Suscripcion suscripcion)
         {
             if (suscripcion.Pagado)
             {
-                suscripcion.FechaPago = System.DateTime.Today;
+                suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
+                suscripcion.Estado = Constants.PAGADO;
             }
             if (!suscripcion.Pagado)
             {
                 suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
                 suscripcion.FormaDePagoId = 1;
                 suscripcion.FechaPago = suscripcion.FechaEmision;
+                suscripcion.Id = GetNextId();
             }
-           
-
             context.Suscripciones.Add(suscripcion);
             await context.SaveChangesAsync();
             return await Get(suscripcion.UserId);
         }
-
+        
         [HttpPut]
         public async Task<ActionResult<ResponseSuscripcion>> Pagada(Suscripcion suscripcion)
         {
@@ -100,16 +107,32 @@ namespace SecureSilo.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var suscripcion = new Suscripcion { Id = id };
-            context.Remove(suscripcion);
-            await context.SaveChangesAsync();
+            var suscripcion = new List<Suscripcion>() {
+                new Suscripcion { Id = id, Pagado = false },
+                new Suscripcion { Id = id, Pagado = true}
+            };
+            foreach (var item in suscripcion)
+            {
+                context.Remove(item);
+                await context.SaveChangesAsync();
+            }
             return NoContent();
         }
         #region PRIVADOS
-
+        private int GetNextId()
+        {
+            var sub = context.Suscripciones.OrderByDescending(x=>x.Id).FirstOrDefault();
+            if (sub == null)
+            {
+                return 0;
+            }
+            return ( sub.Id +  1);
+        }
         private int CantidadSilos(string userId)
         {
             var cantidadSilos = this.context.Silos

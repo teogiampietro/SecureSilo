@@ -12,7 +12,7 @@
     async Task NuevaSuscripcion()
     {
         suscripcion.UserId = UserId;
-        await Http.PostAsJsonAsync("Suscripcion/solicitud-pago", suscripcion);
+        await Http.PostAsJsonAsync("Suscripcion", suscripcion);
         NavManager.NavigateTo($"/suscripcion/{UserId}/gestionar");
     }
 

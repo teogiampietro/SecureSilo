@@ -1,4 +1,4 @@
-﻿@page "/suscripcion/{UserId}/nuevo-pago"
+﻿@page "/suscripcion/{UserId}/nuevo-pago/{SubId:int}"
 @inject HttpClient Http
 @inject NavigationManager NavManager
 <div class="container">
@@ -8,13 +8,18 @@
 </div>
 @code {
     [Parameter] public string UserId { get; set; }
+    [Parameter] public int SubId { get; set; }
+
     Suscripcion suscripcion = new Suscripcion();
+        
+
     async Task NuevoPago()
     {
         suscripcion.UserId = UserId;
+        suscripcion.Id = SubId;
         suscripcion.Pagado = true;
         await Http.PostAsJsonAsync("Suscripcion", suscripcion);
-        NavManager.NavigateTo($"/suscripcion/{UserId}/gestionar");
+        NavManager.NavigateTo($"/suscripcion/{UserId}/gestionar-pagos");
     }
 
 }

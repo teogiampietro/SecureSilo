@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210725144933_fdp")]
+    partial class fdp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -434,12 +436,6 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Alias")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CBU")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -451,30 +447,27 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
-                            Alias = "-",
-                            CBU = "-",
                             Descripcion = "-- Seleccione una forma de pago --"
                         },
                         new
                         {
                             Id = 2,
-                            Alias = "-",
-                            CBU = "-",
                             Descripcion = "Efectivo"
                         },
                         new
                         {
                             Id = 3,
-                            Alias = "MACRO.SECURE.SILO",
-                            CBU = "55948291235",
                             Descripcion = "Transferencia"
                         },
                         new
                         {
                             Id = 4,
-                            Alias = "MP.SECURE.SILO",
-                            CBU = "438850133263",
                             Descripcion = "Mercado Pago"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Tarjeta Credito"
                         });
                 });
 

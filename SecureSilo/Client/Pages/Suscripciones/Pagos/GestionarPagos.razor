@@ -83,18 +83,39 @@
                 <tbody>
                     @foreach (var response in response.Suscripciones)
                     {
-                        <tr>
-                            <td> @response.FechaEmision.ToString("dd/MM/yyyy")</td>                           
-                            <td> @response.FechaPago.ToString("dd/MM/yyyy")</td>
-                            <td> @response.Categoria.Descripcion</td>
+                    <tr>
+                        @if (response.FechaEmision == DateTime.MinValue)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td> @response.FechaEmision.ToString("dd/MM/yyyy")</td>
+                        }
+                        @if (response.FechaEmision == response.FechaPago)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>@response.FechaPago.ToString("dd/MM/yyyy")</td>
+                        }
+                        <td> @response.Categoria.Descripcion</td>
+                        @if (response.FormaDePagoId != 1)
+                        {
                             <td> @response.FormaDePago.Descripcion</td>
-                            <td> @response.Estado</td>
-                            <td> $@response.Categoria.Costo</td>
-                            @if (response.Pagado == false)
-                            {
-                                <td> <a class="btn btn-success" href="suscripcion/@response.UserId/nuevo-pago">Cargar pago</a></td>
-                            }
-                        </tr>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td> @response.Estado</td>
+                        <td> $@response.Categoria.Costo</td>
+                        @if (!response.Pagado)
+                        {
+                            <td> <a class="btn btn-success" href="suscripcion/@response.UserId/nuevo-pago/@response.Id">Cargar pago</a></td>
+                        }
+                    </tr>
                     }
                 </tbody>
             </table>

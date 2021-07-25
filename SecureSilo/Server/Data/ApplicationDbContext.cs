@@ -61,10 +61,10 @@ namespace SecureSilo.Server.Data
 
             var formadepago = new List<FormaDePago>()
             {
-                new FormaDePago(){Id =1, Descripcion="Efectivo"},
-                new FormaDePago(){Id =2, Descripcion="Transferencia"},
-                new FormaDePago(){Id =3, Descripcion="Mercado Pago"},
-                new FormaDePago(){Id =4, Descripcion="Tarjeta Credito"}
+                new FormaDePago(){Id =1, Descripcion="-- Seleccione una forma de pago --",CBU = "-",Alias = "-"},
+                new FormaDePago(){Id =2, Descripcion="Efectivo",CBU = "-",Alias = "-"},
+                new FormaDePago(){Id =3, Descripcion="Transferencia",CBU = "55948291235",Alias = "MACRO.SECURE.SILO"},
+                new FormaDePago(){Id =4, Descripcion="Mercado Pago",CBU = "438850133263",Alias = "MP.SECURE.SILO" }
             };
             builder.Entity<FormaDePago>().HasData(formadepago);
             builder.Entity<Suscripcion>().HasKey(x => new { x.Id, x.Pagado });
@@ -77,13 +77,12 @@ namespace SecureSilo.Server.Data
         //    if (entidades != null)
         //    {
         //        foreach (var entidad in entidades.Where(c => c.State != EntityState.Unchanged))
-        //        {
+        //        {                   
         //            //TODO: auditar(entidad)
         //        }
         //    }
-        //    return base.SaveChanges(); 
+        //    return base.SaveChanges();
         //}
-
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Provincia> Provincias { get; set; }
         public DbSet<Localidad> Localidades { get; set; }
