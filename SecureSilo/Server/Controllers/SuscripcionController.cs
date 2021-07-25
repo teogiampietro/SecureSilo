@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using SecureSilo.Server.Data;
 using SecureSilo.Shared;
 using SecureSilo.Shared.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SecureSilo.Server.Controllers
@@ -78,36 +80,37 @@ namespace SecureSilo.Server.Controllers
                 .ToListAsync();
         }
         #endregion
-
-
         [HttpPost]
         public async Task<ActionResult<ResponseSuscripcion>> Post(Suscripcion suscripcion)
         {
-            if (suscripcion.Pagado)
+            try
             {
-                suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
-                suscripcion.Estado = Constants.PAGADO;
+                if (suscripcion.Pagado)
+                {
+                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
+                    suscripcion.Estado = Constants.PAGADO;
+                }
+                if (!suscripcion.Pagado)
+                {
+                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
+                    suscripcion.FormaDePagoId = 1;
+                    suscripcion.FechaPago = suscripcion.FechaEmision;
+                    suscripcion.Id = GetNextId();
+                }
+                context.Suscripciones.Add(suscripcion);
+                await context.SaveChangesAsync();
+                if (!suscripcion.Pagado)
+                {
+                    EnviarMailAsync(suscripcion);
+                }
+                return await Get(suscripcion.UserId);
             }
-            if (!suscripcion.Pagado)
+            catch (Exception e)
             {
-                suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
-                suscripcion.FormaDePagoId = 1;
-                suscripcion.FechaPago = suscripcion.FechaEmision;
-                suscripcion.Id = GetNextId();
+                throw new InvalidOperationException(e.Message);
             }
-            context.Suscripciones.Add(suscripcion);
-            await context.SaveChangesAsync();
-            return await Get(suscripcion.UserId);
-        }
-        
-        [HttpPut]
-        public async Task<ActionResult<ResponseSuscripcion>> Pagada(Suscripcion suscripcion)
-        {
-            context.Entry(suscripcion).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return NoContent();
-        }
 
+        }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
@@ -160,6 +163,34 @@ namespace SecureSilo.Server.Controllers
             {
                 return Constants.CATEGORIA_PREMIUM;
             }
+        }
+
+        private string ArmarBodyEmail(Suscripcion suscripcion)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Sistema Secure Silo");
+            sb.Append("Estimado usuario, le hacemos llegar este correo porque se ha generado una nueva solicitud de pago");
+            sb.Append("Usted podrá seleccionar en nuestro sistema, cualquiera de los métodos de pago disponibles.");
+            sb.AppendLine("Allí encontrará la información necesaria para realizar el pago de su suscripción.");
+            sb.AppendLine("");
+            sb.AppendLine("Fehca de emisión del pago:" + suscripcion.FechaEmision.ToString("dd/MM/yyyy"));
+            sb.AppendLine("Saldo a pagar: " + suscripcion.Categoria.Costo);
+            sb.AppendLine("Categoria actual: " + suscripcion.Categoria.Descripcion);
+            if (!string.IsNullOrEmpty(suscripcion.Observaciones))
+            {
+                sb.AppendLine("Observaciones del pago " + suscripcion.Observaciones);
+            }
+            sb.AppendLine(" ");
+            sb.AppendLine("Sistema de monitoreo Secure Silo");
+            return string.Empty;
+        }
+        private void EnviarMailAsync(Suscripcion suscripcion)
+        {
+            MailServiceController mail = new MailServiceController(context, _userManager);
+            //capturar mail según usuario
+            var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
+
+            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA SECURE SILO", ArmarBodyEmail(suscripcion));
         }
         #endregion
 
