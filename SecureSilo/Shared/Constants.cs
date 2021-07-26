@@ -8,6 +8,10 @@
         public const int CATEGORIA_PRO = 3;
         public const int CATEGORIA_PREMIUM = 4;
 
+        //Descuentos
+        public const double DESCUENTO_10 = 10;
+        public const double DESCUENTO_15 = 15;
+
         //Estados Suscripcion
         public const string PAGADO = "PAGADO";
         public const string DEBE = "DEBE";

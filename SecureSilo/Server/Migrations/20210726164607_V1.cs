@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SecureSilo.Server.Migrations
 {
-    public partial class asdas : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,23 @@ namespace SecureSilo.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Auditoria",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Accion = table.Column<string>(nullable: true),
+                    Fecha = table.Column<DateTime>(nullable: false),
+                    User = table.Column<string>(nullable: true),
+                    Clase = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Auditoria", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,7 +115,9 @@ namespace SecureSilo.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(nullable: true)
+                    Descripcion = table.Column<string>(nullable: true),
+                    CBU = table.Column<string>(nullable: true),
+                    Alias = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -498,13 +517,13 @@ namespace SecureSilo.Server.Migrations
 
             migrationBuilder.InsertData(
                 table: "FormasDePagos",
-                columns: new[] { "Id", "Descripcion" },
+                columns: new[] { "Id", "Alias", "CBU", "Descripcion" },
                 values: new object[,]
                 {
-                    { 1, "Efectivo" },
-                    { 2, "Transferencia" },
-                    { 3, "Mercado Pago" },
-                    { 4, "Tarjeta Credito" }
+                    { 1, "-", "-", "-- Seleccione una forma de pago --" },
+                    { 2, "-", "-", "Efectivo" },
+                    { 3, "MACRO.SECURE.SILO", "55948291235", "Transferencia" },
+                    { 4, "MP.SECURE.SILO", "438850133263", "Mercado Pago" }
                 });
 
             migrationBuilder.InsertData(
@@ -683,6 +702,9 @@ namespace SecureSilo.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Auditoria");
 
             migrationBuilder.DropTable(
                 name: "DeviceCodes");
