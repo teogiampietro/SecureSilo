@@ -42,14 +42,24 @@
                     @if (roles != null && roles.Length > 0)
                         foreach (var item in roles)
                         {
-                            if (item.RolName == "admin")
-                            {
+
+                            //if (item.RolName == "admin")
+                            //{
                                 <li class="nav-item active">
                                     <NavLink class="nav-link" href="suscripciones">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> Suscripciones
+                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Admin
                                     </NavLink>
                                 </li>
-                            }
+                                //}
+                                //if (item.RolName == "client")
+                                //{
+                                string urlUser = "suscripcion/" + item.User + "/gestionar-pagos";
+                                <li class="nav-item active">
+                                    <NavLink class="nav-link" href="@urlUser">
+                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Cliente
+                                    </NavLink>
+                                </li>
+                            //}
                         }
 
                 </Authorized>
@@ -64,17 +74,15 @@
     private bool collapseNavMenu = true;
     private bool expandSubNav;
     ResponseUserRol[] roles { get; set; }
-
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    protected override async Task OnInitializedAsync()
-    {
-        GetUserRoles();
-    }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+          await GetUserRoles();
     }
 
     async Task GetUserRoles()

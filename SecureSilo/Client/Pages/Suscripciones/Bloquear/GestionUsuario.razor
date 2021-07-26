@@ -1,0 +1,51 @@
+﻿@page "/suscripcion/{UserId}/bloquear"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<div class="container">
+    <br />
+    <h3>Gestionar usuario</h3>
+    @if (usuario != null)
+    {
+        <EditForm Model="@usuario">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div>
+                            <label>ID de usuario:</label>
+                            <InputText class="form-control" @bind-Value="@usuario.Id" />
+                            <ValidationMessage For="@(() => usuario.Id)" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <InputText class="form-control" @bind-Value="@usuario.Name" />
+                        <ValidationMessage For="@(() => usuario.Name)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico:</label>
+                        <InputText class="form-control" @bind-Value="@usuario.Email" />
+                        <ValidationMessage For="@(() => usuario.Email)" />
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Estado usuario
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </EditForm>
+    }
+</div>
+
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    ResponseUsuario usuario;
+    protected async override Task OnParametersSetAsync()
+    {
+        usuario = await Http.GetFromJsonAsync<ResponseUsuario>($"User/{UserId}");
+    }
+}

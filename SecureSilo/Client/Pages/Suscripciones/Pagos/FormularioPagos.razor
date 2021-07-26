@@ -1,0 +1,75 @@
+﻿@inject HttpClient Http
+@attribute [Authorize]
+<EditForm Model="@suscripcion" OnValidSubmit="@OnValidSubmit">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <div>
+                    <label>Fecha de pago:</label>
+                    <InputDate class="form-control" @bind-Value="@suscripcion.FechaPago" />
+                    <ValidationMessage For="@(() => suscripcion.FechaPago)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label>Forma de pago:</label>
+                    <InputSelectNumber class="form-control"
+                                       @bind-Value="suscripcion.FormaDePagoId">
+                        @foreach (var item in FormasPago)
+                        {
+                            @if (item.Id == suscripcion.FormaDePagoId)
+                            {
+                                <option selected value="@item.Id">@item.Descripcion</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        }
+                    </InputSelectNumber>
+                    <ValidationMessage For="@(() => suscripcion.FormaDePagoId)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Observaciones:</label>
+                <div>
+                    <InputTextArea class="form-control" @bind-Value="@suscripcion.Observaciones" />
+                    <ValidationMessage For="@(() => suscripcion.Observaciones)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">@TextoBoton</button>
+            </div>
+        </div>
+    </div>
+    <DataAnnotationsValidator />
+</EditForm>
+
+
+@code {
+
+    [Parameter] public Suscripcion suscripcion { get; set; } = new Suscripcion();
+    [Parameter] public string TextoBoton { get; set; } = "Guardar cambios";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    List<FormaDePago> FormasPago = new List<FormaDePago>();
+
+    private int formaPagoId = 0;
+    private string pago = Constants.GENERADO;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarFormaPago();
+        suscripcion.Estado = pago;
+        suscripcion.FechaPago = (DateTime.MinValue == suscripcion.FechaPago ? DateTime.Today : DateTime.Today);
+    }
+
+    async Task CargarFormaPago()
+    {
+        FormasPago = await Http.GetFromJsonAsync<List<FormaDePago>>("Suscripcion/forma-pago");
+    }
+    private void CambioFormaDePago(int value)
+    {
+
+    }
+}

@@ -2,19 +2,22 @@
 {
     public static class Constants
     {
-        enum EnumPagos
-        {
-           Pagado,
-           Debe,
-           Generado
-        }
+        //Categorias suscripciones
+        public const int CATEGORIA_BASE = 1;
+        public const int CATEGORIA_STANDAR = 2;
+        public const int CATEGORIA_PRO = 3;
+        public const int CATEGORIA_PREMIUM = 4;
+
+        //Estados Suscripcion
         public const string PAGADO = "PAGADO";
         public const string DEBE = "DEBE";
         public const string GENERADO = "GENERADO";
 
-        public const string FORMA_DE_PAGO_MERCADOPAGO = "MERCADOPAGO";
-        public const string FORMA_DE_PAGO_TRANSFERENCIA_EFECTIVO = "TRANS/EFT";
-        public const string FORMA_DE_PAGO_CREDITO = "TARJETA_CREDITO";
+        //Formas de pago
+        public const int FORMA_PAGO_EFECTIVO = 1;
+        public const int FORMA_PAGO_TRANSFERENCIA = 2;
+        public const int FORMA_PAGO_MERCADOPAGO = 3;
+        public const int FORMA_PAGO_TARJETA_CREDITO = 4;
 
         //Estados
         public const string Ok = "OK";

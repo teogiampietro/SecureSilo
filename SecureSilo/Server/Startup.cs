@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SecureSilo.Server.Data;
+using SecureSilo.Server.Helpers;
 using SecureSilo.Shared.Identity;
 using System;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace SecureSilo.Server
             services.AddAuthentication()
              .AddIdentityServerJwt();
 
+            services.AddTransient<IServicioUsuarioActual, ServiciousuarioActual>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {

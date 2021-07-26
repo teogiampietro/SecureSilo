@@ -1,5 +1,6 @@
 ﻿@page "/estados"
 @inject HttpClient Http
+@attribute [Authorize]
 <div class="container">
     <br />
     <h2 class="text-center">Estados de tus silos</h2>
@@ -45,15 +46,15 @@
     }
     else
     {
-<div>
-    @foreach (var item in silos.ToList())
-    {
-        if (item.Dispositivos.Count > 0)
-        {
-            <SecureSilo.Client.Pages.Estados.Estados.SiloComponent Silo="@item" />
-        }
-    }
-</div>
+        <div>
+            @foreach (var item in silos.ToList())
+            {
+                if (item.Dispositivos.Count > 0)
+                {
+                    <SecureSilo.Client.Pages.Estados.Estados.SiloComponent Silo="@item" />
+                }
+            }
+        </div>
     }
 </div>
 @code {

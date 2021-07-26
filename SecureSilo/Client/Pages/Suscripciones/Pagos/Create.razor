@@ -1,0 +1,26 @@
+﻿@page "/suscripcion/{UserId}/nuevo-pago/{SubId:int}"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@attribute [Authorize]
+<div class="container">
+    <br />
+    <h3 class="text-center">Enviar un nuevo pago</h3>
+    <FormularioPagos TextoBoton="Confirmar nuevo pago" OnValidSubmit="@NuevoPago" suscripcion="@suscripcion" />
+</div>
+@code {
+    [Parameter] public string UserId { get; set; }
+    [Parameter] public int SubId { get; set; }
+
+    Suscripcion suscripcion = new Suscripcion();
+
+
+    async Task NuevoPago()
+    {
+        suscripcion.UserId = UserId;
+        suscripcion.Id = SubId;
+        suscripcion.Pagado = true;
+        await Http.PostAsJsonAsync("Suscripcion", suscripcion);
+        NavManager.NavigateTo($"/suscripcion/{UserId}/gestionar-pagos");
+    }
+
+}
