@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecureSilo.Server.Data;
 
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210726135711_auditoria")]
+    partial class auditoria
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,9 +284,6 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Clase")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Fecha")

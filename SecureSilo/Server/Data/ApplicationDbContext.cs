@@ -4,17 +4,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SecureSilo.Shared;
 using SecureSilo.Shared.Identity;
+using SecureSilo.Server.Helpers;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SecureSilo.Server.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
+        private readonly IServicioUsuarioActual serviciousuarioActual;
         public ApplicationDbContext(
             DbContextOptions options,
+            IServicioUsuarioActual servicioUsuarioActual,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
-
+            serviciousuarioActual = servicioUsuarioActual;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -71,18 +78,50 @@ namespace SecureSilo.Server.Data
             base.OnModelCreating(builder);
         }
 
-        //public override int SaveChanges()
-        //{
-        //    var entidades = ChangeTracker.Entries();
-        //    if (entidades != null)
-        //    {
-        //        foreach (var entidad in entidades.Where(c => c.State != EntityState.Unchanged))
-        //        {                   
-        //            //TODO: auditar(entidad)
-        //        }
-        //    }
-        //    return base.SaveChanges();
-        //}
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            Auditar();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void Auditar()
+        {
+            var entidades = ChangeTracker.Entries();
+            if (entidades != null)
+            {
+                List<AuditClass> audits = new List<AuditClass>();
+                foreach (var entidad in entidades.Where(c => c.State != EntityState.Unchanged))
+                {
+                    AuditClass audit = new AuditClass();
+                    audit.Clase = entidad.Entity.ToString();
+                    audit.Fecha = System.DateTime.Now;
+                    audit.User = serviciousuarioActual.ObtenerIdUsuarioActual();
+                    audit.Data = System.Text.Json.JsonSerializer.Serialize(entidad.Entity);
+                    switch (entidad.State)
+                    {
+                        case EntityState.Detached:
+                            audit.Accion = "DETACHED";
+                            break;
+                        case EntityState.Deleted:
+                            audit.Accion = "DELETED";
+                            break;
+                        case EntityState.Modified:
+                            audit.Accion = "MODIFIED";
+                            break;
+                        case EntityState.Added:
+                            audit.Accion = "ADDED";
+                            break;
+                        default:
+                            audit.Accion = "DEFAULT";
+                            break;
+                    }
+                    audits.Add(audit);
+                }
+                Auditoria.AddRange(audits);
+            }
+        }
+
+        
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Provincia> Provincias { get; set; }
         public DbSet<Localidad> Localidades { get; set; }
@@ -96,5 +135,6 @@ namespace SecureSilo.Server.Data
         public DbSet<Suscripcion> Suscripciones { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FormaDePago> FormasDePagos { get; set; }
+        public DbSet<AuditClass> Auditoria { get; set; }
     }
 }
