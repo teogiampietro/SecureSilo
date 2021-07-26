@@ -9,15 +9,21 @@
                     }
                     else
                     {
+
                         <p>No estás autorizado a consumir este recurso</p>
+
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p>Ups, no pudimos encontrar lo que pediste!</p>
-                <p>404 - Not found</p>
+                <text class="text-center">
+                    <br />
+                    <p>Ups, no pudimos encontrar lo que pediste!</p>
+                    <p>404 - Not found</p>
+                </text>
+
             </LayoutView>
         </NotFound>
     </Router>

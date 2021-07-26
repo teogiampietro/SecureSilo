@@ -1,6 +1,8 @@
 ﻿@page "/estadisticas"
 @inject HttpClient Http
 @inject IJSRuntime JsRunT
+@attribute [Authorize]
+
 <div class="container">
     <br />
     <h2 class="text-center">Estadisticas de los campos</h2>
@@ -85,7 +87,7 @@
                 </div>
             </div>
         </div>
-        
+
     </EditForm>
     <div id="chartDiv" style="height: 500px;"></div>
 </div>

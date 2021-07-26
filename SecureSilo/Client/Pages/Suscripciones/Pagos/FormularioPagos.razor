@@ -1,5 +1,5 @@
 ﻿@inject HttpClient Http
-
+@attribute [Authorize]
 <EditForm Model="@suscripcion" OnValidSubmit="@OnValidSubmit">
     <div class="row">
         <div class="col-sm-6">

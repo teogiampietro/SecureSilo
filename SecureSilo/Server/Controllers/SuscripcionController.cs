@@ -169,20 +169,23 @@ namespace SecureSilo.Server.Controllers
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Sistema Secure Silo");
-            sb.Append("Estimado usuario, le hacemos llegar este correo porque se ha generado una nueva solicitud de pago");
-            sb.Append("Usted podrá seleccionar en nuestro sistema, cualquiera de los métodos de pago disponibles.");
-            sb.AppendLine("Allí encontrará la información necesaria para realizar el pago de su suscripción.");
+            sb.AppendLine(" ");
+            sb.Append("Estimado usuario, le hacemos llegar este correo porque se ha generado una nueva solicitud de pago. ");
+            sb.Append("Usted podrá seleccionar en nuestro sistema, cualquiera de los métodos de pago disponibles. ");
+            sb.AppendLine("Allí encontrará la información necesaria para realizar el pago de su suscripción. ");
             sb.AppendLine("");
-            sb.AppendLine("Fehca de emisión del pago:" + suscripcion.FechaEmision.ToString("dd/MM/yyyy"));
-            sb.AppendLine("Saldo a pagar: " + suscripcion.Categoria.Costo);
+            sb.AppendLine("Fecha de emisión del pago: " + suscripcion.FechaEmision.ToString("dd/MM/yyyy"));
+            sb.AppendLine("Saldo a pagar: $" + suscripcion.Categoria.Costo);
             sb.AppendLine("Categoria actual: " + suscripcion.Categoria.Descripcion);
             if (!string.IsNullOrEmpty(suscripcion.Observaciones))
             {
-                sb.AppendLine("Observaciones del pago " + suscripcion.Observaciones);
+                sb.AppendLine("Observaciones de la solictud: " + suscripcion.Observaciones);
             }
             sb.AppendLine(" ");
-            sb.AppendLine("Sistema de monitoreo Secure Silo");
-            return string.Empty;
+            sb.AppendLine("Recuerde que posse 10 días hábiles para acreditar y notificar el mismo. De lo contrario, nos vemos en derecho de bloquear su cuenta. ");
+            sb.AppendLine(" ");
+            sb.AppendLine("Sistema de monitoreo Secure Silo.");
+            return sb.ToString();
         }
         private void EnviarMailAsync(Suscripcion suscripcion)
         {
@@ -190,7 +193,9 @@ namespace SecureSilo.Server.Controllers
             //capturar mail según usuario
             var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
 
-            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA SECURE SILO", ArmarBodyEmail(suscripcion));
+            var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x=>x.Categoria).FirstOrDefault();
+
+            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA SECURE SILO", ArmarBodyEmail(sub));
         }
         #endregion
 

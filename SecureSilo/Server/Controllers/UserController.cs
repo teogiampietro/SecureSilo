@@ -77,7 +77,7 @@ namespace SecureSilo.Server.Controllers
             var response = await context.Users.Where(x => x.Email == email).Select(x => x.Active).FirstOrDefaultAsync();
             return response;
         }
-        [HttpPut("estado")]
+        [HttpPost("estado")]
         public async Task<ActionResult<bool>> ActivarDesactivarUser(RequestEstadoUsuario user)
         {
             var appUser = await _userManager.FindByIdAsync(user.UserId);
@@ -85,6 +85,22 @@ namespace SecureSilo.Server.Controllers
             context.Users.Update(appUser);
             await context.SaveChangesAsync();
             return true;
+        }
+
+        [HttpGet("{UserId}")]
+        public async Task<ActionResult<ResponseUsuario>> GetUserById(string UserId)
+        {
+            var user = await (from users in context.Users
+                              where users.Id == UserId
+                              select new ResponseUsuario()
+                              {
+                                  Id = users.Id,
+                                  Name = users.UserName,
+                                  Email = users.Email,
+                                  Active = users.Active
+                              }).FirstOrDefaultAsync();
+
+            return user;
         }
     }
 }

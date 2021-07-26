@@ -2,6 +2,8 @@
 @inject HttpClient Http
 @inject IJSRuntime JS
 
+@attribute [Authorize]
+
 <div class="container">
     <br />
     @if (response.Suscripciones == null)
@@ -12,11 +14,25 @@
     {
         <EditForm Model="@response">
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-8">
                     <h1>Gestion de suscripciones</h1>
-                </div> <div class="col-sm-2">
+                </div>
+                <div class="col-sm-2">
                     <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
                 </div>
+                @if (response.User.Active)
+                {
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-danger" @onclick="(() => BloqueoUsuario(false))">Bloquear este usuario</button>>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary" @onclick="(() => BloqueoUsuario(true))">Habilitar este usuario</button>
+                    </div>
+                }
+
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -56,15 +72,28 @@
     }
     else
     {
-        <div class="row">
-            <div class="col-sm-10">
-                <h1>Gestion de suscripciones</h1>
-            </div> <div class="col-sm-2">
-                <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
-            </div>
-        </div>
-
         <EditForm Model="@response">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h1>Gestion de suscripciones</h1>
+                </div> <div class="col-sm-2">
+                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
+                </div>
+                @if (response.User.Active)
+                {
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-danger" @onclick="(() => BloqueoUsuario(false))">Bloquear este usuario</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary" @onclick="(() => BloqueoUsuario(true))">Habilitar este usuario</button>
+                    </div>
+                }
+            </div>
+
+
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -98,36 +127,36 @@
                 <tbody>
                     @foreach (var response in response.Suscripciones)
                     {
-                    <tr>
-                        @if (response.FechaEmision == DateTime.MinValue)
-                        {
-                            <td></td>
-                        }
-                        else
-                        {
-                            <td> @response.FechaEmision.ToString("dd/MM/yyyy")</td>
-                        }
-                        @if (response.FechaEmision == response.FechaPago)
-                        {
-                            <td></td>
-                        }
-                        else
-                        {
-                            <td>@response.FechaPago.ToString("dd/MM/yyyy")</td>
-                        }
-                        <td> @response.Categoria.Descripcion</td>
-                        @if (response.FormaDePagoId != 1)
-                        {
-                            <td> @response.FormaDePago.Descripcion</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                        <td> @response.Estado</td>
-                        <td> $@response.Categoria.Costo</td>
-                        <td> <button class="btn btn-danger" @onclick="@(() => AnularSuscripcion(response.Id))">X</button></td>
-                    </tr>
+                        <tr>
+                            @if (response.FechaEmision == DateTime.MinValue)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td> @response.FechaEmision.ToString("dd/MM/yyyy")</td>
+                            }
+                            @if (response.FechaEmision == response.FechaPago)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@response.FechaPago.ToString("dd/MM/yyyy")</td>
+                            }
+                            <td> @response.Categoria.Descripcion</td>
+                            @if (response.FormaDePagoId != 1)
+                            {
+                                <td> @response.FormaDePago.Descripcion</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td> @response.Estado</td>
+                            <td> $@response.Categoria.Costo</td>
+                            <td> <button class="btn btn-danger" @onclick="@(() => AnularSuscripcion(response.Id))">X</button></td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -158,6 +187,16 @@
             await Http.DeleteAsync($"suscripcion/{idSuscripcion}");
             await CargarSuscripciones();
         }
-
+    }
+    private async Task BloqueoUsuario(bool active)
+    {
+        var requestBloqueo = new RequestEstadoUsuario() { UserId = response.User.Id, Active = active };
+        var usuarioActual = response.User.Email;
+        string mensaje = $"¿Está seguro que desea bloquear al usuario: {usuarioActual}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensaje))
+        {
+            await Http.PostAsJsonAsync($"User/estado", requestBloqueo);
+            await CargarSuscripciones();
+        }
     }
 }

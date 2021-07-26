@@ -1,5 +1,5 @@
 ﻿@inject HttpClient Http
-
+@attribute [Authorize]
 <EditForm Model="@suscripcion" OnValidSubmit="@OnValidSubmit">
     <div class="row">
         <div class="col-sm-6">
@@ -21,7 +21,7 @@
                         <option value="@Constants.PAGADO">PAGADO</option>
                     </InputSelectNumber>
                 </div>
-            </div>         
+            </div>
             <div class="form-group">
                 <label>Observaciones:</label>
                 <div>
