@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecureSilo.Server.Data;
+using SecureSilo.Server.Helpers;
 using SecureSilo.Shared;
 using SecureSilo.Shared.Identity;
 using System;
@@ -19,6 +20,7 @@ namespace SecureSilo.Server.Controllers
     {
         public readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private Strategy strategy;
         public SuscripcionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
@@ -89,6 +91,7 @@ namespace SecureSilo.Server.Controllers
                 {
                     suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
                     suscripcion.Estado = Constants.PAGADO;
+                    suscripcion.Total = CalcularTotal(suscripcion);
                 }
                 if (!suscripcion.Pagado)
                 {
@@ -96,6 +99,7 @@ namespace SecureSilo.Server.Controllers
                     suscripcion.FormaDePagoId = 1;
                     suscripcion.FechaPago = suscripcion.FechaEmision;
                     suscripcion.Id = GetNextId();
+                    suscripcion.Total = CalcularTotal(suscripcion);
                 }
                 context.Suscripciones.Add(suscripcion);
                 await context.SaveChangesAsync();
@@ -110,6 +114,31 @@ namespace SecureSilo.Server.Controllers
                 throw new InvalidOperationException(e.Message);
             }
 
+        }
+
+        private double CalcularTotal(Suscripcion suscripcion)
+        {
+            var categoria = context.Categorias.Where(x => x.Id == suscripcion.CategoriaId).FirstOrDefault();
+            
+           switch (categoria.Id)
+            {
+                case Constants.CATEGORIA_BASE:
+                    strategy = new EstrategiaC();
+                    break;
+                case Constants.CATEGORIA_STANDAR:
+                    strategy = new EstrategiaC();
+                    break;
+                case Constants.CATEGORIA_PRO:
+                    strategy = new EstrategiaB();
+                    break;
+                case Constants.CATEGORIA_PREMIUM:
+                    strategy = new EstrategiaA();
+                    break;
+                default:
+                    break;
+            }
+            var total = strategy.Total(categoria.Costo);
+            return total;
         }
 
         [HttpDelete("{id}")]

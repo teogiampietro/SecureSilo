@@ -10,8 +10,8 @@ using SecureSilo.Server.Data;
 namespace SecureSilo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210725144933_fdp")]
-    partial class fdp
+    [Migration("20210726164607_V1")]
+    partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -273,6 +273,33 @@ namespace SecureSilo.Server.Migrations
                     b.ToTable("Actualizaciones");
                 });
 
+            modelBuilder.Entity("SecureSilo.Shared.AuditClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Accion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Clase")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Auditoria");
+                });
+
             modelBuilder.Entity("SecureSilo.Shared.Campo", b =>
                 {
                     b.Property<int>("Id")
@@ -436,6 +463,12 @@ namespace SecureSilo.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Alias")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBU")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -447,27 +480,30 @@ namespace SecureSilo.Server.Migrations
                         new
                         {
                             Id = 1,
+                            Alias = "-",
+                            CBU = "-",
                             Descripcion = "-- Seleccione una forma de pago --"
                         },
                         new
                         {
                             Id = 2,
+                            Alias = "-",
+                            CBU = "-",
                             Descripcion = "Efectivo"
                         },
                         new
                         {
                             Id = 3,
+                            Alias = "MACRO.SECURE.SILO",
+                            CBU = "55948291235",
                             Descripcion = "Transferencia"
                         },
                         new
                         {
                             Id = 4,
+                            Alias = "MP.SECURE.SILO",
+                            CBU = "438850133263",
                             Descripcion = "Mercado Pago"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Descripcion = "Tarjeta Credito"
                         });
                 });
 

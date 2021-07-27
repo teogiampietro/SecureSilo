@@ -18,12 +18,12 @@
                     <h1>Gestion de suscripciones</h1>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
+                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
                 </div>
                 @if (response.User.Active)
                 {
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-danger" @onclick="(() => BloqueoUsuario(false))">Bloquear este usuario</button>>
+                        <button type="button" class="btn btn-danger" @onclick="(() => BloqueoUsuario(false))">Bloquear este usuario</button>
                     </div>
                 }
                 else
@@ -77,7 +77,7 @@
                 <div class="col-sm-8">
                     <h1>Gestion de suscripciones</h1>
                 </div> <div class="col-sm-2">
-                    <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de pago</a>
+                           <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
                 </div>
                 @if (response.User.Active)
                 {
@@ -154,7 +154,7 @@
                                 <td></td>
                             }
                             <td> @response.Estado</td>
-                            <td> $@response.Categoria.Costo</td>
+                            <td> $@response.Total</td>
                             <td> <button class="btn btn-danger" @onclick="@(() => AnularSuscripcion(response.Id))">X</button></td>
                         </tr>
                     }
