@@ -17,9 +17,9 @@ namespace SecureSilo.Server.Data
     {
         private readonly IServicioUsuarioActual serviciousuarioActual;
         public ApplicationDbContext(
-            DbContextOptions options,
-            IServicioUsuarioActual servicioUsuarioActual,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            DbContextOptions options,          
+            IOptions<OperationalStoreOptions> operationalStoreOptions,
+            IServicioUsuarioActual servicioUsuarioActual = default) : base(options, operationalStoreOptions)
         {
             serviciousuarioActual = servicioUsuarioActual;
         }
