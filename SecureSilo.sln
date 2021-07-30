@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		server\server.ino = server\server.ino
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureSilo.Tests", "SecureSilo.Tests\SecureSilo.Tests.csproj", "{064F101A-B78E-4ACC-9709-AC810EC24893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSilo.Tests", "SecureSilo.Tests\SecureSilo.Tests.csproj", "{064F101A-B78E-4ACC-9709-AC810EC24893}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

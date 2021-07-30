@@ -7,6 +7,7 @@ using SecureSilo.Shared.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SecureSilo.Server.Controllers
@@ -101,6 +102,22 @@ namespace SecureSilo.Server.Controllers
                               }).FirstOrDefaultAsync();
 
             return user;
+        }
+        [HttpPost("consulta")]
+        public Task<bool> PostConsulta(RequestContacto contacto)
+        {
+            MailServiceController mail = new MailServiceController(context, _userManager);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Sistema Secure Silo");
+            sb.AppendLine(" ");
+            sb.AppendLine(contacto.Nombre);
+            sb.AppendLine(contacto.CorreoElectronico);
+            sb.AppendLine(contacto.Telefono);
+            sb.AppendLine(contacto.Asunto);
+            sb.AppendLine(contacto.Mensaje);
+            sb.AppendLine(" ");
+
+            return Task.FromResult(mail.SendMessage("securesilo@gmail.com", "Nueva Consulta", sb.ToString()));          
         }
     }
 }

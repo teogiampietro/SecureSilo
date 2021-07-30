@@ -11,22 +11,22 @@
                 <Authorized>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="campos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Campos
+                            <span class="oi oi-grid-four-up" aria-hidden="true"></span> Campos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="silos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Silos
+                            <span class="oi oi-grid-three-up" aria-hidden="true"></span> Silos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="dispositivos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Dispositivos
+                            <span class="oi oi-grid-two-up" aria-hidden="true"></span> Dispositivos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="estados">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estados
+                            <span class="oi oi-rain" aria-hidden="true"></span> Estados
                         </NavLink>
                     </li>
                     <li class="nav-item active">
@@ -36,7 +36,7 @@
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="estadisticas">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estadísticas
+                            <span class="oi oi-rss" aria-hidden="true"></span> Estadísticas
                         </NavLink>
                     </li>
                     @if (roles != null && roles.Length > 0)
@@ -47,7 +47,7 @@
                             {
                                 <li class="nav-item active">
                                     <NavLink class="nav-link" href="suscripciones">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Admin
+                                        <span class="oi oi-dollar" aria-hidden="true"></span> Suscripciones
                                     </NavLink>
                                 </li>
                             }
@@ -56,7 +56,7 @@
                                 string urlUser = "suscripcion/" + item.User + "/gestionar-pagos";
                                 <li class="nav-item active">
                                     <NavLink class="nav-link" href="@urlUser">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Cliente
+                                        <span class="oi oi-dollar" aria-hidden="true"></span> Suscripciones
                                     </NavLink>
                                 </li>
                             }
