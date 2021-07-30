@@ -1,0 +1,56 @@
+﻿@inject HttpClient http
+@inject NavigationManager navManager
+<EditForm Model="request">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class=text-center>Dejanos tu consulta</h3>
+            <div class="form-group">
+                <label>Nombre: *</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@request.Nombre" />
+                    <ValidationMessage For="@(() => request.Nombre)" />
+                </div>
+                <label>Correo electronico: *</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@request.CorreoElectronico" />
+                    <ValidationMessage For="@(() => request.CorreoElectronico)" />
+                </div>
+                <label>Telefono: *</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@request.Telefono" />
+                    <ValidationMessage For="@(() => request.Telefono)" />
+                </div>
+                <label>Asunto:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@request.Asunto" />
+                    <ValidationMessage For="@(() => request.Asunto)" />
+                </div>
+                <label>Consulta:</label>
+                <div>
+                    <InputTextArea class="form-control" @bind-Value="@request.Mensaje" />
+                    <ValidationMessage For="@(() => request.Mensaje)" />
+                </div>
+                <br />
+                <button type="submit" class="btn btn-success text-center " @onclick="(() => CargarConsulta())">Enviar</button>
+
+                <DataAnnotationsValidator />
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <img class="" src="/image/logosecuresilo.PNG" alt="producto" height="500" width="400">
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    RequestContacto request { get; set; } = new RequestContacto();
+
+    async Task CargarConsulta()
+    {
+        await http.PostAsJsonAsync("User/consulta", request);
+        navManager.NavigateTo("/");
+    }
+}

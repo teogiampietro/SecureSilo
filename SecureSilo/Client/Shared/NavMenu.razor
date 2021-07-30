@@ -1,7 +1,7 @@
 ﻿@inject HttpClient http
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3">
-    <a class="navbar-brand" href="/">AlarmSilo</a>
+    <a class="navbar-brand" href="/">SecureSilo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,22 +11,22 @@
                 <Authorized>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="campos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Campos
+                            <span class="oi oi-grid-four-up" aria-hidden="true"></span> Campos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="silos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Silos
+                            <span class="oi oi-grid-three-up" aria-hidden="true"></span> Silos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="dispositivos">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Dispositivos
+                            <span class="oi oi-grid-two-up" aria-hidden="true"></span> Dispositivos
                         </NavLink>
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="estados">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estados
+                            <span class="oi oi-rain" aria-hidden="true"></span> Estados
                         </NavLink>
                     </li>
                     <li class="nav-item active">
@@ -36,30 +36,30 @@
                     </li>
                     <li class="nav-item active">
                         <NavLink class="nav-link" href="estadisticas">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> Estadísticas
+                            <span class="oi oi-rss" aria-hidden="true"></span> Estadísticas
                         </NavLink>
                     </li>
                     @if (roles != null && roles.Length > 0)
                         foreach (var item in roles)
                         {
 
-                            //if (item.RolName == "admin")
-                            //{
+                            if (item.RolName == "admin")
+                            {
                                 <li class="nav-item active">
                                     <NavLink class="nav-link" href="suscripciones">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Admin
+                                        <span class="oi oi-dollar" aria-hidden="true"></span> Suscripciones
                                     </NavLink>
                                 </li>
-                                //}
-                                //if (item.RolName == "client")
-                                //{
+                            }
+                            if (item.RolName == "client")
+                            {
                                 string urlUser = "suscripcion/" + item.User + "/gestionar-pagos";
                                 <li class="nav-item active">
                                     <NavLink class="nav-link" href="@urlUser">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> S. Cliente
+                                        <span class="oi oi-dollar" aria-hidden="true"></span> Suscripciones
                                     </NavLink>
                                 </li>
-                            //}
+                            }
                         }
 
                 </Authorized>
@@ -82,7 +82,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
-          await GetUserRoles();
+        await GetUserRoles();
     }
 
     async Task GetUserRoles()
