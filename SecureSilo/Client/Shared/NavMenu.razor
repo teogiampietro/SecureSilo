@@ -2,11 +2,13 @@
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-3">
     <a class="navbar-brand" href="/">SecureSilo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
+
+
+    <div class="@NavMenuCssClass navbar-collapse" id="navbarCollapse" @onclick="ToggleNavMenu">
+        <ul class=" navbar-nav mr-auto">
             <AuthorizeView>
                 <Authorized>
                     <li class="nav-item active">
@@ -72,8 +74,8 @@
 
 @code {
     private bool collapseNavMenu = true;
-    private bool expandSubNav;
     ResponseUserRol[] roles { get; set; }
+
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
