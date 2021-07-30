@@ -2,9 +2,9 @@
 ('1','admin'),
 ('2','client')
 
-insert into dbo.AspNetUsers (Id,UserName,NormalizedUserName,Email,Normalizedemail,EmailConfirmed, PasswordHash, SecurityStamp, concurrencyStamp, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled,LockoutEnd, LockoutEnabled, AccessFailedCount) values
-('16434fd8-424d-41d3-b12d-a0597260873b','admin@gmail.com','ADMIN@GMAIL.COM','admin@gmail.com','ADMIN@GMAIL.COM',0,'AQAAAAEAACcQAAAAECdhdYGftxXy5YSyqFWZsjiMQsxn6u25cx5bXnDWvsKIZrvrUqRwlJIzQRRHT5NoqA==','6HX3ZCPZG5V5JSYDVUSWQVQPDIDKTQON','c54b34f1-5759-4135-8c92-ac21a7fe28d1',null,0,0,null,1,0),
-('42274db6-0bc5-4411-99a1-a825a3dc60a7','client@gmail.com','CLIENT@GMAIL.COM','client@gmail.com' , 'CLIENT@GMAIL.COM',0,'AQAAAAEAACcQAAAAEJ0V0JRFcQrgLWDo1Jarg8MdCpE8DxHrss6q1oZiXOIypF5/KdNmJhhMJHR4U91Ccg==','2EHT5JJSNEBSHIXMPKPNMMZHEG765PMP','d042a39d-1fe4-4e04-8322-3c09a882d94d',null,0,0,null,1,0)
+insert into dbo.AspNetUsers (Id,UserName,NormalizedUserName,Email,Normalizedemail,EmailConfirmed, PasswordHash, SecurityStamp, concurrencyStamp, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled,LockoutEnd, LockoutEnabled, AccessFailedCount, Active) values
+('16434fd8-424d-41d3-b12d-a0597260873b','admin@gmail.com','ADMIN@GMAIL.COM','admin@gmail.com','ADMIN@GMAIL.COM',0,'AQAAAAEAACcQAAAAECdhdYGftxXy5YSyqFWZsjiMQsxn6u25cx5bXnDWvsKIZrvrUqRwlJIzQRRHT5NoqA==','6HX3ZCPZG5V5JSYDVUSWQVQPDIDKTQON','c54b34f1-5759-4135-8c92-ac21a7fe28d1',null,0,0,null,1,0,1),
+('42274db6-0bc5-4411-99a1-a825a3dc60a7','client@gmail.com','CLIENT@GMAIL.COM','client@gmail.com' , 'CLIENT@GMAIL.COM',0,'AQAAAAEAACcQAAAAEJ0V0JRFcQrgLWDo1Jarg8MdCpE8DxHrss6q1oZiXOIypF5/KdNmJhhMJHR4U91Ccg==','2EHT5JJSNEBSHIXMPKPNMMZHEG765PMP','d042a39d-1fe4-4e04-8322-3c09a882d94d',null,0,0,null,1,0,1)
 
 insert into dbo.AspNetUserRoles(UserId, RoleId) values
 ('16434fd8-424d-41d3-b12d-a0597260873b','1'),
