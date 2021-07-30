@@ -61,15 +61,12 @@
     {
         await CargarFormaPago();
         suscripcion.Estado = pago;
-        suscripcion.FechaPago = (DateTime.MinValue == suscripcion.FechaPago ? DateTime.Today : DateTime.Today);
+        suscripcion.FechaPago = DateTime.Now;
     }
 
     async Task CargarFormaPago()
     {
         FormasPago = await Http.GetFromJsonAsync<List<FormaDePago>>("Suscripcion/forma-pago");
     }
-    private void CambioFormaDePago(int value)
-    {
 
-    }
 }

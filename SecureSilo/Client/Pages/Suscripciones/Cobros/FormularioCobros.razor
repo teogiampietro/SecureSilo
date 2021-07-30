@@ -49,7 +49,7 @@
     protected override async Task OnInitializedAsync()
     {
         suscripcion.Estado = pago;
-        suscripcion.FechaEmision = (DateTime.MinValue == suscripcion.FechaEmision ? DateTime.Today : DateTime.Today);
+        suscripcion.FechaEmision = DateTime.Now;
     }
     private void ValorPago(string pago)
     {
