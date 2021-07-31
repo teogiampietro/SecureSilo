@@ -1,16 +1,8 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navManager
 <EditForm Model="request">
-
     <div class="row">
-        <div class="col-sm-3"> </div>
-        <div class="col-sm-6">
-            <br />
-            <div class="text-center">
-                <img src="/image/Securesilo.png" alt="producto" height="250" width="450">
-            </div>
-            <br />
-            <br />
+        <div class="col-sm-5">
             <h3 class=text-center>Dejanos tu consulta</h3>
             <div class="form-group">
                 <label>Nombre: *</label>
@@ -44,7 +36,12 @@
                 <DataAnnotationsValidator />
             </div>
         </div>
-        <div class="col-sm-3"> </div>
+        <div class="col-sm-7">
+            <br><br><br><br><br>
+            <div class="text-center">
+                <img src="/image/Securesilo.png" alt="producto" height="200" width="400">
+            </div>
+        </div>
     </div>
 </EditForm>
 
