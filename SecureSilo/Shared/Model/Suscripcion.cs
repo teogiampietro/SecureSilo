@@ -9,6 +9,7 @@ namespace SecureSilo.Shared
         public int Id { get; set; }
         [Key]
         public bool Pagado { get; set; }
+        public bool Verificado { get; set; }
         public string UserId { get; set; }
         public DateTime FechaEmision { get; set; }
         public DateTime FechaPago { get; set; }
@@ -24,6 +25,7 @@ namespace SecureSilo.Shared
         public Suscripcion()
         {
             Pagado = false;
+            Verificado = false;
         }
         
     }

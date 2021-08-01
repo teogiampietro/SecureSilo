@@ -82,6 +82,7 @@ namespace SecureSilo.Server.Controllers
                 .ToListAsync();
         }
         #endregion
+        #region CUD
         [HttpPost]
         public async Task<ActionResult<ResponseSuscripcion>> Post(Suscripcion suscripcion)
         {
@@ -89,23 +90,23 @@ namespace SecureSilo.Server.Controllers
             {
                 if (suscripcion.Pagado)
                 {
-                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
+                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilosUser(suscripcion.UserId));
                     suscripcion.Estado = Constants.PAGADO;
                     suscripcion.Total = CalcularTotal(suscripcion);
                 }
                 if (!suscripcion.Pagado)
                 {
-                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilos(suscripcion.UserId));
+                    suscripcion.CategoriaId = CalcularCategoria(CantidadSilosUser(suscripcion.UserId));
                     suscripcion.FormaDePagoId = 1;
                     suscripcion.FechaPago = suscripcion.FechaEmision;
-                    suscripcion.Id = GetNextId();
+                    suscripcion.Id = GetNextIdSuscripcion();
                     suscripcion.Total = CalcularTotal(suscripcion);
                 }
                 context.Suscripciones.Add(suscripcion);
                 await context.SaveChangesAsync();
                 if (!suscripcion.Pagado)
                 {
-                    EnviarMailAsync(suscripcion);
+                    PrepararEnvioSolicitud(suscripcion);
                 }
                 return await Get(suscripcion.UserId);
             }
@@ -113,14 +114,69 @@ namespace SecureSilo.Server.Controllers
             {
                 throw new InvalidOperationException(e.Message);
             }
+        }
+        [HttpPut]
+        public async Task<ActionResult> VerificarPago(Suscripcion suscripcion)
+        {
+            try
+            {
+                //Verifico el pago
+                suscripcion.Verificado = true;
+                //Verifico la solicitud
+                var subSolicitud = context.Suscripciones.Where(x => x.Id == suscripcion.Id && x.Pagado == false).FirstOrDefault();
+                subSolicitud.Verificado = true;
+
+                context.Entry(suscripcion).State = EntityState.Modified;
+                context.Entry(subSolicitud).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                PrepararEnvioPagoVerificado(suscripcion);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+
+                throw new InvalidOperationException(e.Message);
+            }
 
         }
-
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var suscripcion = new List<Suscripcion>() {
+                new Suscripcion { Id = id, Pagado = false },
+                new Suscripcion { Id = id, Pagado = true}
+            };
+            foreach (var item in suscripcion)
+            {
+                context.Remove(item);
+                await context.SaveChangesAsync();
+            }
+            return NoContent();
+        }
+        #endregion
+        #region PRIVADOS
+        private int GetNextIdSuscripcion()
+        {
+            var sub = context.Suscripciones.OrderByDescending(x=>x.Id).FirstOrDefault();
+            if (sub == null)
+            {
+                return 0;
+            }
+            return ( sub.Id +  1);
+        }
+        private int CantidadSilosUser(string userId)
+        {
+            var cantidadSilos = this.context.Silos
+                .Where(x => x.Dispositivos.Count > 0)
+                .Where(x => x.UserId == userId)
+                .Count();
+            return cantidadSilos;
+        }
         private double CalcularTotal(Suscripcion suscripcion)
         {
             var categoria = context.Categorias.Where(x => x.Id == suscripcion.CategoriaId).FirstOrDefault();
-            
-           switch (categoria.Id)
+
+            switch (categoria.Id)
             {
                 case Constants.CATEGORIA_BASE:
                     strategy = new EstrategiaC();
@@ -140,40 +196,6 @@ namespace SecureSilo.Server.Controllers
             var total = strategy.Total(categoria.Costo);
             return total;
         }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var suscripcion = new List<Suscripcion>() {
-                new Suscripcion { Id = id, Pagado = false },
-                new Suscripcion { Id = id, Pagado = true}
-            };
-            foreach (var item in suscripcion)
-            {
-                context.Remove(item);
-                await context.SaveChangesAsync();
-            }
-            return NoContent();
-        }
-        #region PRIVADOS
-        private int GetNextId()
-        {
-            var sub = context.Suscripciones.OrderByDescending(x=>x.Id).FirstOrDefault();
-            if (sub == null)
-            {
-                return 0;
-            }
-            return ( sub.Id +  1);
-        }
-        private int CantidadSilos(string userId)
-        {
-            var cantidadSilos = this.context.Silos
-                .Where(x => x.Dispositivos.Count > 0)
-                .Where(x => x.UserId == userId)
-                .Count();
-            return cantidadSilos;
-        }
-
         private int CalcularCategoria(int cantidadSilos)
         {
             if (cantidadSilos <= 5)
@@ -193,18 +215,35 @@ namespace SecureSilo.Server.Controllers
                 return Constants.CATEGORIA_PREMIUM;
             }
         }
-
-        private string ArmarBodyEmail(Suscripcion suscripcion)
+        private void PrepararEnvioPagoVerificado(Suscripcion suscripcion)
         {
+            var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
+            var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x => x.Categoria).FirstOrDefault();
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Sistema Secure Silo");
+            sb.AppendLine("");      
+            sb.AppendLine("Estimado usuario, le hacemos llegar este correo ya que se verificado un pago que fue realizado el día " + suscripcion.FechaPago.ToString("dd/MM/yyyy"));
+            sb.AppendLine("Gracias por seguir utilizando nuestro sistema.");
+            sb.AppendLine("");
+            sb.AppendLine("Servicio de Soporte Secure Silo");
+
+            EnviarMail(mailCampo.Email, "SISTEMA SECURE SILO", sb.ToString());
+        }
+        private void PrepararEnvioSolicitud(Suscripcion suscripcion)
+        {
+            var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
+            var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x => x.Categoria).FirstOrDefault();
+            
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Sistema Secure Silo");
             sb.AppendLine(" ");
-            sb.Append("Estimado usuario, le hacemos llegar este correo porque se ha generado una nueva solicitud de pago. ");
+            sb.Append("Estimado usuario, le hacemos llegar este correo ya que se ha generado una nueva solicitud de pago. ");
             sb.Append("Usted podrá seleccionar en nuestro sistema, cualquiera de los métodos de pago disponibles. ");
             sb.AppendLine("Allí encontrará la información necesaria para realizar el pago de su suscripción. ");
             sb.AppendLine("");
             sb.AppendLine("Fecha de emisión del pago: " + suscripcion.FechaEmision.ToString("dd/MM/yyyy"));
-            sb.AppendLine("Saldo a pagar: $" + suscripcion.Categoria.Costo);
+            sb.AppendLine("Saldo a pagar: $" + suscripcion.Total);
             sb.AppendLine("Categoria actual: " + suscripcion.Categoria.Descripcion);
             if (!string.IsNullOrEmpty(suscripcion.Observaciones))
             {
@@ -212,20 +251,17 @@ namespace SecureSilo.Server.Controllers
             }
             sb.AppendLine(" ");
             sb.AppendLine("Recuerde que posse 10 días hábiles para acreditar y notificar el mismo. De lo contrario, nos vemos en derecho de bloquear su cuenta. ");
-            sb.AppendLine(" ");
-            sb.AppendLine("Sistema de monitoreo Secure Silo.");
-            return sb.ToString();
+            sb.AppendLine("");
+            sb.AppendLine("Servicio de Soporte Secure Silo");
+
+            EnviarMail(mailCampo.Email, "SISTEMA SECURE SILO", sb.ToString());
         }
-        private void EnviarMailAsync(Suscripcion suscripcion)
+        private bool EnviarMail(string para, string asunto, string cuerpo)
         {
             MailServiceController mail = new MailServiceController(context, _userManager);
-            //capturar mail según usuario
-            var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
-
-            var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x=>x.Categoria).FirstOrDefault();
-
-            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA SECURE SILO", ArmarBodyEmail(sub));
-        }
+            mail.SendMessage(para, asunto, cuerpo);
+            return true;
+        }   
         #endregion
 
     }
