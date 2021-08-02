@@ -35,15 +35,15 @@ namespace SecureSilo.Server.Data
             builder.Entity<Grano>().HasData(granos);
             var parametros = new List<Parametro>()
             {
-                new Parametro(){Id=1,Riesgo= Constants.Alto,TemperaturaValue=35,HumedadMinValue=14,HumedadMaxValue=99, GranoID=1},
-                new Parametro(){Id=2,Riesgo= Constants.Medio,TemperaturaValue=35,HumedadMinValue=10,HumedadMaxValue=14,GranoID=1},
-                new Parametro(){Id=3,Riesgo= Constants.Bajo,TemperaturaValue=35,HumedadMinValue=0,HumedadMaxValue=10, GranoID = 1},
-                new Parametro(){Id=4,Riesgo= Constants.Alto,TemperaturaValue=35,HumedadMinValue=14,HumedadMaxValue=99, GranoID = 2},
-                new Parametro(){Id=5,Riesgo= Constants.Medio,TemperaturaValue=35,HumedadMinValue=10,HumedadMaxValue=14, GranoID = 2},
-                new Parametro(){Id=6,Riesgo= Constants.Bajo,TemperaturaValue=35,HumedadMinValue=0,HumedadMaxValue=10, GranoID = 2},
-                new Parametro(){Id=7,Riesgo= Constants.Alto,TemperaturaValue=35,HumedadMinValue=14,HumedadMaxValue=99, GranoID = 3},
-                new Parametro(){Id=8,Riesgo= Constants.Medio,TemperaturaValue=35,HumedadMinValue=10,HumedadMaxValue=14, GranoID = 3},
-                new Parametro(){Id=9,Riesgo= Constants.Bajo,TemperaturaValue=35,HumedadMinValue=0,HumedadMaxValue=10, GranoID = 3},
+                new Parametro(){Id=1,Riesgo= Constants.Alto,    TemperaturaValue=30,HumedadMinValue=16  ,HumedadMaxValue=99,  GranoID=1},
+                new Parametro(){Id=2,Riesgo= Constants.Medio,   TemperaturaValue=30,HumedadMinValue=14  ,HumedadMaxValue=16,  GranoID=1},
+                new Parametro(){Id=3,Riesgo= Constants.Bajo,    TemperaturaValue=30,HumedadMinValue=0   ,HumedadMaxValue=14,   GranoID = 1},
+                new Parametro(){Id=4,Riesgo= Constants.Alto,    TemperaturaValue=30,HumedadMinValue=16  ,HumedadMaxValue=99,  GranoID = 2},
+                new Parametro(){Id=5,Riesgo= Constants.Medio,   TemperaturaValue=30,HumedadMinValue=14  ,HumedadMaxValue=16,  GranoID = 2},
+                new Parametro(){Id=6,Riesgo= Constants.Bajo,    TemperaturaValue=30,HumedadMinValue=0   ,HumedadMaxValue=14,   GranoID = 2},
+                new Parametro(){Id=7,Riesgo= Constants.Alto,    TemperaturaValue=30,HumedadMinValue=16  ,HumedadMaxValue=99,  GranoID = 3},
+                new Parametro(){Id=8,Riesgo= Constants.Medio,   TemperaturaValue=30,HumedadMinValue=14  ,HumedadMaxValue=16,  GranoID = 3},
+                new Parametro(){Id=9,Riesgo= Constants.Bajo,    TemperaturaValue=30,HumedadMinValue=0   ,HumedadMaxValue=14,   GranoID = 3},
             };
             builder.Entity<Parametro>().HasData(parametros);
 

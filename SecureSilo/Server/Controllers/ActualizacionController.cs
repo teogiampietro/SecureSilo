@@ -111,7 +111,7 @@ namespace SecureSilo.Server.Controllers
                     update.Dispositivo.Descripcion = ("dsp" + dsp.Id);
                     update.Dispositivo.Estado = CalcularEstadoUpdate(update, silo.Grano);
                     update.DispositivoID = dsp.Id;
-                    update.F = DateTime.Now.ToString();
+                    update.F = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
                     this.context.Add(update);
                 }
                 await context.SaveChangesAsync();
@@ -149,8 +149,8 @@ namespace SecureSilo.Server.Controllers
                 {
                     foreach (var item in grano.Parametros)
                     {
-                        if (upd.H >= item.HumedadMinValue &&
-                            upd.H < item.HumedadMaxValue)
+                        if (upd.H > item.HumedadMinValue &&
+                            upd.H <= item.HumedadMaxValue)
                         {
                             switch (item.Riesgo)
                             {
@@ -184,9 +184,9 @@ namespace SecureSilo.Server.Controllers
                     if (flag == false)
                         EnviarMailAsync();
 
-                    return estados[3];
+                    return estados[4];
                 }
-                else if (dispositivosRevisar.Any(x => x.Estado == estados[2]))
+                else if (dispositivosRevisar.Any(x => x.Estado == estados[2] ))
                 {
                     return estados[2];
                 }

@@ -115,7 +115,7 @@ namespace SecureSilo.Server.Controllers
                                     where dispositivos.SiloId == idSilo
                                     && dispositivos.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
                                     group updates by updates.F into g
-                                    orderby g.Key descending
+                                    orderby g.Key
                                     select new
                                     {
                                         g.Key,

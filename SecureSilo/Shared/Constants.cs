@@ -35,6 +35,8 @@
         public const string Medio = "MEDIO";
         public const string Bajo = "BAJO";
         public const string NoValue = "SIN_RIESGO";
+
+        public const string idTelegram = "1809980038:AAH51WjegA2rQ27xs5EOiHxevDTtgNOPVu4";
     }
 
 }

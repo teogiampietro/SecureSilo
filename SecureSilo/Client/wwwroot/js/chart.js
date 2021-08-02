@@ -16,8 +16,8 @@ window.generateChart = (params) => {
     var valor = params.valor;
 
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'X');
-    data.addColumn('number', 'Y');
+    data.addColumn('number', 'Dias');
+    data.addColumn('number', valor);
 
 
     for (var i = 0; i < ys.length; i++) {
@@ -27,7 +27,7 @@ window.generateChart = (params) => {
     var options = {
         hAxis: { title: tiempo },
         vAxis: { title: valor },
-        title: 'Temperatura de los últimos '+ tiempo+' días',
+        title: ' ' + valor +' de los últimos '+ ys.length +' días',
         legend: { position: 'none' }
     };
 
