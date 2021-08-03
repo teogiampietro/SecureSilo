@@ -221,14 +221,14 @@ namespace SecureSilo.Server.Controllers
             var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x => x.Categoria).FirstOrDefault();
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Sistema Secure Silo");
+            sb.AppendLine("Sistema " + Constants.nombreEmpresa);
             sb.AppendLine("");      
             sb.AppendLine("Estimado usuario, le hacemos llegar este correo ya que se verificado un pago que fue realizado el día " + suscripcion.FechaPago.ToString("dd/MM/yyyy"));
             sb.AppendLine("Gracias por seguir utilizando nuestro sistema.");
             sb.AppendLine("");
-            sb.AppendLine("Servicio de Soporte Secure Silo");
+            sb.AppendLine("Servicio de Soporte " + Constants.nombreEmpresa);
 
-            EnviarMail(mailCampo.Email, "SISTEMA SECURE SILO", sb.ToString());
+            EnviarMail(mailCampo.Email, "SISTEMA " + Constants.nombreEmpresa.ToUpper(), sb.ToString());
         }
         private void PrepararEnvioSolicitud(Suscripcion suscripcion)
         {
@@ -236,7 +236,7 @@ namespace SecureSilo.Server.Controllers
             var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x => x.Categoria).FirstOrDefault();
             
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Sistema Secure Silo");
+            sb.AppendLine("Sistema " + Constants.nombreEmpresa);
             sb.AppendLine(" ");
             sb.Append("Estimado usuario, le hacemos llegar este correo ya que se ha generado una nueva solicitud de pago. ");
             sb.Append("Usted podrá seleccionar en nuestro sistema, cualquiera de los métodos de pago disponibles. ");
@@ -252,9 +252,9 @@ namespace SecureSilo.Server.Controllers
             sb.AppendLine(" ");
             sb.AppendLine("Recuerde que posse 10 días hábiles para acreditar y notificar el mismo. De lo contrario, nos vemos en derecho de bloquear su cuenta. ");
             sb.AppendLine("");
-            sb.AppendLine("Servicio de Soporte Secure Silo");
+            sb.AppendLine("Servicio de Soporte " + Constants.nombreEmpresa);
 
-            EnviarMail(mailCampo.Email, "SISTEMA SECURE SILO", sb.ToString());
+            EnviarMail(mailCampo.Email, "SISTEMA " + Constants.nombreEmpresa.ToUpper(), sb.ToString());
         }
         private bool EnviarMail(string para, string asunto, string cuerpo)
         {
