@@ -214,6 +214,7 @@ namespace SecureSilo.Server.Controllers
         private string ArmarBodyEmail()
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Sistema " + Constants.nombreEmpresa);
             sb.AppendLine("Informe de alerta:");
             sb.Append("Le informamos que en el campo " + silo.Campo.Descripcion);
             sb.Append(", el silo " + silo.Descripcion);
@@ -222,7 +223,7 @@ namespace SecureSilo.Server.Controllers
             sb.AppendLine("Localidad:" + silo.Campo.Localidad);
             sb.AppendLine("Ubicacion:" + silo.Campo.Ubicacion);
             sb.AppendLine("");
-            sb.AppendLine("Sistema de monitoreo AlarmSilo");
+            sb.AppendLine("Servicio de Soporte " + Constants.nombreEmpresa);
             return sb.ToString();
         }
 
@@ -232,7 +233,7 @@ namespace SecureSilo.Server.Controllers
             //capturar mail según dueño del campo
             var mailCampo = context.Users.Where(x => x.Id == silo.UserId).FirstOrDefault();
 
-            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA ALARM SILO", ArmarBodyEmail());
+            var resultado = mail.SendMessage(mailCampo.Email, "SISTEMA " + Constants.nombreEmpresa.ToUpper(), ArmarBodyEmail());
             if (resultado == true)
                 flag = true;
         }
