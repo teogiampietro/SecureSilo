@@ -184,7 +184,7 @@ namespace SecureSilo.Server.Controllers
                     if (flag == false)
                         EnviarMailAsync();
 
-                    return estados[4];
+                    return estados[3];
                 }
                 else if (dispositivosRevisar.Any(x => x.Estado == estados[2] ))
                 {
