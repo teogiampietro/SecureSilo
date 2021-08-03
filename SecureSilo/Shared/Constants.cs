@@ -38,6 +38,7 @@
 
         public const string idTelegram = "1809980038:AAH51WjegA2rQ27xs5EOiHxevDTtgNOPVu4";
         public const string nombreEmpresa = "AlarmSilo";
+        public const string gmail = "@gmail.com";
         
     }
 
