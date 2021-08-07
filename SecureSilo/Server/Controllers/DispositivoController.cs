@@ -9,6 +9,7 @@ using SecureSilo.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using SecureSilo.Shared.Identity;
+using SecureSilo.Server.Extensions;
 
 namespace SecureSilo.Server.Controllers
 {
@@ -30,16 +31,16 @@ namespace SecureSilo.Server.Controllers
         {
             Silo silo = new Silo();
             silo = this.context.Silos
-                .Include(x=>x.Dispositivos)
+                .Include(x => x.Dispositivos)
                 .Where(x => x.Id == dispositivo.SiloId).FirstOrDefault();
             if (silo.Dispositivos != null && silo.Dispositivos.Count >= 10)
             {
                 return new BadRequestResult();
             }
-            if (string.IsNullOrEmpty(dispositivo.UserId) )
+            if (string.IsNullOrEmpty(dispositivo.UserId))
             {
                 dispositivo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }           
+            }
             context.Add(dispositivo);
             await context.SaveChangesAsync();
             if (String.IsNullOrEmpty(dispositivo.Descripcion))
@@ -89,11 +90,12 @@ namespace SecureSilo.Server.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
         //Endpoint para traer una lista de dispositivos que pertenecen a un id de silo
-        [HttpGet("GetDispositivoPorSilo/{idSilo}", Name = "obtenerDispositivoxSilo")]
-        public async Task<ActionResult<List<Dispositivo>>> GetDispositivosPorSilo(int idSilo)
+        [HttpGet("GetDispositivoPorSilo/{idSilo}&{alarma}")]
+        public async Task<ActionResult<List<Dispositivo>>> GetDispositivosPorSilo(int idSilo, int alarma = 0)
         {
             return await context.Dispositivos
                 .Include(x => x.Updates)
+                .WhereIf(alarma == 1, x => x.Updates.Any(y => y.A == "FF"))
                 .Where(x => x.SiloId == idSilo)
                 .Where(x => x.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .ToListAsync();

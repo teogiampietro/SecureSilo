@@ -7,7 +7,7 @@
 
     <EditForm Model="@Dispositivo">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm-5">
                 <h5 class="text-center">Campo</h5>
                 <div class="form-group">
                     <div>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="col-sm-5">
                 <h5 class="text-center">Silo</h5>
                 <div class="form-group">
                     <div>
@@ -51,6 +51,20 @@
                                     <option value="@item.Id">@item.Descripcion</option>
                                 }
                             }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <h5 class="text-center">Movimiento</h5>
+                <div class="form-group">
+                    <div>
+                        <InputSelectNumber class="form-control"
+                                           ValueChanged="@((int movimientoValue) => ValorAlarmaCambiado(movimientoValue))"
+                                           ValueExpression="@(() => alarma)"
+                                           Value="alarma">
+                            <option value=0>Todo</option>
+                            <option value=1>FALLOS</option>
                         </InputSelectNumber>
                     </div>
                 </div>
@@ -108,6 +122,7 @@
     List<Dispositivo> dispositivos = new List<Dispositivo>();
     private int campoId = 0;
     private int siloId = 0;
+    private int alarma = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,7 +152,15 @@
     private async Task ValorSiloCambiado(int valueSilo)
     {
         siloId = valueSilo;
-        dispositivos = await Http.GetFromJsonAsync<List<Dispositivo>>($"Dispositivos/GetDispositivoPorSilo/{valueSilo}");
+        dispositivos = await Http.GetFromJsonAsync<List<Dispositivo>>($"Dispositivos/GetDispositivoPorSilo/{valueSilo}&{alarma}");
+    }
+    private async Task ValorAlarmaCambiado(int valor)
+    {
+        alarma = valor;
+        if (siloId != 0)
+            dispositivos = await Http.GetFromJsonAsync<List<Dispositivo>>($"Dispositivos/GetDispositivoPorSilo/{siloId}&{alarma}");
+       
+
     }
 }
 
