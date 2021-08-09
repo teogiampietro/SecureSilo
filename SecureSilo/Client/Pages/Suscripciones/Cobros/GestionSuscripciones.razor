@@ -14,11 +14,14 @@
     {
         <EditForm Model="@response">
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <h1>Gestion de suscripciones</h1>
                 </div>
                 <div class="col-sm-2">
                     <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</a>
                 </div>
                 @if (response.User.Active)
                 {
@@ -77,10 +80,13 @@
     {
         <EditForm Model="@response">
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <h1>Gestion de suscripciones</h1>
                 </div> <div class="col-sm-2">
                     <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</a>
                 </div>
                 @if (response.User.Active)
                 {
@@ -238,6 +244,16 @@
         if (await JS.InvokeAsync<bool>("confirm", mensaje))
         {
             await Http.PutAsJsonAsync($"Suscripcion", suscripcion);
+            await CargarSuscripciones();
+        }
+    }
+    private async Task PagoAnual(string userid)
+    {
+        RequestUserId request = new RequestUserId() { UserId = userid };
+        string mensaje = $"¿Confirma generar una solicitud de pago anual para el usuario {response.User.Email}?";
+        if (await JS.InvokeAsync<bool>("confirm", mensaje))
+        {
+            await Http.PostAsJsonAsync($"Suscripcion/anual", request);
             await CargarSuscripciones();
         }
     }

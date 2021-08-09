@@ -7,6 +7,7 @@ using SecureSilo.Shared;
 using SecureSilo.Shared.Identity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -115,6 +116,28 @@ namespace SecureSilo.Server.Controllers
                 throw new InvalidOperationException(e.Message);
             }
         }
+        [HttpPost("anual")]
+        public async Task<ActionResult> SuscripcionAnual(RequestUserId request)
+        {
+            for (int i = 1; i <= 12; i++)
+            {
+                Suscripcion suscripcion = new Suscripcion()
+                {
+                    Id = GetNextIdSuscripcion(),
+                    CategoriaId = CalcularCategoria(CantidadSilosUser(request.UserId)),
+                    Estado = Constants.GENERADO,
+                    FechaEmision = new DateTime(DateTime.Now.Year, i, 5),
+                    FechaPago = new DateTime(DateTime.Now.Year, i, 5),
+                    FormaDePagoId = Constants.FORMA_PAGO_EFECTIVO,
+                    UserId = request.UserId,
+                    Observaciones = "GENERADO AUTOMATICAMENTE",
+                };
+                suscripcion.Total = CalcularTotal(suscripcion);
+                context.Suscripciones.Add(suscripcion);
+                await context.SaveChangesAsync();
+            }
+            return NoContent();
+        }
         [HttpPut]
         public async Task<ActionResult> VerificarPago(Suscripcion suscripcion)
         {
@@ -157,12 +180,12 @@ namespace SecureSilo.Server.Controllers
         #region PRIVADOS
         private int GetNextIdSuscripcion()
         {
-            var sub = context.Suscripciones.OrderByDescending(x=>x.Id).FirstOrDefault();
+            var sub = context.Suscripciones.OrderByDescending(x => x.Id).FirstOrDefault();
             if (sub == null)
             {
                 return 0;
             }
-            return ( sub.Id +  1);
+            return (sub.Id + 1);
         }
         private int CantidadSilosUser(string userId)
         {
@@ -222,7 +245,7 @@ namespace SecureSilo.Server.Controllers
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Sistema " + Constants.nombreEmpresa);
-            sb.AppendLine("");      
+            sb.AppendLine("");
             sb.AppendLine("Estimado usuario, le hacemos llegar este correo ya que se verificado un pago que fue realizado el día " + suscripcion.FechaPago.ToString("dd/MM/yyyy"));
             sb.AppendLine("Gracias por seguir utilizando nuestro sistema.");
             sb.AppendLine("");
@@ -234,7 +257,7 @@ namespace SecureSilo.Server.Controllers
         {
             var mailCampo = context.Users.Where(x => x.Id == suscripcion.UserId).FirstOrDefault();
             var sub = context.Suscripciones.Where(x => x.Id == suscripcion.Id).Include(x => x.Categoria).FirstOrDefault();
-            
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Sistema " + Constants.nombreEmpresa);
             sb.AppendLine(" ");
@@ -261,7 +284,8 @@ namespace SecureSilo.Server.Controllers
             MailServiceController mail = new MailServiceController(context, _userManager);
             mail.SendMessage(para, asunto, cuerpo);
             return true;
-        }   
+        }
+
         #endregion
 
     }
