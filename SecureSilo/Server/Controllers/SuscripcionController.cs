@@ -61,6 +61,7 @@ namespace SecureSilo.Server.Controllers
                 .Include(x => x.Categoria)
                 .Include(x => x.FormaDePago)
                 .Where(x => x.UserId == UserId)
+                .OrderBy(x=> x.FechaEmision)
                 .ToListAsync();
 
             response.Suscripciones = subs;
@@ -119,22 +120,27 @@ namespace SecureSilo.Server.Controllers
         [HttpPost("anual")]
         public async Task<ActionResult> SuscripcionAnual(RequestUserId request)
         {
+            Suscripcion sub;
             for (int i = 1; i <= 12; i++)
             {
-                Suscripcion suscripcion = new Suscripcion()
+                sub = await context.Suscripciones.Where(x => x.UserId == request.UserId && x.FechaEmision.Month == i && x.FechaEmision.Year == DateTime.Now.Year).FirstOrDefaultAsync();
+                if (sub == null)
                 {
-                    Id = GetNextIdSuscripcion(),
-                    CategoriaId = CalcularCategoria(CantidadSilosUser(request.UserId)),
-                    Estado = Constants.GENERADO,
-                    FechaEmision = new DateTime(DateTime.Now.Year, i, 5),
-                    FechaPago = new DateTime(DateTime.Now.Year, i, 5),
-                    FormaDePagoId = Constants.FORMA_PAGO_EFECTIVO,
-                    UserId = request.UserId,
-                    Observaciones = "GENERADO AUTOMATICAMENTE",
-                };
-                suscripcion.Total = CalcularTotal(suscripcion);
-                context.Suscripciones.Add(suscripcion);
-                await context.SaveChangesAsync();
+                    Suscripcion suscripcion = new Suscripcion()
+                    {
+                        Id = GetNextIdSuscripcion(),
+                        CategoriaId = CalcularCategoria(CantidadSilosUser(request.UserId)),
+                        Estado = Constants.GENERADO,
+                        FechaEmision = new DateTime(DateTime.Now.Year, i, 5),
+                        FechaPago = new DateTime(DateTime.Now.Year, i, 5),
+                        FormaDePagoId = Constants.FORMA_PAGO_EFECTIVO,
+                        UserId = request.UserId,
+                        Observaciones = "GENERADO AUTOMATICAMENTE",
+                    };
+                    suscripcion.Total = CalcularTotal(suscripcion);
+                    context.Suscripciones.Add(suscripcion);
+                    await context.SaveChangesAsync();
+                }              
             }
             return NoContent();
         }
