@@ -21,7 +21,7 @@
                     <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</a>
+                    <button type="button" class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</button>
                 </div>
                 @if (response.User.Active)
                 {
@@ -86,7 +86,7 @@
                     <a class="btn btn-success" href="suscripcion/@response.User.Id/nuevo-cobro">Solicitud de un nuevo pago</a>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</a>
+                    <button type="button" class="btn btn-success" @onclick="(() => PagoAnual(response.User.Id))">Generar pago anual</button>
                 </div>
                 @if (response.User.Active)
                 {
