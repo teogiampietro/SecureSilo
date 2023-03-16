@@ -1,14 +1,15 @@
 # SecureSilo
 
-## Resumen
-SecureSilo es un sistema de seguridad y control sobre silos bolsa. 
-Permite obtener mediciones diarias gracias a dispositivos incorporados a los silos bolsa, mediante los cuales a travez de actualizaciones via SMS-3G el sistema se nutre de información en tiempo real.
+## Summary
 
-También cuenta con sensores de movimiento, por lo cual controla la integridad del grano, ya que si se detecta alguna anomalía en ellos, enviará mensajes de alarma y llamará a la lista de números que el ciente desea.
+SecureSilo is a security and control system for bag silos. 
+It allows to obtain daily measurements thanks to devices incorporated to the bag silos, by means of which through updates via SMS-3G the system is fed with information in real time.
 
-Otro módulo importante para los administradores, es el módulo de suscripciones, donde podrás generar anualmente ordenes de pago para los usuarios, notificando por email donde y cómo pagar la mensualidad. Ya que de no hacerlo el sistema deniega el acceso al usuario, aunque sigue tomando las mediciones diarias para una futura regularidad de la suscripción.
+It also has motion sensors, so it controls the integrity of the grain, because if any anomaly is detected in them, it will send alarm messages and call the list of numbers that the customer wants.
 
-## Tecnologías aplicadas
+Another important module for administrators, is the subscriptions module, where you can generate annual payment orders for users, notifying by email where and how to pay the monthly fee. Otherwise the system will deny access to the user, although it continues to take daily measurements for future regularity of the subscription.
+
+## Technologies applied
 
 - .NET Core 3.1
 - SQL Server
