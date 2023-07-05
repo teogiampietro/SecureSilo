@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		server\server.ino = server\server.ino
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSilo.Tests", "SecureSilo.Tests\SecureSilo.Tests.csproj", "{064F101A-B78E-4ACC-9709-AC810EC24893}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{EC0ED414-BAB0-4E85-8CE6-A58CE69501C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC0ED414-BAB0-4E85-8CE6-A58CE69501C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC0ED414-BAB0-4E85-8CE6-A58CE69501C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{064F101A-B78E-4ACC-9709-AC810EC24893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{064F101A-B78E-4ACC-9709-AC810EC24893}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{064F101A-B78E-4ACC-9709-AC810EC24893}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{064F101A-B78E-4ACC-9709-AC810EC24893}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
